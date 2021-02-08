@@ -20,23 +20,26 @@ public class Calculations {
      * @return the length value converted to the ending unit system
      */
     public static double convertLength(Units startingUnits, Units endingUnits, double value){
-        switch (startingUnits){
-            case ENGLISH:
-                switch (endingUnits){
-                    case METRIC:
-                        return value / 39.37;//inches to meters
-                    case ENGLISH:
-                        return value;
-                }
-            case METRIC:
-                switch (endingUnits){
-                    case METRIC:
-                        return value;
-                    case ENGLISH:
-                        return value * 39.37;//meters to inches
-                }
+        if (value > EPSILON) {
+            switch (startingUnits) {
+                case ENGLISH:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value / 39.37;//inches to meters
+                        case ENGLISH:
+                            return value;
+                    }
+                case METRIC:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value;
+                        case ENGLISH:
+                            return value * 39.37;//meters to inches
+                    }
+            }
+            return -1d;
         }
-        throw new IllegalArgumentException("Illegal units");
+        throw new IllegalArgumentException("Length cannot be less than or equal to zero");
     }
 
     /**
@@ -49,52 +52,58 @@ public class Calculations {
      * @return the force value converted to the ending unit system
      */
     public static double convertForce(Units startingUnits, Units endingUnits, double value){
-        switch (startingUnits){
-            case ENGLISH:
-                switch (endingUnits){
-                    case METRIC:
-                        return value * 4.4482216;//pounds to newtons
-                    case ENGLISH:
-                        return value;
-                }
-            case METRIC:
-                switch (endingUnits){
-                    case METRIC:
-                        return value;
-                    case ENGLISH:
-                        return value / 4.4482216;//newtons to pounds
-                }
+        if (value > EPSILON) {
+            switch (startingUnits) {
+                case ENGLISH:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value * 4.4482216;//pounds to newtons
+                        case ENGLISH:
+                            return value;
+                    }
+                case METRIC:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value;
+                        case ENGLISH:
+                            return value / 4.4482216;//newtons to pounds
+                    }
+            }
+            return -1d;
         }
-        throw new IllegalArgumentException("Illegal units");
+        throw new IllegalArgumentException("Force cannot be less than or equal to zero");
     }
 
     /**
      * Converts pressure value from one unit system to a different unit system.
      * Note that in the english system pressure is measured in psi (pounds/squared inches)
-     * and in the metric system pressure is measured in pascals (newtons/squared meters).
+     * and in the metric system pressure is measured in kilopascals (1,000 pascals - newtons/squared meters).
      * @param startingUnits the current unit system of the passed value
      * @param endingUnits the unit system wanted
-     * @param value the current presure value in the starting unit system
+     * @param value the current pressure value in the starting unit system
      * @return the pressure value converted to the ending unit system
      */
     public static double convertPressure(Units startingUnits, Units endingUnits, double value){
-        switch (startingUnits){
-            case ENGLISH:
-                switch (endingUnits){
-                    case METRIC:
-                        return value * 6894.76;//psi to pa
-                    case ENGLISH:
-                        return value;
-                }
-            case METRIC:
-                switch (endingUnits){
-                    case METRIC:
-                        return value;
-                    case ENGLISH:
-                        return value / 6894.76;//pa to psi
-                }
+        if (value > EPSILON) {
+            switch (startingUnits) {
+                case ENGLISH:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value * 6.89476;//psi to kPa
+                        case ENGLISH:
+                            return value;
+                    }
+                case METRIC:
+                    switch (endingUnits) {
+                        case METRIC:
+                            return value;
+                        case ENGLISH:
+                            return value / 6.89476;//kPa to psi
+                    }
+            }
+            return -1d;
         }
-        throw new IllegalArgumentException("Illegal units");
+        throw new IllegalArgumentException("Pressure cannot be less than or equal to zero");
     }
 
     /**
