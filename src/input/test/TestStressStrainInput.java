@@ -18,7 +18,7 @@ public class TestStressStrainInput {
      */
     private static NiDaq daq = new NiDaq();
 
-    private static final int inputBufferSize = 100000000;
+    private static final int inputBufferSize = 8;
 
     /**
      * Tests the Analog inputs on the DAQ National Instruments 6009 Chip for the given channel pair
@@ -63,31 +63,21 @@ public class TestStressStrainInput {
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
-        String channel = "1:5";
-        double [] out = analogInputTest(channel);
+        String channel = "1:1";
+        double [] out = null;
         while(out==null) {
-            if (out != null) {
-                System.out.println("Output is not null.");
-                System.out.println("Printing the output:");
-                System.out.println("*******************************************");
-                for (double num : out) {
-                    System.out.println(num);
-                }
-            } else {
-                System.out.println("Output was null :(");
-            }
             out = analogInputTest(channel);
+            Thread.sleep(100);
         }
-        if (out != null) {
-            System.out.println("Output is not null.");
-            System.out.println("Printing the output:");
-            System.out.println("*******************************************");
-            for (double num : out) {
-                System.out.println(num);
-            }
-        } else {
-            System.out.println("Output was null :(");
+        System.out.println("Output is not null.");
+        System.out.println("Printing the output:");
+        System.out.println("*******************************************");
+        int nonZero = 0;
+        for (double num : out) {
+            System.out.println(num);
+            if(num != 0.0) ++nonZero;
         }
+        System.out.println("This many non-zero numbers:\t" + nonZero);
     }
 }
 

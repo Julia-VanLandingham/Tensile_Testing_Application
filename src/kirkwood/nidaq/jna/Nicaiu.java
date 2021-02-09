@@ -55,6 +55,8 @@ public interface Nicaiu extends StdCallLibrary {
 	public static final int DAQmx_Val_FiniteSamps = (int)10178;
 	public static final int DAQmx_Val_ContSamps = (int)10123;
 	public static final int DAQmx_Val_OnDemand = (int)10390;
+	public static final int DAQmx_Val_Diff = 10106;
+	//#define DAQmx_Val_Diff                                                    10106 // Differential
 	
 
 	
