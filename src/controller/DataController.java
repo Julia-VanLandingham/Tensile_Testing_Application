@@ -68,6 +68,23 @@ public class DataController {
                 }
             }
         }
+        if(DEBUG){
+            System.out.println("DATA_CONTROLLER: Debug is enabled:");
+            if(buffer!= null){
+                System.out.println("Output is not null...");
+                System.out.println("Printing the output:");
+                System.out.println("*******************************************");
+                int nonZero = 0;
+                for (double num : buffer) {
+                    System.out.println(num);
+                    if(num != 0.0) ++nonZero;
+                }
+                System.out.println("This many non-zero numbers:\t" + nonZero);
+            }else{
+                System.err.println("DATA_CONTROLLER: Buffer is null");
+            }
+
+        }
         return null;
     }
 
