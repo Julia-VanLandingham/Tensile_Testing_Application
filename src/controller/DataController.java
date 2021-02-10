@@ -45,13 +45,12 @@ public class DataController {
                 DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
                 IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[]{read});
                 daq.readAnalogF64(aiTask, -1, -1, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, bufferSize, samplesPerChannelRead);
-                // TimeUnit.SECONDS.sleep(1);
-                // TODO: Can't remember if this is necessary so we commented it out to decide later
+                Thread.sleep(100);
                 daq.stopTask(aiTask);
                 daq.clearTask(aiTask);
                 return buffer;
 
-            } catch (NiDaqException e) {
+            } catch (NiDaqException | InterruptedException e) {
                 try {
                     if (DEBUG) {
                         e.printStackTrace();
