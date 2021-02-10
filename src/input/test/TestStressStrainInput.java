@@ -18,7 +18,7 @@ public class TestStressStrainInput {
      */
     private static NiDaq daq = new NiDaq();
 
-    private static final int inputBufferSize = 8;
+    private static final int inputBufferSize = 1000;
 
     /**
      * Tests the Analog inputs on the DAQ National Instruments 6009 Chip for the given channel pair
@@ -33,7 +33,7 @@ public class TestStressStrainInput {
             aiTask = daq.createTask("AITask");
             System.out.println("aiTask assigned" + aiTask);
             daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 8);
+            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
             daq.startTask(aiTask);
             System.out.println("Task Started!");
             Integer read = new Integer(0);
@@ -63,7 +63,7 @@ public class TestStressStrainInput {
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
-        String channel = "1:1";
+        String channel = "0:0";
         double [] out = null;
         while(out==null) {
             out = analogInputTest(channel);
