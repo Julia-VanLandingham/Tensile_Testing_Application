@@ -184,7 +184,6 @@ public class ArrowvaleDaq implements Runnable {
         try {
             sendSocket.send(packet);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
