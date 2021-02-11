@@ -13,7 +13,6 @@ import kirkwood.nidaq.access.NiDaq;
 
 public class DataController {
 
-
     // NiDaq middle layer to call NiDaq function.
     private static NiDaq daq = new NiDaq();
 
@@ -25,6 +24,10 @@ public class DataController {
 
     /**
      * Gets voltage values from USB device (this was written for: NI USB-6009)
+     * NOTE: In order for this class to work you need to add the libraries (in folder libs) to your IDE
+     * Ignores Exceptions thrown by Driver Library
+     * Uses Libraries from here to interface with National Instruments USB Device:
+     * https://github.com/davekirkwood/JNI-for-NI-Drivers
      *
      * @param channel    channel you would like to read from (must be formatted as the Analog Input Port #:# EX: AI0 = 0:0)
      * @param samples    number of samples you would like to read
