@@ -28,8 +28,7 @@ public class MainWindow extends JFrame {
 
         setTitle("Tensile Testing");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(frameWidth,frameHeight);
-        setMinimumSize(new Dimension(frameWidth, frameHeight));
+        setPreferredSize(new Dimension(frameWidth, frameHeight));
         setResizable(true);
 
         setupGraphPanel();
