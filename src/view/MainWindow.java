@@ -3,13 +3,15 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This class creates the main window named "Tensile Testing"
+ */
+
 public class MainWindow extends JFrame {
 
     private final int frameHeight;
     private final int frameWidth;
 
-    private JPanel rightPanel;
-    private JPanel buttonPanel;
     private JButton startButton;
     private JPanel valuePanel;
     private JPanel graphPanel;
@@ -46,12 +48,18 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
+    /*
+     * Creates graph panel
+     */
     private void setupGraphPanel(){
         graphPanel = new JPanel();
         graphPanel.setSize(new Dimension((int) ( frameWidth * .75), frameHeight));
         graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
     }
 
+    /*
+     * Creates value panel and start/stop button
+     */
     private void setupValuePanel(){
         valuePanel = new JPanel();
         valuePanel.add(new JLabel("Wombats"));
@@ -63,7 +71,9 @@ public class MainWindow extends JFrame {
 
     }
 
-
+    /*
+     * Creates menu bar
+     */
     private void setupMenuBar(){
         menuBar = new JMenuBar();
 
@@ -84,9 +94,45 @@ public class MainWindow extends JFrame {
         menuBar.add(edit);
 
     }
+    
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public JButton getStartButton() {
+        return startButton;
+    }
+
+    public JPanel getValuePanel() {
+        return valuePanel;
+    }
+
+    public JPanel getGraphPanel() {
+        return graphPanel;
+    }
+
+    public JMenuItem getSettings() {
+        return settings;
+    }
+
+    public JMenuItem getExit() {
+        return exit;
+    }
+
+    public JMenuItem getExport() {
+        return export;
+    }
+
+    public JMenuItem getInput() {
+        return input;
+    }
+
     public static void main(String[] args){
         MainWindow mainWindow = new MainWindow();
 
     }
-
 }
