@@ -29,7 +29,7 @@ public class MainWindow extends JFrame {
         frameWidth = (int) (screenSize.getWidth() * .95);
 
         setTitle("Tensile Testing");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setPreferredSize(new Dimension(frameWidth, frameHeight));
         setResizable(true);
 
