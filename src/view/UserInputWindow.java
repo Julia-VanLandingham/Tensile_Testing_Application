@@ -1,5 +1,7 @@
 package view;
 
+import controller.InputController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -32,7 +34,7 @@ public class UserInputWindow extends JFrame {
 
         add(outerPanel);
         pack();
-        setVisible(true);
+        setVisible(false);
     }
 
     /*
@@ -86,8 +88,8 @@ public class UserInputWindow extends JFrame {
         rectangularInputPanel = new JPanel();
         rectangularInputPanel.setLayout(new BoxLayout(rectangularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel widthLabel = new JLabel("Width: ");
-        JLabel depthLabel = new JLabel("Depth: ");
+        JLabel widthLabel = new JLabel("Width (in): ");
+        JLabel depthLabel = new JLabel("Depth (in): ");
 
         widthInputField = new JTextField();
         depthInputField = new JTextField();
@@ -107,7 +109,7 @@ public class UserInputWindow extends JFrame {
         circularInputPanel = new JPanel();
         circularInputPanel.setLayout(new BoxLayout(circularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel diameterLabel = new JLabel("Diameter: ");
+        JLabel diameterLabel = new JLabel("Diameter (in): ");
 
         diameterInputField = new JTextField();
 
@@ -124,8 +126,8 @@ public class UserInputWindow extends JFrame {
         initialElongationInputPanel.setLayout(new BoxLayout(initialElongationInputPanel, BoxLayout.X_AXIS));
         initialElongationInputPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
-        JLabel elongationLabel = new JLabel("Initial Elongation:");
-        elongationInputField = new JTextField();
+        JLabel elongationLabel = new JLabel("Initial Elongation (in):");
+        elongationInputField = new JTextField("0.5");
 
         initialElongationInputPanel.add(elongationLabel);
         initialElongationInputPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
@@ -175,9 +177,20 @@ public class UserInputWindow extends JFrame {
         return cancel;
     }
 
-    public static void main(String[] args){
-        new UserInputWindow();
+    public double getWidthInput(){
+        return Double.parseDouble(widthInputField.getText());
     }
 
+    public double getDepthInput(){
+        return Double.parseDouble(depthInputField.getText());
+    }
+
+    public double getDiameterInput(){
+        return Double.parseDouble(diameterInputField.getText());
+    }
+
+    public double getElongationInput(){
+        return Double.parseDouble(elongationInputField.getText());
+    }
 }
 
