@@ -3,6 +3,9 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import javax.swing.SpringLayout;
+import javax.swing.Spring;
+
 
 
 public class SettingsView extends JFrame{
@@ -14,14 +17,16 @@ public class SettingsView extends JFrame{
     private static final int DEFAULT_SAMPLE_RATE = 100;
 
 
+
     private final String [] measurements = {"psi", "pascals", "Kipp"};
-    private JPanel jpanelNorth = new JPanel();
+    private final String[] SpringLables ={SAMPLE_RATE_STRING, UNIT_SELECTION_STRING};
+    private int labelLength = SpringLables.length;
+    private JPanel jpanelNorth = new JPanel(new SpringLayout());
+    private JLabel sampleRateLabel = new JLabel(SpringLables[0]);
+    private JLabel unitsDefaultLabel = new JLabel(SpringLables[1]);
     private JPanel jpanelSouth = new JPanel();
-    private JPanel sampleRatePanel = new JPanel();
-    private JPanel unitSelectionPanel = new JPanel();
     private JButton saveButton = new JButton("Save");
     private JSpinner sampleRateSelection ;
-    private JLabel sampleRateLabel = new JLabel(SAMPLE_RATE_STRING);
     private JComboBox<String> unitSelection = new JComboBox<String>(measurements);
     private JLabel unitSelectionLabel = new JLabel(UNIT_SELECTION_STRING);
 
@@ -38,19 +43,18 @@ public class SettingsView extends JFrame{
         frameWidth = (int) (screenSize.getWidth() * .95);
 
         setSize( frameWidth, frameHeight);
-
+        //default layout for panels is flow
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
         add(jpanelNorth, BorderLayout.NORTH);
         add(jpanelSouth, BorderLayout.SOUTH);
+        jpanelNorth.add(sampleRateLabel);
+        jpanelNorth.add(unitsDefaultLabel);
+        jpanelNorth.add(sampleRateSelection);
+        jpanelNorth.add(unitSelection);
+        //jpanelNorth.putConstraint(jpanelNorth,Sp)-trying to add constraints to spring panel
         jpanelSouth.add(saveButton);
         sampleRateSelection = new JSpinner();
-        sampleRatePanel.add(sampleRateSelection, BorderLayout.EAST);
-        sampleRatePanel.add(sampleRateLabel, BorderLayout.WEST);
-        unitSelectionPanel.add(unitSelection, BorderLayout.EAST);
-        unitSelectionPanel.add(unitSelectionLabel, BorderLayout.WEST);
         jpanelNorth.add(sampleRateLabel, BorderLayout.NORTH);
-        jpanelNorth.add(unitSelectionPanel, BorderLayout.SOUTH);
         pack();
         setLocationRelativeTo(null);
     }
