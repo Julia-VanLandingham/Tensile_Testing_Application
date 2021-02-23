@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.SpringLayout;
-import javax.swing.Spring;
-
 
 
 public class SettingsView extends JFrame{
@@ -19,15 +17,11 @@ public class SettingsView extends JFrame{
 
 
     private final String [] measurements = {"psi", "pascals", "Kipp"};
-    private final String[] SpringLables ={SAMPLE_RATE_STRING, UNIT_SELECTION_STRING};
-    private int labelLength = SpringLables.length;
-    private JPanel jpanelNorth = new JPanel(new SpringLayout());
-    private JLabel sampleRateLabel = new JLabel(SpringLables[0]);
-    private JLabel unitsDefaultLabel = new JLabel(SpringLables[1]);
-    private JPanel jpanelSouth = new JPanel();
+
+    private JPanel southPanel = new JPanel();
     private JButton saveButton = new JButton("Save");
-    private JSpinner sampleRateSelection ;
-    private JComboBox<String> unitSelection = new JComboBox<String>(measurements);
+    private JSpinner sampleRateSelection  = new JSpinner(new SpinnerNumberModel(1,1,10,1));
+    private JComboBox<String> unitSelection = new JComboBox<>(measurements);
     private JLabel unitSelectionLabel = new JLabel(UNIT_SELECTION_STRING);
 
 
@@ -44,17 +38,21 @@ public class SettingsView extends JFrame{
 
         setSize( frameWidth, frameHeight);
         //default layout for panels is flow
+        JPanel northPanel = new JPanel(new SpringLayout());
+        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE_STRING,JLabel.TRAILING);
+        JLabel unitsDefaultLabel = new JLabel(UNIT_SELECTION_STRING,JLabel.TRAILING);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        add(jpanelNorth, BorderLayout.NORTH);
-        add(jpanelSouth, BorderLayout.SOUTH);
-        jpanelNorth.add(sampleRateLabel);
-        jpanelNorth.add(unitsDefaultLabel);
-        jpanelNorth.add(sampleRateSelection);
-        jpanelNorth.add(unitSelection);
-        //jpanelNorth.putConstraint(jpanelNorth,Sp)-trying to add constraints to spring panel
-        jpanelSouth.add(saveButton);
-        sampleRateSelection = new JSpinner();
-        jpanelNorth.add(sampleRateLabel, BorderLayout.NORTH);
+        add(northPanel, BorderLayout.NORTH);
+        add(southPanel, BorderLayout.SOUTH);
+        northPanel.add(sampleRateLabel);
+        sampleRateLabel.setLabelFor(sampleRateSelection);
+        northPanel.add(sampleRateSelection);
+        northPanel.add(unitsDefaultLabel);
+        unitsDefaultLabel.setLabelFor(unitSelection);
+        northPanel.add(unitSelection);
+        SpringUtilities.makeCompactGrid(northPanel,2,2,5,5,5,5);
+        southPanel.add(saveButton);
+
         pack();
         setLocationRelativeTo(null);
     }
