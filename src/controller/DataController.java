@@ -34,7 +34,7 @@ public class DataController {
      * @param bufferSize size of the array you would like to read into (most cases should be same as samples)
      * @return buffer of voltage values as doubles (returns null if operation failed)
      */
-    private double[] analogInputStart(String channel, int samples, int bufferSize) {
+    public double[] analogInputStart(String channel, int samples, int bufferSize) {
         double[] buffer = new double[bufferSize];
         for (int i = 0; i < TRIES && buffer != null; ++i) {
             Pointer aiTask = null;
@@ -99,6 +99,10 @@ public class DataController {
 
     private double [] voltageConversion(double [] rawVoltageData){
         return null;
+        /*
+        zeroing the machine also zeros the voltage I believe
+
+         */
     }
 
 }

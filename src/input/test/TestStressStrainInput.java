@@ -4,6 +4,7 @@ import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
+import java.io.*;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,9 @@ public class TestStressStrainInput {
      */
     private static NiDaq daq = new NiDaq();
 
-    private static final int inputBufferSize = 1000;
+    private static final int inputBufferSize = 300000;
+    private static final double samplesPerSecond = 1000.0;
+    private static final int samplesInChannel = inputBufferSize;
 
     /**
      * Tests the Analog inputs on the DAQ National Instruments 6009 Chip for the given channel pair
@@ -32,8 +35,8 @@ public class TestStressStrainInput {
             String physicalChan = "Dev1/ai" + channel;
             aiTask = daq.createTask("AITask");
             System.out.println("aiTask assigned" + aiTask);
-            daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
+            daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+            daq.cfgSampClkTiming(aiTask, "", samplesPerSecond, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, samplesInChannel);
             daq.startTask(aiTask);
             System.out.println("Task Started!");
             Integer read = new Integer(0);
@@ -72,12 +75,27 @@ public class TestStressStrainInput {
         System.out.println("Output is not null.");
         System.out.println("Printing the output:");
         System.out.println("*******************************************");
+        /*
         int nonZero = 0;
         for (double num : out) {
             System.out.println(num);
             if(num != 0.0) ++nonZero;
         }
         System.out.println("This many non-zero numbers:\t" + nonZero);
+        */
+        double total = 0.0;
+        try {
+            PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile.txt"));
+            for(double num : out){
+                outputFile.println(num);
+                num += total;
+            }
+            outputFile.close();
+            System.out.println("File created successfully");
+        }
+        catch ( IOException e) {
+        }
+        System.out.println("Average of output is: " + (total / out.length));
     }
 }
 
