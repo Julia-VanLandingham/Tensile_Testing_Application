@@ -2,6 +2,9 @@ package controller;
 
 import view.UserInputWindow;
 
+/**
+ * Sets up and controls the functions of the UserInputWindow
+ */
 public class InputController {
 
     private UserInputWindow inputWindow;
@@ -38,5 +41,4 @@ public class InputController {
     public UserInputWindow getInputWindow(){
         return inputWindow;
     }
-
 }

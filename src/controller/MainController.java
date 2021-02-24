@@ -2,6 +2,10 @@ package controller;
 
 import view.MainWindow;
 
+/**
+ * Root of the entire program
+ * NOTE: This should be the only main method ever actually run
+ */
 public class MainController {
 
     private MainWindow mainWindow;
@@ -17,5 +21,4 @@ public class MainController {
     public static void main(String[] args){
         new MainController();
     }
-
 }
