@@ -34,7 +34,7 @@ public class DataController {
      * @param bufferSize size of the array you would like to read into (most cases should be same as samples)
      * @return buffer of voltage values as doubles (returns null if operation failed)
      */
-    public double[] analogInputStart(String channel, int samples, int bufferSize) {
+    private double[] analogInputStart(String channel, int samples, int bufferSize) {
         double[] buffer = new double[bufferSize];
         for (int i = 0; i < TRIES && buffer != null; ++i) {
             Pointer aiTask = null;
@@ -87,6 +87,17 @@ public class DataController {
             }
 
         }
+        return null;
+    }
+
+    // TODO: signal from machines is often noisy, this function should take a array of raw data and give back the averaged data set
+    // Possibly use a mapping function to return an array or we could just do it inline and take the small samples of data
+    // and just use the average of that small sample as one point.
+    private double[] signalConditioner (double [] data){
+        return null;
+    }
+
+    private double [] voltageConversion(double [] rawVoltageData){
         return null;
     }
 
