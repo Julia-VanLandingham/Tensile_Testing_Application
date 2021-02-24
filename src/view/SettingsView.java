@@ -12,13 +12,15 @@ public class SettingsView extends JFrame{
     private final int frameWidth;
     private static final String SAMPLE_RATE_STRING = "Default Sample Rate: ";
     private static final String UNIT_SELECTION_STRING = "Default Units : ";
+    private static final String DEFAULT_ELONGATION = "Default Elongation: ";
     private static final int DEFAULT_SAMPLE_RATE = 100;
+    private JTextField defaultElongationField;
 
 
 
     private final String [] measurements = {"psi", "pascals", "Kipp"};
 
-    private JPanel southPanel = new JPanel();
+
     private JButton saveButton = new JButton("Save");
     private JSpinner sampleRateSelection  = new JSpinner(new SpinnerNumberModel(1,1,10,1));
     private JComboBox<String> unitSelection = new JComboBox<>(measurements);
@@ -26,40 +28,52 @@ public class SettingsView extends JFrame{
 
 
 
+
+
     public SettingsView () {
         setTitle("Settings");
-        setVisible(false);
         setResizable(true);
-
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frameHeight = (int) (screenSize.getHeight() * .95);
         frameWidth = (int) (screenSize.getWidth() * .95);
-
         setSize( frameWidth, frameHeight);
-        //default layout for panels is flow
-        JPanel northPanel = new JPanel(new SpringLayout());
-        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE_STRING,JLabel.TRAILING);
-        JLabel unitsDefaultLabel = new JLabel(UNIT_SELECTION_STRING,JLabel.TRAILING);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        add(northPanel, BorderLayout.NORTH);
-        add(southPanel, BorderLayout.SOUTH);
-        northPanel.add(sampleRateLabel);
-        sampleRateLabel.setLabelFor(sampleRateSelection);
-        northPanel.add(sampleRateSelection);
-        northPanel.add(unitsDefaultLabel);
-        unitsDefaultLabel.setLabelFor(unitSelection);
-        northPanel.add(unitSelection);
-        SpringUtilities.makeCompactGrid(northPanel,2,2,5,5,5,5);
-        southPanel.add(saveButton);
 
+        add(createNorthPanel(), BorderLayout.NORTH);
+        add(createSouthPanel(), BorderLayout.SOUTH);
+
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setVisible(true);
         pack();
         setLocationRelativeTo(null);
     }
 
-    public void setVisibile(boolean isVisible){
-        setVisible(isVisible);
+    private JPanel createNorthPanel(){
+        JPanel northPanel = new JPanel(new SpringLayout());
+        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE_STRING,JLabel.TRAILING);
+        northPanel.add(sampleRateLabel);
+        sampleRateLabel.setLabelFor(sampleRateSelection);
+        northPanel.add(sampleRateSelection);
+
+        JLabel unitsDefaultLabel = new JLabel(UNIT_SELECTION_STRING,JLabel.TRAILING);
+        northPanel.add(unitsDefaultLabel);
+        unitsDefaultLabel.setLabelFor(unitSelection);
+        northPanel.add(unitSelection);
+
+        JLabel defaultElongationLabel = new JLabel(DEFAULT_ELONGATION ,JLabel.TRAILING);
+        northPanel.add(defaultElongationLabel);
+        defaultElongationField = new JTextField("0.5");
+        defaultElongationLabel.setLabelFor(defaultElongationField);
+        northPanel.add(defaultElongationField);
+        SpringUtilities.makeCompactGrid(northPanel,3,2,6,6,6,6);
+        return northPanel;
     }
+
+    private JPanel createSouthPanel(){
+        JPanel southPanel = new JPanel();
+        southPanel.add(saveButton);
+        return southPanel;
+    }
+
 
     public ArrayList<String> getInput(){ //for getting all the inputs from the fields before closing
         return null;
@@ -73,6 +87,5 @@ public class SettingsView extends JFrame{
 
     public static void main (String [] args){
         SettingsView viewTest = new SettingsView();
-        viewTest.setVisibile(true);
     }
 }
