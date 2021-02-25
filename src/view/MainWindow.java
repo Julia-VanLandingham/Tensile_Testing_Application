@@ -21,7 +21,6 @@ public class MainWindow extends JFrame {
     private JMenuItem export;
     private JMenuItem input;
 
-
     public MainWindow(){
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -38,7 +37,6 @@ public class MainWindow extends JFrame {
 
         add(graphPanel, BorderLayout.CENTER);
         add(valuePanel, BorderLayout.EAST);
-
 
         setupMenuBar();
         this.setJMenuBar(menuBar);
@@ -68,7 +66,6 @@ public class MainWindow extends JFrame {
         startButton = new JButton("Start");
         valuePanel.add(startButton);
         valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(50,50,50,50)));
-
     }
 
     /*
@@ -89,10 +86,8 @@ public class MainWindow extends JFrame {
         input = new JMenuItem("Input Measurements");
         edit.add(input);
 
-
         menuBar.add(file);
         menuBar.add(edit);
-
     }
     
     public int getFrameHeight() {
