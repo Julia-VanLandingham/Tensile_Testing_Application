@@ -20,7 +20,7 @@ public class TestStressStrainInput {
      */
     private static NiDaq daq = new NiDaq();
 
-    private static final int inputBufferSize = 560000;
+    private static final int inputBufferSize = 480000;
     private static final double samplesPerSecond = 48000.0;
     private static final int samplesInChannel = inputBufferSize;
 
@@ -64,6 +64,15 @@ public class TestStressStrainInput {
             } catch(NiDaqException e2) {}
             throw(e);
         }
+    }
+
+    private static double[] convertToLbs (double [] input){
+        if(input == null) return null;
+        double [] output = new double[input.length];
+        for(int i = 0; i < input.length; i++){
+
+        }
+        return output;
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
