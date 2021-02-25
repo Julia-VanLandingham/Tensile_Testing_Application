@@ -5,30 +5,27 @@ import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.SpringLayout;
 
+/**
+ * Creates a pop-up frame which displays settings options
+ */
 public class SettingsView extends JFrame{
 
-    private final int frameHeight;
-    private final int frameWidth;
-    private static final String SAMPLE_RATE_STRING = "Default Sample Rate: ";
-    private static final String UNIT_SELECTION_STRING = "Default Units : ";
-    private static final String DEFAULT_ELONGATION = "Default Elongation (in): ";
+    private static final String SAMPLE_RATE = "Sample Rate: ";
     private static final int DEFAULT_SAMPLE_RATE = 100;
+    private JSpinner sampleRateSelection  = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
+
+    private static final String UNIT_SELECTION = "Units: ";
+    private final String [] measurements = {"psi", "pascals", "Kipp"};
+    private JComboBox<String> unitSelection = new JComboBox<>(measurements);
+
+    private static final String ELONGATION = "Elongation (in): ";
     private JTextField defaultElongationField;
 
-    private final String [] measurements = {"psi", "pascals", "Kipp"};
-
     private JButton saveButton = new JButton("Save");
-    private JSpinner sampleRateSelection  = new JSpinner(new SpinnerNumberModel(1,1,10,1));
-    private JComboBox<String> unitSelection = new JComboBox<>(measurements);
-    private JLabel unitSelectionLabel = new JLabel(UNIT_SELECTION_STRING);
 
     public SettingsView () {
         setTitle("Settings");
         setResizable(false);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frameHeight = (int) (screenSize.getHeight() * .95);
-        frameWidth = (int) (screenSize.getWidth() * .95);
-        setSize( frameWidth, frameHeight);
 
         add(createNorthPanel(), BorderLayout.NORTH);
         add(createSouthPanel(), BorderLayout.SOUTH);
@@ -39,27 +36,36 @@ public class SettingsView extends JFrame{
         setLocationRelativeTo(null);
     }
 
+    /*
+     * Creates fields that allow the user to determine the settings
+     * that will be used throughout the test. Those settings include sample rate, units, and elongation
+     */
     private JPanel createNorthPanel(){
         JPanel northPanel = new JPanel(new SpringLayout());
-        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE_STRING,JLabel.TRAILING);
+        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE,JLabel.TRAILING);
         northPanel.add(sampleRateLabel);
         sampleRateLabel.setLabelFor(sampleRateSelection);
         northPanel.add(sampleRateSelection);
 
-        JLabel unitsDefaultLabel = new JLabel(UNIT_SELECTION_STRING,JLabel.TRAILING);
-        northPanel.add(unitsDefaultLabel);
-        unitsDefaultLabel.setLabelFor(unitSelection);
+        JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
+        northPanel.add(unitsSelectionLabel);
+        unitsSelectionLabel.setLabelFor(unitSelection);
         northPanel.add(unitSelection);
 
-        JLabel defaultElongationLabel = new JLabel(DEFAULT_ELONGATION ,JLabel.TRAILING);
+        JLabel defaultElongationLabel = new JLabel(ELONGATION,JLabel.TRAILING);
         northPanel.add(defaultElongationLabel);
         defaultElongationField = new JTextField("0.5");
         defaultElongationLabel.setLabelFor(defaultElongationField);
         northPanel.add(defaultElongationField);
         SpringUtilities.makeCompactGrid(northPanel,3,2,6,6,6,6);
+
         return northPanel;
     }
 
+    /*
+     * Creates a save button that will allow a user to
+     * save the settings that were decided on and will persist throughout the test
+     */
     private JPanel createSouthPanel(){
         JPanel southPanel = new JPanel();
         southPanel.add(saveButton);
