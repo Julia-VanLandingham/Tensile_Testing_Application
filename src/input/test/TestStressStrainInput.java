@@ -7,6 +7,7 @@ import kirkwood.nidaq.jna.Nicaiu;
 import java.io.*;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -19,8 +20,8 @@ public class TestStressStrainInput {
      */
     private static NiDaq daq = new NiDaq();
 
-    private static final int inputBufferSize = 300000;
-    private static final double samplesPerSecond = 1000.0;
+    private static final int inputBufferSize = 560000;
+    private static final double samplesPerSecond = 48000.0;
     private static final int samplesInChannel = inputBufferSize;
 
     /**
@@ -95,8 +96,37 @@ public class TestStressStrainInput {
         }
         catch ( IOException e) {
         }
-        System.out.println("Average of output is: " + (total / out.length));
+        System.out.println("Average of output is: " + (total / (double) out.length));
+        double [] cleanedData = new double[out.length / 100];
+        int cleanedDataIndex = 0;
+        double [] buffer = new double[100];
+        total = 0.0;
+        for(int i = 0; i < out.length; ++i){
+            int indexBuffer = i % 100;
+            buffer[indexBuffer] = out[i];
+            if(indexBuffer == 99){
+                for(double num : buffer){
+                    total += num;
+                }
+                cleanedData[cleanedDataIndex++] = total / 100.0;
+                total = 0.0;
+            }
+        }
+        System.out.println("CLEANED DATA:\t" + cleanedData.length + " values");
+        System.out.println("Output to outfile_cleaned.txt");
+        try {
+            PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile_cleaned.txt"));
+            for(double num : cleanedData){
+                outputFile.println(num);
+            }
+            outputFile.close();
+            System.out.println("File created successfully");
+        }
+        catch ( IOException e) {
+        }
     }
+
+
 }
 
 
