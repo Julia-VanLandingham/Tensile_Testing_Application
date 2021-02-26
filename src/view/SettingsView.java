@@ -42,14 +42,15 @@ public class SettingsView extends JFrame{
     /*
      * Creates fields that allow the user to determine the settings
      * that will be used throughout the test. Those settings include sample rate, units, and elongation
+     * Takes a scanner to aid in persisting the settings throughout
      */
     private JPanel createNorthPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
         JLabel sampleRateLabel = new JLabel(SAMPLE_RATE,JLabel.TRAILING);
         JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
         JLabel defaultElongationLabel = new JLabel(ELONGATION,JLabel.TRAILING);
-        boolean readSuceeded = false;
-        if(userInput != null)  {
+        boolean readSucceeded = false;
+        if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
                 int sampleRate = userInput.nextInt();
                 String selectedUnitType = userInput.next();
@@ -58,25 +59,25 @@ public class SettingsView extends JFrame{
                 defaultElongationField = new JTextField(elongation+"");
                 unitSelection = new JComboBox<>(MEASUREMENTS);
                 unitSelection.setSelectedItem(selectedUnitType);
-                readSuceeded = true;
+                readSucceeded = true;
             }
             catch( NoSuchElementException | IllegalStateException e) {
             }
         }
-        if(!readSuceeded){
+        
+        if(!readSucceeded){ //if no values inputted default values show
             sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
             defaultElongationField = new JTextField("0.5");
             unitSelection = new JComboBox<>(MEASUREMENTS);
         }
+
         northPanel.add(sampleRateLabel);
         sampleRateLabel.setLabelFor(sampleRateSelection);
         northPanel.add(sampleRateSelection);
 
-
         northPanel.add(unitsSelectionLabel);
         unitsSelectionLabel.setLabelFor(unitSelection);
         northPanel.add(unitSelection);
-
 
         northPanel.add(defaultElongationLabel);
 
@@ -108,7 +109,9 @@ public class SettingsView extends JFrame{
     public JButton getSaveButton(){ return saveButton;  }
 
     public JSpinner getSampleRateSelection(){return sampleRateSelection; }
+
     public JComboBox<String> getUnitSelection(){return unitSelection; }
+
     public JTextField getDefaultElongation(){return defaultElongationField;}
 
 }

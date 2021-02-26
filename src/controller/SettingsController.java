@@ -1,7 +1,6 @@
 package controller;
 
 import view.SettingsView;
-
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,16 +9,14 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class SettingsController {
-    private static final String CONFIG_FILE = "settings.cfg";
+    private static final String CONFIG_FILE = "settings.cfg"; //file settings are stored in
     private SettingsView settingsWindow;
-
 
     public SettingsController(){
         Scanner input = null;
         try{
-           input =new Scanner(new File(CONFIG_FILE));
+           input = new Scanner(new File(CONFIG_FILE));
         } catch (FileNotFoundException e) {
-
         }
         settingsWindow = new SettingsView(input);
 
@@ -27,6 +24,8 @@ public class SettingsController {
         if(input != null){
             input.close();
         }
+
+        //retrieves settings info and stores in file
         settingsWindow.getSaveButton().addActionListener(e -> {
             try {
                 double value = Double.parseDouble(settingsWindow.getDefaultElongation().getText().trim());
@@ -36,7 +35,6 @@ public class SettingsController {
                 out.println(value);
                 out.close();
             } catch (FileNotFoundException exception) {
-
             }
             catch (NumberFormatException exception) {
                 JOptionPane.showMessageDialog(settingsWindow,"Default Elongation value is not a properly formatted number."," Bad Elongation Number",JOptionPane.ERROR_MESSAGE);
