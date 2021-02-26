@@ -70,7 +70,7 @@ public class TestStressStrainInput {
         if(input == null) return null;
         double [] output = new double[input.length];
         for(int i = 0; i < input.length; i++){
-
+            //Do Conversion Here
         }
         return output;
     }
