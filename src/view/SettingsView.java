@@ -64,20 +64,20 @@ public class SettingsView extends JFrame{
             catch( NoSuchElementException | IllegalStateException e) {
             }
         }
+        
         if(!readSucceeded){ //if no values inputted default values show
             sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
             defaultElongationField = new JTextField("0.5");
             unitSelection = new JComboBox<>(MEASUREMENTS);
         }
+
         northPanel.add(sampleRateLabel);
         sampleRateLabel.setLabelFor(sampleRateSelection);
         northPanel.add(sampleRateSelection);
 
-
         northPanel.add(unitsSelectionLabel);
         unitsSelectionLabel.setLabelFor(unitSelection);
         northPanel.add(unitSelection);
-
 
         northPanel.add(defaultElongationLabel);
 
