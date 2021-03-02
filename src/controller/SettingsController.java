@@ -28,7 +28,7 @@ public class SettingsController {
         //retrieves settings info and stores in file
         settingsWindow.getSaveButton().addActionListener(e -> {
             try {
-                double value = Double.parseDouble(settingsWindow.getDefaultElongation().getText().trim());
+                double value = Double.parseDouble(settingsWindow.getDefaultGaugeLength().getText().trim());
                 PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
                 out.println(settingsWindow.getSampleRateSelection().getValue());
                 out.println(settingsWindow.getUnitSelection().getSelectedItem());
