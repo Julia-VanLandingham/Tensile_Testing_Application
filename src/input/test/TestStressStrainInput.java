@@ -1,6 +1,7 @@
 package input.test;
 
 import com.sun.jna.Pointer;
+import jdk.jfr.internal.tool.Main;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
@@ -9,9 +10,14 @@ import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.lang.*;
 
 
 import kirkwood.nidaq.access.NiDaq;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class TestStressStrainInput {
 
@@ -19,9 +25,11 @@ public class TestStressStrainInput {
      * NiDaq middle layer to call NiDaq function.
      */
     private static NiDaq daq = new NiDaq();
+    // 5 min :      1500000
+    // 2.5 min :     750000
 
-    private static final int inputBufferSize = 480000;
-    private static final double samplesPerSecond = 48000.0;
+    private static final int inputBufferSize = 3000;
+    private static final double samplesPerSecond = 3000.0;
     private static final int samplesInChannel = inputBufferSize;
 
     /**
@@ -78,21 +86,27 @@ public class TestStressStrainInput {
     public static void main (String [] args) throws NiDaqException, InterruptedException {
         String channel = "0:0";
         double [] out = null;
+        System.out.println("Test Started...");
+        long startTime = System.currentTimeMillis();
         while(out==null) {
             out = analogInputTest(channel);
             Thread.sleep(100);
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("Test Finished.");
+        try {
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+                    Main.class.getResourceAsStream( "input.test/beep.wav"));
+            clip.open(inputStream);
+            clip.start();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        System.out.println("Time elapsed: " + ((endTime - startTime)/1000) + " seconds");
         System.out.println("Output is not null.");
         System.out.println("Printing the output:");
         System.out.println("*******************************************");
-        /*
-        int nonZero = 0;
-        for (double num : out) {
-            System.out.println(num);
-            if(num != 0.0) ++nonZero;
-        }
-        System.out.println("This many non-zero numbers:\t" + nonZero);
-        */
         double total = 0.0;
         try {
             PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile.txt"));

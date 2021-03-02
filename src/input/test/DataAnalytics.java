@@ -16,7 +16,7 @@ public class DataAnalytics {
     private static void readData(){
         dataSet = new ArrayList<Double>();
         try {
-            File myObj = new File("D:\\5_min-1.txt");
+            File myObj = new File("outfile.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -32,55 +32,26 @@ public class DataAnalytics {
 
     // Reduces Average data
     private static void cleanDataAverage(double[] input, int cleanFactor) {
+        double [] tempData = new double[input.length / 100];
         int cleanedDataIndex = 0;
-        cleanedData = new double[input.length / cleanFactor];
-        double total = 0;
+        double [] buffer = new double[100];
+        double total = 0.0;
         for(int i = 0; i < input.length; ++i){
-            int indexBuffer = i % cleanFactor;
-            double [] buffer = new double[input.length];
+            int indexBuffer = i % 100;
             buffer[indexBuffer] = input[i];
-            if(indexBuffer == (cleanFactor - 1)){
+            if(indexBuffer == 99){
                 for(double num : buffer){
                     total += num;
                 }
-                cleanedData[cleanedDataIndex++] = total / 100.0;
+                tempData[cleanedDataIndex++] = total / 100.0;
                 total = 0.0;
             }
         }
-
+        cleanedData = tempData;
     }
 
-    private static void cleanDataOutliers(double[] input, int cleanFactor) {
-        int cleanedDataIndex = 0;
-        cleanedData = new double[input.length/cleanFactor];
-        double total = 0;
-        for(int i = 0; i < input.length; ++i){
-            int indexBuffer = i % cleanFactor;
-            double [] buffer = new double[cleanFactor];
-            buffer[indexBuffer] = input[i];
-            if(indexBuffer == (cleanFactor - 1)){
-                for(double num : buffer){
-                    total += num;
-                }
-                double averageOfSet = total / 100.0;
-                double upperBound = averageOfSet + 0.01;
-                double lowerBound = averageOfSet - 0.01;
-                for(double num: buffer){
-                    if(!(num > upperBound | num < lowerBound)){
-                        cleanedData[cleanedDataIndex / cleanFactor] = num;
-                    }else{
-                        cleanedData[cleanedDataIndex / cleanFactor] = averageOfSet;
-                    }
-                    cleanedDataIndex++;
-                }
 
-                total = 0.0;
-            }
-        }
-
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         readData();
         double [] array = new double[dataSet.size()];
         for(int i = 0; i < dataSet.size(); i++){
@@ -116,12 +87,27 @@ public class DataAnalytics {
         System.out.println("***************************************");
 
         System.out.println("Testing Voltage Conversion:");
-        double m = 124.0 / 0.07868153834685204; // lbs over volts
+        double maxReading = 0.0;
+        double m = 20000.0 / 10.0; // lbs over volts
         // Equation is y = mx + b
         // There is no offset since the 0 is 0
         // Offset should be set by the user when zeroing with the software
-
-
+        //double x = 10.0; // 10 volts for SpecTester machine tested on 3/2/2021
+        double b = 0.0321857337739997;
+        double [] actualData = new double[cleanedData.length];
+        int dataIndex = 0;
+        PrintWriter outputFile = new PrintWriter(new FileOutputStream("actualData.txt"));
+        for(double num : cleanedData){
+            double y = m * num + b;
+            actualData[dataIndex] = y;
+            outputFile.println(y);
+            dataIndex++;
+            if(y > maxReading){
+                maxReading = y;
+            }
+        }
+        System.out.println("Max lbs: "+ maxReading);
+        System.out.println("End of Test");
 
     }
 
