@@ -13,7 +13,7 @@ public class UserInputWindow extends JFrame {
 
     private JPanel rectangularInputPanel;
     private JPanel circularInputPanel;
-    private JTextField elongationInputField;
+    private JTextField gaugeLengthInputField;
     private JTextField diameterInputField;
     private JTextField widthInputField;
     private JTextField depthInputField;
@@ -29,7 +29,7 @@ public class UserInputWindow extends JFrame {
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
         outerPanel.add(createCrossSectionInputPanel());
-        outerPanel.add(createInitialElongationInputPanel());
+        outerPanel.add(createGaugeLengthInputPanel());
         outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(createOptionsPanel());
 
@@ -122,22 +122,22 @@ public class UserInputWindow extends JFrame {
     }
 
     /*
-     * Initial elongation input (will eventually be filled with a default value pulled from settings)
+     * Initial gauge length input (will eventually be filled with a default value pulled from settings)
      */
-    private JPanel createInitialElongationInputPanel(){
-        JPanel initialElongationInputPanel = new JPanel();
-        initialElongationInputPanel.setLayout(new BoxLayout(initialElongationInputPanel, BoxLayout.X_AXIS));
-        initialElongationInputPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
+    private JPanel createGaugeLengthInputPanel(){
+        JPanel gaugeLengthInputPanel = new JPanel();
+        gaugeLengthInputPanel.setLayout(new BoxLayout(gaugeLengthInputPanel, BoxLayout.X_AXIS));
+        gaugeLengthInputPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
-        JLabel elongationLabel = new JLabel("Initial Elongation (in):");
-        elongationInputField = new JTextField("0.5", 10); //**needs to pull from the default enlongation in settings**
+        JLabel gaugeLengthLabel = new JLabel("Gauge Length:");
+        gaugeLengthInputField = new JTextField("0.5", 10); //**needs to pull from the default enlongation in settings**
 
-        initialElongationInputPanel.add(elongationLabel);
-        initialElongationInputPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
-        initialElongationInputPanel.add(elongationInputField);
-        initialElongationInputPanel.add(Box.createHorizontalGlue());
+        gaugeLengthInputPanel.add(gaugeLengthLabel);
+        gaugeLengthInputPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
+        gaugeLengthInputPanel.add(gaugeLengthInputField);
+        gaugeLengthInputPanel.add(Box.createHorizontalGlue());
 
-        return initialElongationInputPanel;
+        return gaugeLengthInputPanel;
     }
 
     /*
@@ -163,7 +163,7 @@ public class UserInputWindow extends JFrame {
      * Resets all the text fields back to their initial values (nothing or default values)
      */
     private void clear(){
-        elongationInputField.setText("0.5");//**needs to pull from the default elongation in settings**
+        gaugeLengthInputField.setText("0.5");//**needs to pull from the default gauge length in settings**
         widthInputField.setText("");
         depthInputField.setText("");
         diameterInputField.setText("");
@@ -194,11 +194,11 @@ public class UserInputWindow extends JFrame {
     }
 
     /**
-     * Gets the elongation that was input from the user (more likely this is still just the default value)
-     * @return the elongation value
+     * Gets the gauge length that was input from the user (more likely this is still just the default value)
+     * @return the gauge length value
      */
-    public double getElongationInput(){
-        return Double.parseDouble(elongationInputField.getText());
+    public double getGaugeLengthInput(){
+        return Double.parseDouble(gaugeLengthInputField.getText());
     }
 
     //Getters

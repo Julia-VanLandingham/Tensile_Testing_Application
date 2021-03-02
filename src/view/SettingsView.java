@@ -3,7 +3,6 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.SpringLayout;
@@ -21,8 +20,8 @@ public class SettingsView extends JFrame{
     private final String [] MEASUREMENTS = {"psi", "pascals", "kip"};
     private JComboBox<String> unitSelection;
 
-    private static final String ELONGATION = "Elongation (in): ";
-    private JTextField defaultElongationField;
+    private static final String GAUGE_LENGTH = "Gauge Length: ";
+    private JTextField gaugeLengthField;
 
     private JButton saveButton = new JButton("Save");
 
@@ -41,22 +40,22 @@ public class SettingsView extends JFrame{
 
     /*
      * Creates fields that allow the user to determine the settings
-     * that will be used throughout the test. Those settings include sample rate, units, and elongation
+     * that will be used throughout the test. Those settings include sample rate, units, and gauge length
      * Takes a scanner to aid in persisting the settings throughout
      */
     private JPanel createNorthPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
         JLabel sampleRateLabel = new JLabel(SAMPLE_RATE,JLabel.TRAILING);
         JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
-        JLabel defaultElongationLabel = new JLabel(ELONGATION,JLabel.TRAILING);
+        JLabel gaugeLengthLabel = new JLabel(GAUGE_LENGTH,JLabel.TRAILING);
         boolean readSucceeded = false;
         if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
                 int sampleRate = userInput.nextInt();
                 String selectedUnitType = userInput.next();
-                double elongation = userInput.nextDouble();
+                double gaugeLength = userInput.nextDouble();
                 sampleRateSelection = new JSpinner(new SpinnerNumberModel(sampleRate,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
-                defaultElongationField = new JTextField(elongation+"");
+                gaugeLengthField = new JTextField(gaugeLength+"");
                 unitSelection = new JComboBox<>(MEASUREMENTS);
                 unitSelection.setSelectedItem(selectedUnitType);
                 readSucceeded = true;
@@ -67,7 +66,7 @@ public class SettingsView extends JFrame{
         
         if(!readSucceeded){ //if no values inputted default values show
             sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
-            defaultElongationField = new JTextField("0.5");
+            gaugeLengthField = new JTextField("0.5");
             unitSelection = new JComboBox<>(MEASUREMENTS);
         }
 
@@ -79,10 +78,10 @@ public class SettingsView extends JFrame{
         unitsSelectionLabel.setLabelFor(unitSelection);
         northPanel.add(unitSelection);
 
-        northPanel.add(defaultElongationLabel);
+        northPanel.add(gaugeLengthLabel);
 
-        defaultElongationLabel.setLabelFor(defaultElongationField);
-        northPanel.add(defaultElongationField);
+        gaugeLengthLabel.setLabelFor(gaugeLengthField);
+        northPanel.add(gaugeLengthField);
         SpringUtilities.makeCompactGrid(northPanel,3,2,6,6,6,6);
 
         return northPanel;
@@ -112,6 +111,6 @@ public class SettingsView extends JFrame{
 
     public JComboBox<String> getUnitSelection(){return unitSelection; }
 
-    public JTextField getDefaultElongation(){return defaultElongationField;}
+    public JTextField getDefaultGaugeLength(){return gaugeLengthField;}
 
 }
