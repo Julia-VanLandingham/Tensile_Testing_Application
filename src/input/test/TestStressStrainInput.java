@@ -94,15 +94,6 @@ public class TestStressStrainInput {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("Test Finished.");
-        try {
-            Clip clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-                    Main.class.getResourceAsStream( "input.test/beep.wav"));
-            clip.open(inputStream);
-            clip.start();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
         System.out.println("Time elapsed: " + ((endTime - startTime)/1000) + " seconds");
         System.out.println("Output is not null.");
         System.out.println("Printing the output:");
