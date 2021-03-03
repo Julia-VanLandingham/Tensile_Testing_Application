@@ -63,7 +63,7 @@ public class SettingsView extends JFrame{
             catch( NoSuchElementException | IllegalStateException e) {
             }
         }
-        
+
         if(!readSucceeded){ //if no values inputted default values show
             sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
             gaugeLengthField = new JTextField("0.5");
@@ -111,6 +111,8 @@ public class SettingsView extends JFrame{
 
     public JComboBox<String> getUnitSelection(){return unitSelection; }
 
-    public JTextField getDefaultGaugeLength(){return gaugeLengthField;}
+    public double getDefaultGaugeLength(){
+        return Double.parseDouble(gaugeLengthField.getText().trim());
+    }
 
 }
