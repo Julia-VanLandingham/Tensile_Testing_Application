@@ -2,6 +2,7 @@ package input.test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -18,9 +19,8 @@ public class DataAnalytics {
         try {
             File myObj = new File("outfile.txt");
             Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                double num = Double.parseDouble(data);
+            while (myReader.hasNextDouble()) {
+                double num = myReader.nextDouble();
                 dataSet.add(num);
             }
             myReader.close();
@@ -32,22 +32,13 @@ public class DataAnalytics {
 
     // Reduces Average data
     private static void cleanDataAverage(double[] input, int cleanFactor) {
-        double [] tempData = new double[input.length / 100];
-        int cleanedDataIndex = 0;
-        double [] buffer = new double[100];
-        double total = 0.0;
-        for(int i = 0; i < input.length; ++i){
-            int indexBuffer = i % 100;
-            buffer[indexBuffer] = input[i];
-            if(indexBuffer == 99){
-                for(double num : buffer){
-                    total += num;
-                }
-                tempData[cleanedDataIndex++] = total / 100.0;
-                total = 0.0;
+        cleanedData = new double[input.length / 100];
+        for(int i = 0; i < cleanedData.length; i++){
+            for(int j = 0; j < cleanFactor; j++){
+                cleanedData[i] += input[i * cleanFactor + j];
             }
+            cleanedData[i] /= cleanFactor;
         }
-        cleanedData = tempData;
     }
 
 
@@ -73,6 +64,8 @@ public class DataAnalytics {
         System.out.println("***************************************");
         System.out.println("Cleaning data...");
         cleanDataAverage(array, 100);
+        Arrays.sort(cleanedData);
+        System.out.println("Cleaned Data Median: " + cleanedData[cleanedData.length/2]);
         try {
             PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile_cleaned.txt"));
             for(double num : cleanedData){
@@ -88,25 +81,26 @@ public class DataAnalytics {
 
         System.out.println("Testing Voltage Conversion:");
         double maxReading = 0.0;
-        double m = 20000.0 / 10.0; // lbs over volts
+        double m = 1960.57419686093; // linear regression number from excel
         // Equation is y = mx + b
-        // There is no offset since the 0 is 0
-        // Offset should be set by the user when zeroing with the software
-        //double x = 10.0; // 10 volts for SpecTester machine tested on 3/2/2021
-        double b = 0.0321857337739997;
+        double b = -14.6854707573448;
         double [] actualData = new double[cleanedData.length];
-        int dataIndex = 0;
+        total = 0.0;
         PrintWriter outputFile = new PrintWriter(new FileOutputStream("actualData.txt"));
-        for(double num : cleanedData){
-            double y = m * num + b;
-            actualData[dataIndex] = y;
+        for(int i = 0; i < cleanedData.length; i++){
+            double y = (m * cleanedData[i]) + b;
+            actualData[i] = y;
             outputFile.println(y);
-            dataIndex++;
+            total += y;
             if(y > maxReading){
                 maxReading = y;
             }
         }
+        System.out.println("Median: " + actualData[actualData.length/2]);
+        System.out.println("Average lbs: " + total/actualData.length);
+        outputFile.close();
         System.out.println("Max lbs: "+ maxReading);
+
         System.out.println("End of Test");
 
     }

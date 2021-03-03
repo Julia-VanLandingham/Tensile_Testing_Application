@@ -28,9 +28,10 @@ public class TestStressStrainInput {
     // 5 min :      1500000
     // 2.5 min :     750000
 
-    private static final int inputBufferSize = 3000;
-    private static final double samplesPerSecond = 3000.0;
+    private static final int inputBufferSize = 4000;
+    private static final double samplesPerSecond = 1000.0;
     private static final int samplesInChannel = inputBufferSize;
+    private static final int mode = Nicaiu.DAQmx_Val_Diff;
 
     /**
      * Tests the Analog inputs on the DAQ National Instruments 6009 Chip for the given channel pair
@@ -44,7 +45,7 @@ public class TestStressStrainInput {
             String physicalChan = "Dev1/ai" + channel;
             aiTask = daq.createTask("AITask");
             System.out.println("aiTask assigned" + aiTask);
-            daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+            daq.createAIVoltageChannel(aiTask, physicalChan, "", mode, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
             daq.cfgSampClkTiming(aiTask, "", samplesPerSecond, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, samplesInChannel);
             daq.startTask(aiTask);
             System.out.println("Task Started!");
@@ -54,14 +55,12 @@ public class TestStressStrainInput {
             DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
             IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
             daq.readAnalogF64(aiTask, -1, -1, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, inputBufferSize, samplesPerChannelRead);
-            TimeUnit.SECONDS.sleep(1);
-            System.out.println("Waited a second...");
             daq.stopTask(aiTask);
             daq.clearTask(aiTask);
             System.out.println("Buffer:\t" + buffer);
             return buffer;
 
-        } catch(NiDaqException | InterruptedException e) {
+        } catch(NiDaqException e) {
             try {
                 System.out.println("Trying to stop task");
                 System.out.println(e.getMessage());
@@ -94,7 +93,7 @@ public class TestStressStrainInput {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("Test Finished.");
-        System.out.println("Time elapsed: " + ((endTime - startTime)/1000) + " seconds");
+        System.out.println("Time elapsed: " + ((endTime - startTime)/1000.0) + " seconds");
         System.out.println("Output is not null.");
         System.out.println("Printing the output:");
         System.out.println("*******************************************");
