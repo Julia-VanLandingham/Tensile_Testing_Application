@@ -22,6 +22,7 @@ public class MainController {
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
+        //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
