@@ -159,15 +159,19 @@ public class UserInputWindow extends JFrame {
         return optionsPanel;
     }
 
+
     /*
      * Resets all the text fields back to their initial values (nothing or default values)
      */
+    /** NOTE: This needs fixed, it does not do what it is supposed to do */
+    /*
     private void clear(){
         gaugeLengthInputField.setText("0.5");
         widthInputField.setText("");
         depthInputField.setText("");
         diameterInputField.setText("");
     }
+    */
 
     /**
      * Gets the width that was input from the user
