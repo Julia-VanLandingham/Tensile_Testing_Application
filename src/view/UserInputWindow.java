@@ -91,8 +91,8 @@ public class UserInputWindow extends JFrame {
         rectangularInputPanel = new JPanel();
         rectangularInputPanel.setLayout(new BoxLayout(rectangularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel widthLabel = new JLabel("Width (in): ");
-        JLabel depthLabel = new JLabel("Depth (in): ");
+        JLabel widthLabel = new JLabel("Width: ");
+        JLabel depthLabel = new JLabel("Depth: ");
 
         widthInputField = new JTextField(10);
         depthInputField = new JTextField(10);
@@ -112,7 +112,7 @@ public class UserInputWindow extends JFrame {
         circularInputPanel = new JPanel();
         circularInputPanel.setLayout(new BoxLayout(circularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel diameterLabel = new JLabel("Diameter (in): ");
+        JLabel diameterLabel = new JLabel("Diameter: ");
 
         diameterInputField = new JTextField(10);
 
@@ -130,7 +130,7 @@ public class UserInputWindow extends JFrame {
         gaugeLengthInputPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
         JLabel gaugeLengthLabel = new JLabel("Gauge Length:");
-        gaugeLengthInputField = new JTextField("0.5", 10);
+        gaugeLengthInputField = new JTextField("", 10);
 
         gaugeLengthInputPanel.add(gaugeLengthLabel);
         gaugeLengthInputPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
