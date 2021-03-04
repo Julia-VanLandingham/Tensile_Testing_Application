@@ -17,7 +17,7 @@ public class SettingsView extends JFrame{
     private JSpinner sampleRateSelection;
 
     private static final String UNIT_SELECTION = "Units: ";
-    private final String [] MEASUREMENTS = {"psi", "pascals", "kip"};
+    private final String [] MEASUREMENTS = {"English", "Metric"};
     private JComboBox<String> unitSelection;
 
     private static final String GAUGE_LENGTH = "Gauge Length: ";
