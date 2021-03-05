@@ -64,6 +64,7 @@ public class MainWindow extends JFrame {
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
         valuePanel.add(Box.createVerticalGlue());
         startButton = new JButton("Start");
+        startButton.setFocusable(false);
         valuePanel.add(startButton);
         valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(50,50,50,50)));
     }
@@ -124,10 +125,5 @@ public class MainWindow extends JFrame {
 
     public JMenuItem getInput() {
         return input;
-    }
-
-    public static void main(String[] args){
-        MainWindow mainWindow = new MainWindow();
-
     }
 }

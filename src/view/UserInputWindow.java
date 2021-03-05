@@ -71,6 +71,8 @@ public class UserInputWindow extends JFrame {
         ButtonGroup crossSectionButtons = new ButtonGroup();
         circular = new JRadioButton("Circular");
         rectangular = new JRadioButton("Rectangular");
+        circular.setFocusable(false);
+        rectangular.setFocusable(false);
         crossSectionButtons.add(rectangular);
         crossSectionButtons.add(circular);
 
@@ -150,6 +152,9 @@ public class UserInputWindow extends JFrame {
 
         ok = new JButton("OK");
         cancel = new JButton("Cancel");
+
+        ok.setFocusable(false);
+        cancel.setFocusable(false);
 
         optionsPanel.add(Box.createHorizontalGlue());
         optionsPanel.add(ok);
