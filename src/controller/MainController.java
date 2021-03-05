@@ -19,7 +19,7 @@ public class MainController {
         setLookAndFeel();
         mainWindow = new MainWindow();
         inputController = new InputController();
-        settingsController = new SettingsController();
+        settingsController = new SettingsController(inputController);
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
