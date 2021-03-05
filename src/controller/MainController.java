@@ -1,7 +1,8 @@
 package controller;
 
 import view.MainWindow;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 /**
@@ -22,6 +23,15 @@ public class MainController {
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
+        //disposes of all windows when the main window is closed
+        mainWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                inputController.getInputWindow().dispose();
+                settingsController.getSettingsWindow().dispose();
+                mainWindow.dispose();
+            }
+        });
     }
 
     /*
