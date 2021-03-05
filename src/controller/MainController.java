@@ -1,9 +1,9 @@
 package controller;
 
 import view.MainWindow;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.*;
 
 /**
  * Root of the entire program
@@ -16,6 +16,7 @@ public class MainController {
     private SettingsController settingsController;
 
     public MainController(){
+        setLookAndFeel();
         mainWindow = new MainWindow();
         inputController = new InputController();
         settingsController = new SettingsController();
@@ -31,6 +32,20 @@ public class MainController {
                 mainWindow.dispose();
             }
         });
+    }
+
+    /*
+     * Set the look and feel for all the windows
+     */
+    private void setLookAndFeel(){
+        try {
+            //Set system look and feel
+            UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){
