@@ -30,9 +30,10 @@ public class SettingsController {
             try {
                 double value = settingsWindow.getDefaultGaugeLength();
                 inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(value)); //settings gauge length to input gauge length
+                inputController.getInputWindow().getUnitSelectionBox().setSelectedItem(settingsWindow.getDefaultUnits());
+
                 PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
-                out.println(settingsWindow.getSampleRateSelection().getValue());
-                out.println(settingsWindow.getUnitSelection().getSelectedItem());
+                out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
                 out.println(value);
                 out.close();
             } catch (FileNotFoundException exception) {

@@ -11,6 +11,9 @@ public class UserInputWindow extends JFrame {
     private static final int VERTICAL_BUFFER = 10;
     private static final int HORIZONTAL_BUFFER = 10;
 
+    private final String[] MEASUREMENTS = {"English", "Metric"};
+
+    private JComboBox<String> unitSelectionBox;
     private JPanel rectangularInputPanel;
     private JPanel circularInputPanel;
     private JTextField gaugeLengthInputField;
@@ -30,6 +33,7 @@ public class UserInputWindow extends JFrame {
 
         outerPanel.add(createCrossSectionInputPanel());
         outerPanel.add(createGaugeLengthInputPanel());
+        outerPanel.add(createUnitSelectionPanel());
         outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(createOptionsPanel());
 
@@ -164,11 +168,27 @@ public class UserInputWindow extends JFrame {
         return optionsPanel;
     }
 
+    private JPanel createUnitSelectionPanel(){
+        JPanel unitSelectionPanel = new JPanel();
+        unitSelectionPanel.setLayout(new BoxLayout(unitSelectionPanel, BoxLayout.X_AXIS));
+        unitSelectionPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
+
+        JLabel unitSelectionLabel = new JLabel("Unit System: ");
+        unitSelectionBox = new JComboBox<>(MEASUREMENTS);
+        unitSelectionBox.setFocusable(false);
+
+        unitSelectionPanel.add(unitSelectionLabel);
+        unitSelectionPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
+        unitSelectionPanel.add(unitSelectionBox);
+        unitSelectionPanel.add(Box.createHorizontalGlue());
+
+        return unitSelectionPanel;
+    }
 
     /*
      * Resets all the text fields back to their initial values (nothing or default values)
      */
-    /** NOTE: This needs fixed, it does not do what it is supposed to do */
+    // **NOTE: This needs fixed, it does not do what it is supposed to do **
     /*
     private void clear(){
         gaugeLengthInputField.setText("0.5");
@@ -228,6 +248,8 @@ public class UserInputWindow extends JFrame {
     }
 
     public JTextField getGaugeLengthInputField(){ return gaugeLengthInputField;}
+
+    public JComboBox<String> getUnitSelectionBox(){ return unitSelectionBox; }
 
     public JButton getOkButton(){
         return ok;

@@ -12,13 +12,9 @@ import javax.swing.SpringLayout;
  */
 public class SettingsView extends JFrame{
 
-    private static final String SAMPLE_RATE = "Sample Rate: ";
-    private static final int DEFAULT_SAMPLE_RATE = 100;
-    private JSpinner sampleRateSelection;
-
-    private static final String UNIT_SELECTION = "Units: ";
-    private final String [] MEASUREMENTS = {"English", "Metric"};
-    private JComboBox<String> unitSelection;
+    private static final String UNIT_SELECTION = "Unit System: ";
+    private final String[] MEASUREMENTS = {"English", "Metric"};
+    private JComboBox<String> defaultUnitSelectionBox;
 
     private static final String GAUGE_LENGTH = "Gauge Length: ";
     private JTextField gaugeLengthField;
@@ -45,44 +41,38 @@ public class SettingsView extends JFrame{
      */
     private JPanel createNorthPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
-        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE,JLabel.TRAILING);
         JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
         JLabel gaugeLengthLabel = new JLabel(GAUGE_LENGTH,JLabel.TRAILING);
         boolean readSucceeded = false;
         if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
-                int sampleRate = userInput.nextInt();
                 String selectedUnitType = userInput.next();
                 double gaugeLength = userInput.nextDouble();
-                sampleRateSelection = new JSpinner(new SpinnerNumberModel(sampleRate,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
                 gaugeLengthField = new JTextField(gaugeLength+"");
-                unitSelection = new JComboBox<>(MEASUREMENTS);
-                unitSelection.setSelectedItem(selectedUnitType);
+                defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
+                defaultUnitSelectionBox.setFocusable(false);
+                defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
                 readSucceeded = true;
             }
             catch( NoSuchElementException | IllegalStateException e) {
             }
         }
 
-        if(!readSucceeded){ //if no values inputted default values show
-            sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
+        if(!readSucceeded){ //if no values input default values show
             gaugeLengthField = new JTextField("0.5");
-            unitSelection = new JComboBox<>(MEASUREMENTS);
+            defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
+            defaultUnitSelectionBox.setFocusable(false);
         }
 
-        northPanel.add(sampleRateLabel);
-        sampleRateLabel.setLabelFor(sampleRateSelection);
-        northPanel.add(sampleRateSelection);
-
         northPanel.add(unitsSelectionLabel);
-        unitsSelectionLabel.setLabelFor(unitSelection);
-        northPanel.add(unitSelection);
+        unitsSelectionLabel.setLabelFor(defaultUnitSelectionBox);
+        northPanel.add(defaultUnitSelectionBox);
 
         northPanel.add(gaugeLengthLabel);
 
         gaugeLengthLabel.setLabelFor(gaugeLengthField);
         northPanel.add(gaugeLengthField);
-        SpringUtilities.makeCompactGrid(northPanel,3,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(northPanel,2,2,6,6,6,6);
 
         return northPanel;
     }
@@ -107,12 +97,13 @@ public class SettingsView extends JFrame{
 
     public JButton getSaveButton(){ return saveButton;  }
 
-    public JSpinner getSampleRateSelection(){return sampleRateSelection; }
-
-    public JComboBox<String> getUnitSelection(){return unitSelection; }
+    public JComboBox<String> getDefaultUnitSelectionBox(){return defaultUnitSelectionBox; }
 
     public double getDefaultGaugeLength(){
         return Double.parseDouble(gaugeLengthField.getText().trim());
     }
 
+    public String getDefaultUnits(){
+        return (String) defaultUnitSelectionBox.getSelectedItem();
+    }
 }
