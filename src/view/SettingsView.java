@@ -6,24 +6,21 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.SpringLayout;
+import controller.Calculations.Units;
 
 /**
  * Creates a pop-up frame which displays settings options
  */
 public class SettingsView extends JFrame{
 
-    private static final String SAMPLE_RATE = "Sample Rate: ";
-    private static final int DEFAULT_SAMPLE_RATE = 100;
-    private JSpinner sampleRateSelection;
-
-    private static final String UNIT_SELECTION = "Units: ";
-    private final String [] MEASUREMENTS = {"English", "Metric"};
-    private JComboBox<String> unitSelection;
-
+    private static final String UNIT_SELECTION = "Unit System: ";
+    private final String[] MEASUREMENTS = {"English", "Metric"};
+    private JComboBox<String> defaultUnitSelectionBox;
+    private Units currentUnitSystem;
     private static final String GAUGE_LENGTH = "Gauge Length: ";
     private JTextField gaugeLengthField;
 
-    private JButton saveButton = new JButton("Save");
+    private JButton saveButton;
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
@@ -32,7 +29,7 @@ public class SettingsView extends JFrame{
         add(createNorthPanel(userInput), BorderLayout.NORTH);
         add(createSouthPanel(), BorderLayout.SOUTH);
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(false);
         pack();
         setLocationRelativeTo(null);
@@ -45,44 +42,45 @@ public class SettingsView extends JFrame{
      */
     private JPanel createNorthPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
-        JLabel sampleRateLabel = new JLabel(SAMPLE_RATE,JLabel.TRAILING);
         JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
         JLabel gaugeLengthLabel = new JLabel(GAUGE_LENGTH,JLabel.TRAILING);
         boolean readSucceeded = false;
         if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
-                int sampleRate = userInput.nextInt();
                 String selectedUnitType = userInput.next();
+                if (selectedUnitType.equals("English")){
+                    currentUnitSystem = Units.ENGLISH;
+                }else{
+                    currentUnitSystem = Units.METRIC;
+                }
+
                 double gaugeLength = userInput.nextDouble();
-                sampleRateSelection = new JSpinner(new SpinnerNumberModel(sampleRate,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
-                gaugeLengthField = new JTextField(gaugeLength+"");
-                unitSelection = new JComboBox<>(MEASUREMENTS);
-                unitSelection.setSelectedItem(selectedUnitType);
+                gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 10);
+                defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
+                defaultUnitSelectionBox.setFocusable(false);
+                defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
                 readSucceeded = true;
             }
             catch( NoSuchElementException | IllegalStateException e) {
             }
         }
 
-        if(!readSucceeded){ //if no values inputted default values show
-            sampleRateSelection = new JSpinner(new SpinnerNumberModel(DEFAULT_SAMPLE_RATE,DEFAULT_SAMPLE_RATE,(DEFAULT_SAMPLE_RATE * 100),1));
+        if(!readSucceeded){ //if no values input default values show
             gaugeLengthField = new JTextField("0.5");
-            unitSelection = new JComboBox<>(MEASUREMENTS);
+            defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
+            currentUnitSystem = Units.ENGLISH;
+            defaultUnitSelectionBox.setFocusable(false);
         }
 
-        northPanel.add(sampleRateLabel);
-        sampleRateLabel.setLabelFor(sampleRateSelection);
-        northPanel.add(sampleRateSelection);
-
         northPanel.add(unitsSelectionLabel);
-        unitsSelectionLabel.setLabelFor(unitSelection);
-        northPanel.add(unitSelection);
+        unitsSelectionLabel.setLabelFor(defaultUnitSelectionBox);
+        northPanel.add(defaultUnitSelectionBox);
 
         northPanel.add(gaugeLengthLabel);
 
         gaugeLengthLabel.setLabelFor(gaugeLengthField);
         northPanel.add(gaugeLengthField);
-        SpringUtilities.makeCompactGrid(northPanel,3,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(northPanel,2,2,6,6,6,6);
 
         return northPanel;
     }
@@ -93,6 +91,8 @@ public class SettingsView extends JFrame{
      */
     private JPanel createSouthPanel(){
         JPanel southPanel = new JPanel();
+        saveButton = new JButton("Save");
+        saveButton.setFocusable(false);
         southPanel.add(saveButton);
         return southPanel;
     }
@@ -101,18 +101,21 @@ public class SettingsView extends JFrame{
         return null;
     }
 
-    private ArrayList<String> getDefaults(){ //gets the defaults from the class that handles persistent settings
-        return null;
-    }
-
     public JButton getSaveButton(){ return saveButton;  }
 
-    public JSpinner getSampleRateSelection(){return sampleRateSelection; }
+    public JComboBox<String> getDefaultUnitSelectionBox(){return defaultUnitSelectionBox; }
 
-    public JComboBox<String> getUnitSelection(){return unitSelection; }
+    public JTextField getDefaultGaugeLengthField(){ return gaugeLengthField; }
 
     public double getDefaultGaugeLength(){
         return Double.parseDouble(gaugeLengthField.getText().trim());
     }
 
+    public String getDefaultUnits(){
+        return (String) defaultUnitSelectionBox.getSelectedItem();
+    }
+
+    public Units getCurrentUnitSystem(){ return currentUnitSystem; }
+
+    public void setCurrentUnitSystem(Units currentUnitSystem){ this.currentUnitSystem = currentUnitSystem; }
 }

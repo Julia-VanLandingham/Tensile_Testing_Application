@@ -1,6 +1,7 @@
 package controller;
 
 import view.UserInputWindow;
+import controller.Calculations.Units;
 
 /**
  * Sets up and controls the functions of the UserInputWindow
@@ -27,6 +28,21 @@ public class InputController {
             inputWindow.getCircularInputPanel().setVisible(false);
             inputWindow.getRectangularInputPanel().setVisible(true);
         });
+
+        inputWindow.getUnitSelectionBox().addActionListener(e -> {
+            //convert the values to the correct unit system
+            double convertedValue;
+            if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
+                convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, inputWindow.getGaugeLengthInput());
+                inputWindow.setCurrentUnitSystem(Units.ENGLISH);
+            }else{
+                convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, inputWindow.getGaugeLengthInput());
+                inputWindow.setCurrentUnitSystem(Units.METRIC);
+            }
+
+            inputWindow.getGaugeLengthInputField().setText(String.format("%.10f", convertedValue));
+        });
+
     }
 
     /**
