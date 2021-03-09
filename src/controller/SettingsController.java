@@ -23,7 +23,8 @@ public class SettingsController {
 
         //do this the first time to populate all the values in the input window from the saved settings
         try {
-            //we have to do this first so we can
+            //we have to set this dummy value first so we can set the selected item of the combo box
+            //the real value is set below
             inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(1.0));
 
             if (settingsWindow.getDefaultUnits().equals("English")){

@@ -1,7 +1,5 @@
 package view;
 
-import controller.Calculations;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ public class SettingsView extends JFrame{
     private static final String GAUGE_LENGTH = "Gauge Length: ";
     private JTextField gaugeLengthField;
 
-    private JButton saveButton = new JButton("Save");
+    private JButton saveButton;
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
@@ -93,6 +91,8 @@ public class SettingsView extends JFrame{
      */
     private JPanel createSouthPanel(){
         JPanel southPanel = new JPanel();
+        saveButton = new JButton("Save");
+        saveButton.setFocusable(false);
         southPanel.add(saveButton);
         return southPanel;
     }
