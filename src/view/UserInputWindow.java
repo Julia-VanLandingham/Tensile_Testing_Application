@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import controller.Calculations.Units;
 
 /**
  * Creates a pop-up frame for user to input values used in calculations
@@ -14,6 +15,7 @@ public class UserInputWindow extends JFrame {
     private final String[] MEASUREMENTS = {"English", "Metric"};
 
     private JComboBox<String> unitSelectionBox;
+    private Units currentUnitSystem;
     private JPanel rectangularInputPanel;
     private JPanel circularInputPanel;
     private JTextField gaugeLengthInputField;
@@ -128,7 +130,7 @@ public class UserInputWindow extends JFrame {
     }
 
     /*
-     * Initial gauge length input (will eventually be filled with a default value pulled from settings)
+     * Initial gauge length input, populated from default value
      */
     private JPanel createGaugeLengthInputPanel(){
         JPanel gaugeLengthInputPanel = new JPanel();
@@ -168,6 +170,9 @@ public class UserInputWindow extends JFrame {
         return optionsPanel;
     }
 
+    /*
+     * Unit system selection options
+     */
     private JPanel createUnitSelectionPanel(){
         JPanel unitSelectionPanel = new JPanel();
         unitSelectionPanel.setLayout(new BoxLayout(unitSelectionPanel, BoxLayout.X_AXIS));
@@ -257,6 +262,14 @@ public class UserInputWindow extends JFrame {
 
     public JButton getCancelButton(){
         return cancel;
+    }
+
+    public Units getCurrentUnitSystem(){
+        return currentUnitSystem;
+    }
+
+    public void setCurrentUnitSystem(Units currentUnitSystem){
+        this.currentUnitSystem = currentUnitSystem;
     }
 }
 

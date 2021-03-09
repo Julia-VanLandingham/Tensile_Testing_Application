@@ -1,11 +1,14 @@
 package view;
 
+import controller.Calculations;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.SpringLayout;
+import controller.Calculations.Units;
 
 /**
  * Creates a pop-up frame which displays settings options
@@ -15,7 +18,7 @@ public class SettingsView extends JFrame{
     private static final String UNIT_SELECTION = "Unit System: ";
     private final String[] MEASUREMENTS = {"English", "Metric"};
     private JComboBox<String> defaultUnitSelectionBox;
-
+    private Units currentUnitSystem;
     private static final String GAUGE_LENGTH = "Gauge Length: ";
     private JTextField gaugeLengthField;
 
@@ -28,7 +31,7 @@ public class SettingsView extends JFrame{
         add(createNorthPanel(userInput), BorderLayout.NORTH);
         add(createSouthPanel(), BorderLayout.SOUTH);
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(false);
         pack();
         setLocationRelativeTo(null);
@@ -47,8 +50,14 @@ public class SettingsView extends JFrame{
         if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
                 String selectedUnitType = userInput.next();
+                if (selectedUnitType.equals("English")){
+                    currentUnitSystem = Units.ENGLISH;
+                }else{
+                    currentUnitSystem = Units.METRIC;
+                }
+
                 double gaugeLength = userInput.nextDouble();
-                gaugeLengthField = new JTextField(gaugeLength+"");
+                gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 10);
                 defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
                 defaultUnitSelectionBox.setFocusable(false);
                 defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
@@ -61,6 +70,7 @@ public class SettingsView extends JFrame{
         if(!readSucceeded){ //if no values input default values show
             gaugeLengthField = new JTextField("0.5");
             defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
+            currentUnitSystem = Units.ENGLISH;
             defaultUnitSelectionBox.setFocusable(false);
         }
 
@@ -91,13 +101,11 @@ public class SettingsView extends JFrame{
         return null;
     }
 
-    private ArrayList<String> getDefaults(){ //gets the defaults from the class that handles persistent settings
-        return null;
-    }
-
     public JButton getSaveButton(){ return saveButton;  }
 
     public JComboBox<String> getDefaultUnitSelectionBox(){return defaultUnitSelectionBox; }
+
+    public JTextField getDefaultGaugeLengthField(){ return gaugeLengthField; }
 
     public double getDefaultGaugeLength(){
         return Double.parseDouble(gaugeLengthField.getText().trim());
@@ -106,4 +114,8 @@ public class SettingsView extends JFrame{
     public String getDefaultUnits(){
         return (String) defaultUnitSelectionBox.getSelectedItem();
     }
+
+    public Units getCurrentUnitSystem(){ return currentUnitSystem; }
+
+    public void setCurrentUnitSystem(Units currentUnitSystem){ this.currentUnitSystem = currentUnitSystem; }
 }

@@ -27,6 +27,21 @@ public class InputController {
             inputWindow.getCircularInputPanel().setVisible(false);
             inputWindow.getRectangularInputPanel().setVisible(true);
         });
+
+        inputWindow.getUnitSelectionBox().addActionListener(e -> {
+            //convert the values to the correct unit system
+            double convertedValue;
+            if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
+                convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Calculations.Units.ENGLISH, inputWindow.getGaugeLengthInput());
+                inputWindow.setCurrentUnitSystem(Calculations.Units.ENGLISH);
+            }else{
+                convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Calculations.Units.METRIC, inputWindow.getGaugeLengthInput());
+                inputWindow.setCurrentUnitSystem(Calculations.Units.METRIC);
+            }
+
+            inputWindow.getGaugeLengthInputField().setText(String.format("%.10f", convertedValue));
+        });
+
     }
 
     /**
