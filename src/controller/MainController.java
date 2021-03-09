@@ -14,6 +14,7 @@ public class MainController {
     private MainWindow mainWindow;
     private InputController inputController;
     private SettingsController settingsController;
+    private boolean isStart = true;
 
     public MainController(){
         setLookAndFeel();
@@ -23,6 +24,16 @@ public class MainController {
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
+        mainWindow.getStartButton() .addActionListener(e ->
+                {if(isStart)
+        {
+            mainWindow.getStartButton().setText("Stop");
+            isStart = false;
+        }
+        else {
+            mainWindow.getStartButton().setText("Start");
+            isStart = true;
+            }});
         //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
