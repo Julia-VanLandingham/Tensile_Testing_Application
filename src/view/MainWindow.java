@@ -27,6 +27,7 @@ public class MainWindow extends JFrame {
     private JMenuItem exit;
     private JMenuItem export;
     private JMenuItem input;
+    private XYSeries series = new XYSeries("Stress");
 
     public MainWindow(){
 
@@ -60,11 +61,6 @@ public class MainWindow extends JFrame {
         graphPanel = new JPanel();
         graphPanel.setSize(new Dimension((int) ( frameWidth * .75), frameHeight));
         graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        XYSeries series = new XYSeries("stressStrain");
-        for(int i = 0; i < 100; i++)
-        {
-            series.add(i,Math.random());
-        }
         XYSeriesCollection dataset = new XYSeriesCollection(series);
         JFreeChart chart = ChartFactory.createXYLineChart(null,"Strain","Stress",dataset, PlotOrientation.VERTICAL,true,true,true);
         ChartPanel chartPanel = new ChartPanel(chart);
@@ -141,5 +137,8 @@ public class MainWindow extends JFrame {
 
     public JMenuItem getInput() {
         return input;
+    }
+    public XYSeries getSeries() {
+        return series;
     }
 }
