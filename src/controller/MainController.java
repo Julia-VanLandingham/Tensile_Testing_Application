@@ -38,6 +38,7 @@ public class MainController {
             mainWindow.getStartButton().setText("Start");
             isStart = true;
             updater.terminate();
+            mainWindow.getStartButton().setEnabled(false);
             }});
         //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
