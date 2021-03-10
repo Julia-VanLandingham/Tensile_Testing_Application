@@ -2,6 +2,9 @@ package controller;
 
 import org.jfree.data.xy.XYSeries;
 
+/**
+ * Live graphs data
+ */
 public class GraphUpdater extends Thread {
 
     private XYSeries series;

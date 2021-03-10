@@ -27,19 +27,18 @@ public class MainController {
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getExit().addActionListener(e -> disposeAll());
-        mainWindow.getStartButton() .addActionListener(e ->
-                {if(isStart)
-        {
-            mainWindow.getStartButton().setText("Stop");
-            isStart = false;
-            updater.start();
-        }
-        else {
-            mainWindow.getStartButton().setText("Start");
-            isStart = true;
-            updater.terminate();
-            mainWindow.getStartButton().setEnabled(false);
-            }});
+        mainWindow.getStartButton().addActionListener(e -> {
+            if(isStart){
+                mainWindow.getStartButton().setText("Stop");
+                isStart = false;
+                updater.start();
+            }else {
+                mainWindow.getStartButton().setText("Start");
+                isStart = true;
+                updater.terminate();
+                mainWindow.getStartButton().setEnabled(false);
+            }
+        });
         //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
@@ -64,6 +63,9 @@ public class MainController {
         }
     }
 
+    /*
+     * Disposes of all windows and terminates any current graphing to end the program
+     */
     private void disposeAll(){
         inputController.getInputWindow().dispose();
         settingsController.getSettingsWindow().dispose();
