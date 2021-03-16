@@ -13,7 +13,7 @@ public class InputController {
     private double depth;
     private double diameter;
 
-    public InputController(){
+    public InputController(MainController mainController){
         inputWindow = new UserInputWindow();
 
         inputWindow.getCancelButton().addActionListener(e -> inputWindow.setVisible(false));
@@ -35,14 +35,33 @@ public class InputController {
             if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
                 convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, inputWindow.getGaugeLengthInput());
                 inputWindow.setCurrentUnitSystem(Units.ENGLISH);
+
+                //update the graph labels
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (in/in)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (KSI)");
+
+                //update the units displayed on input fields
+                inputWindow.getGaugeLengthLabel().setText("Gauge Length (in): ");
+                inputWindow.getDepthLabel().setText("Depth (in): ");
+                inputWindow.getDiameterLabel().setText("Diameter (in): ");
+                inputWindow.getWidthLabel().setText("Width (in): ");
             }else{
                 convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, inputWindow.getGaugeLengthInput());
                 inputWindow.setCurrentUnitSystem(Units.METRIC);
+
+                //update the graph labels
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (mm/mm)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (MPa)");
+
+                //update the units displayed on input fields
+                inputWindow.getGaugeLengthLabel().setText("Gauge Length (mm): ");
+                inputWindow.getDepthLabel().setText("Depth (mm): ");
+                inputWindow.getDiameterLabel().setText("Diameter (mm): ");
+                inputWindow.getWidthLabel().setText("Width (mm): ");
             }
 
             inputWindow.getGaugeLengthInputField().setText(String.format("%.10f", convertedValue));
         });
-
     }
 
     /**

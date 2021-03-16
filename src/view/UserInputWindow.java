@@ -26,6 +26,10 @@ public class UserInputWindow extends JFrame {
     private JButton cancel;
     private JRadioButton circular;
     private JRadioButton rectangular;
+    private  JLabel gaugeLengthLabel;
+    private JLabel diameterLabel;
+    private JLabel widthLabel;
+    private JLabel depthLabel;
 
     public UserInputWindow(){
         setTitle("Measurements Input");
@@ -33,9 +37,9 @@ public class UserInputWindow extends JFrame {
         JPanel outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
+        outerPanel.add(createUnitSelectionPanel());
         outerPanel.add(createCrossSectionInputPanel());
         outerPanel.add(createGaugeLengthInputPanel());
-        outerPanel.add(createUnitSelectionPanel());
         outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(createOptionsPanel());
 
@@ -99,8 +103,8 @@ public class UserInputWindow extends JFrame {
         rectangularInputPanel = new JPanel();
         rectangularInputPanel.setLayout(new BoxLayout(rectangularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel widthLabel = new JLabel("Width: ");
-        JLabel depthLabel = new JLabel("Depth: ");
+        widthLabel = new JLabel("Width: ");
+        depthLabel = new JLabel("Depth: ");
 
         widthInputField = new JTextField(10);
         depthInputField = new JTextField(10);
@@ -120,7 +124,7 @@ public class UserInputWindow extends JFrame {
         circularInputPanel = new JPanel();
         circularInputPanel.setLayout(new BoxLayout(circularInputPanel, BoxLayout.X_AXIS));
 
-        JLabel diameterLabel = new JLabel("Diameter: ");
+        diameterLabel = new JLabel("Diameter: ");
 
         diameterInputField = new JTextField(10);
 
@@ -137,7 +141,7 @@ public class UserInputWindow extends JFrame {
         gaugeLengthInputPanel.setLayout(new BoxLayout(gaugeLengthInputPanel, BoxLayout.X_AXIS));
         gaugeLengthInputPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER, HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
-        JLabel gaugeLengthLabel = new JLabel("Gauge Length:");
+        gaugeLengthLabel = new JLabel("Gauge Length:");
         gaugeLengthInputField = new JTextField("", 10);
 
         gaugeLengthInputPanel.add(gaugeLengthLabel);
@@ -266,6 +270,22 @@ public class UserInputWindow extends JFrame {
 
     public Units getCurrentUnitSystem(){
         return currentUnitSystem;
+    }
+
+    public JLabel getGaugeLengthLabel(){
+        return gaugeLengthLabel;
+    }
+
+    public JLabel getDiameterLabel(){
+        return diameterLabel;
+    }
+
+    public JLabel getWidthLabel(){
+        return widthLabel;
+    }
+
+    public JLabel getDepthLabel() {
+        return depthLabel;
     }
 
     public void setCurrentUnitSystem(Units currentUnitSystem){

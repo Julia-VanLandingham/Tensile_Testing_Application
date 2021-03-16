@@ -20,8 +20,8 @@ public class MainController {
     public MainController(){
         setLookAndFeel();
         mainWindow = new MainWindow();
-        inputController = new InputController();
-        settingsController = new SettingsController(inputController);
+        inputController = new InputController(this);
+        settingsController = new SettingsController(inputController, this);
         updater = new GraphUpdater(mainWindow.getSeries());
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
@@ -73,6 +73,10 @@ public class MainController {
         if(updater != null){
             updater.terminate();
         }
+    }
+
+    public MainWindow getMainWindow(){
+        return mainWindow;
     }
 
     public static void main(String[] args){
