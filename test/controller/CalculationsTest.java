@@ -21,7 +21,7 @@ class CalculationsTest {
 
     @Test
     void convertLengthEnglishToMetric(){
-        assertEquals(1.89484, Calculations.convertLength(Units.ENGLISH, Units.METRIC, 74.6), DELTA);
+        assertEquals(1894.84, Calculations.convertLength(Units.ENGLISH, Units.METRIC, 74.6), DELTA);
     }
 
     @Test
@@ -36,7 +36,7 @@ class CalculationsTest {
 
     @Test
     void convertLengthMetricToEnglish(){
-        assertEquals(118.11, Calculations.convertLength(Units.METRIC, Units.ENGLISH, 3.0), DELTA);
+        assertEquals(0.11811, Calculations.convertLength(Units.METRIC, Units.ENGLISH, 3.0), DELTA);
     }
 
     @Test

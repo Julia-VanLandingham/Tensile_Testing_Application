@@ -13,7 +13,7 @@ public class Calculations {
     /**
      * Converts length value from one unit system to a different unit system.
      * Note that in the english system length is measured in inches
-     * and in the metric system length is measured in meters.
+     * and in the metric system length is measured in millimeters.
      * @param startingUnits the current unit system of the passed value
      * @param endingUnits the unit system wanted
      * @param value the current length value in the starting unit system
@@ -25,7 +25,7 @@ public class Calculations {
                 case ENGLISH:
                     switch (endingUnits) {
                         case METRIC:
-                            return value / 39.37;//inches to meters
+                            return value * 25.4;//inches to mm
                         case ENGLISH:
                             return value;
                     }
@@ -34,7 +34,7 @@ public class Calculations {
                         case METRIC:
                             return value;
                         case ENGLISH:
-                            return value * 39.37;//meters to inches
+                            return value / 25.4;//mm to inches
                     }
             }
             return -1d;
@@ -76,8 +76,8 @@ public class Calculations {
 
     /**
      * Converts pressure value from one unit system to a different unit system.
-     * Note that in the english system pressure is measured in psi (pounds/squared inches)
-     * and in the metric system pressure is measured in kilopascals (1,000 pascals - newtons/squared meters).
+     * Note that in the english system pressure is measured in KSI (Kip/squared inches - kip = 1,000 pounds)
+     * and in the metric system pressure is measured in megapascals (1,000,000 pascals - newtons/squared meters).
      * @param startingUnits the current unit system of the passed value
      * @param endingUnits the unit system wanted
      * @param value the current pressure value in the starting unit system
@@ -89,7 +89,7 @@ public class Calculations {
                 case ENGLISH:
                     switch (endingUnits) {
                         case METRIC:
-                            return value * 6.89476;//psi to kPa
+                            return value * 6.89475728 ;//KSI to MPa
                         case ENGLISH:
                             return value;
                     }
@@ -98,7 +98,7 @@ public class Calculations {
                         case METRIC:
                             return value;
                         case ENGLISH:
-                            return value / 6.89476;//kPa to psi
+                            return value / 6.89475728 ;//MPa to KSI
                     }
             }
             return -1d;
@@ -109,11 +109,11 @@ public class Calculations {
     /**
      * Calculate strain
      * @param elongation elongation measured
-     * @param initial initial value of WHAT????
+     * @param gaugeLength the gauge length
      * @return strain
      */
-    public static double calculateStrain(double elongation, double initial){
-        return elongation/initial;
+    public static double calculateStrain(double elongation, double gaugeLength){
+        return elongation/gaugeLength;
     }
 
     /**
