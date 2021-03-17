@@ -13,7 +13,7 @@ public class SettingsController {
     private static final String CONFIG_FILE = "settings.cfg"; //file settings are stored in
     private SettingsView settingsWindow;
 
-    public SettingsController(InputController inputController){
+    public SettingsController(InputController inputController, MainController mainController){
         Scanner input = null;
         try{
            input = new Scanner(new File(CONFIG_FILE));
@@ -29,8 +29,12 @@ public class SettingsController {
 
             if (settingsWindow.getDefaultUnits().equals("English")){
                 inputController.getInputWindow().setCurrentUnitSystem(Units.ENGLISH);
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (in/in)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (KSI)");
             }else{
                 inputController.getInputWindow().setCurrentUnitSystem(Units.METRIC);
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (mm/mm)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (MPa)");
             }
             inputController.getInputWindow().getUnitSelectionBox().setSelectedItem(settingsWindow.getDefaultUnits());
 
@@ -76,9 +80,23 @@ public class SettingsController {
             if (settingsWindow.getDefaultUnitSelectionBox().getSelectedItem().equals("English")) {
                 convertedValue = Calculations.convertLength(settingsWindow.getCurrentUnitSystem(), Units.ENGLISH, settingsWindow.getDefaultGaugeLength());
                 settingsWindow.setCurrentUnitSystem(Units.ENGLISH);
+
+                //update the graph labels
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (in/in)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (KSI)");
+
+                //update the units displayed on input fields
+                settingsWindow.getGaugeLengthLabel().setText("Gauge Length (in): ");
             }else{
                 convertedValue = Calculations.convertLength(settingsWindow.getCurrentUnitSystem(), Units.METRIC, settingsWindow.getDefaultGaugeLength());
                 settingsWindow.setCurrentUnitSystem(Units.METRIC);
+
+                //update the graph labels
+                mainController.getMainWindow().getChart().getXYPlot().getDomainAxis().setLabel("Strain (mm/mm)");
+                mainController.getMainWindow().getChart().getXYPlot().getRangeAxis().setLabel("Stress (MPa)");
+
+                //update the units displayed on input fields
+                settingsWindow.getGaugeLengthLabel().setText("Gauge Length (mm): ");
             }
 
             settingsWindow.getDefaultGaugeLengthField().setText(String.format("%.10f", convertedValue));

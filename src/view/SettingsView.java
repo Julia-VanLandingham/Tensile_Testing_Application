@@ -13,21 +13,31 @@ import controller.Calculations.Units;
  */
 public class SettingsView extends JFrame{
 
-    private static final String UNIT_SELECTION = "Unit System: ";
+    //constants used for formatting
+    private static final int VERTICAL_BUFFER = 10;
+    private static final int HORIZONTAL_BUFFER = 10;
+
     private final String[] MEASUREMENTS = {"English", "Metric"};
+
     private JComboBox<String> defaultUnitSelectionBox;
     private Units currentUnitSystem;
-    private static final String GAUGE_LENGTH = "Gauge Length: ";
     private JTextField gaugeLengthField;
-
     private JButton saveButton;
+    private JLabel gaugeLengthLabel;
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
         setResizable(false);
 
-        add(createNorthPanel(userInput), BorderLayout.NORTH);
-        add(createSouthPanel(), BorderLayout.SOUTH);
+        JPanel outerPanel = new JPanel();
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
+        outerPanel.add(createNorthPanel(userInput));
+        outerPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
+        outerPanel.add(createSouthPanel());
+        outerPanel.add(Box.createVerticalGlue());
+
+        add(outerPanel);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(false);
@@ -42,20 +52,24 @@ public class SettingsView extends JFrame{
      */
     private JPanel createNorthPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
-        JLabel unitsSelectionLabel = new JLabel(UNIT_SELECTION,JLabel.TRAILING);
-        JLabel gaugeLengthLabel = new JLabel(GAUGE_LENGTH,JLabel.TRAILING);
+        JLabel unitsSelectionLabel = new JLabel("Unit System:");
+        gaugeLengthLabel = new JLabel("");
         boolean readSucceeded = false;
         if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
                 String selectedUnitType = userInput.next();
                 if (selectedUnitType.equals("English")){
                     currentUnitSystem = Units.ENGLISH;
+                    //update the units displayed on input fields
+                    gaugeLengthLabel.setText("Gauge Length (in):");
                 }else{
                     currentUnitSystem = Units.METRIC;
+                    //update the units displayed on input fields
+                    gaugeLengthLabel.setText("Gauge Length (mm):");
                 }
 
                 double gaugeLength = userInput.nextDouble();
-                gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 10);
+                gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 12);
                 defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
                 defaultUnitSelectionBox.setFocusable(false);
                 defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
@@ -80,7 +94,7 @@ public class SettingsView extends JFrame{
 
         gaugeLengthLabel.setLabelFor(gaugeLengthField);
         northPanel.add(gaugeLengthField);
-        SpringUtilities.makeCompactGrid(northPanel,2,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(northPanel,2,2,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER);
 
         return northPanel;
     }
@@ -113,6 +127,10 @@ public class SettingsView extends JFrame{
 
     public String getDefaultUnits(){
         return (String) defaultUnitSelectionBox.getSelectedItem();
+    }
+
+    public JLabel getGaugeLengthLabel(){
+        return gaugeLengthLabel;
     }
 
     public Units getCurrentUnitSystem(){ return currentUnitSystem; }
