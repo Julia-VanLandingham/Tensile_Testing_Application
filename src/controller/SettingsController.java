@@ -14,6 +14,7 @@ public class SettingsController {
     private SettingsView settingsWindow;
     private InputController inputController;
 
+
     public SettingsController(InputController inputController, MainController mainController){
         this.inputController = inputController;
         Scanner input = null;

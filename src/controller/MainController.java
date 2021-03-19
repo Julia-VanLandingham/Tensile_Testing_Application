@@ -78,8 +78,10 @@ public class MainController {
         }
     }
 
-    public MainWindow getMainWindow(){
+
+    public MainWindow getMainWindow() {
         return mainWindow;
+    }
     private void reset(){
         int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
         if(option == JOptionPane.YES_OPTION){
@@ -92,8 +94,6 @@ public class MainController {
             settingsController.updateUnitsSystem();
             inputController.onUnitSystemChange();
         }
-
-
     }
 
     public static void main(String[] args){
