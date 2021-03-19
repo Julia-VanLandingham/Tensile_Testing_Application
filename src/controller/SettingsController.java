@@ -12,8 +12,10 @@ import controller.Calculations.Units;
 public class SettingsController {
     private static final String CONFIG_FILE = "settings.cfg"; //file settings are stored in
     private SettingsView settingsWindow;
+    private InputController inputController;
 
     public SettingsController(InputController inputController, MainController mainController){
+        this.inputController = inputController;
         Scanner input = null;
         try{
            input = new Scanner(new File(CONFIG_FILE));
@@ -56,12 +58,7 @@ public class SettingsController {
             try {
                 double value = settingsWindow.getDefaultGaugeLength();
                 inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(value)); //settings gauge length to input gauge length
-                if (settingsWindow.getDefaultUnits().equals("English")){
-                    inputController.getInputWindow().setCurrentUnitSystem(Units.ENGLISH);
-                }else{
-                    inputController.getInputWindow().setCurrentUnitSystem(Units.METRIC);
-                }
-                inputController.getInputWindow().getUnitSelectionBox().setSelectedItem(settingsWindow.getDefaultUnits());
+                updateUnitsSystem();
 
                 PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
                 out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
@@ -101,6 +98,15 @@ public class SettingsController {
 
             settingsWindow.getDefaultGaugeLengthField().setText(String.format("%.10f", convertedValue));
         });
+    }
+
+    public void updateUnitsSystem(){
+        if (settingsWindow.getDefaultUnits().equals("English")){
+            inputController.getInputWindow().setCurrentUnitSystem(Units.ENGLISH);
+        }else{
+            inputController.getInputWindow().setCurrentUnitSystem(Units.METRIC);
+        }
+        inputController.getInputWindow().getUnitSelectionBox().setSelectedItem(settingsWindow.getDefaultUnits());
     }
 
     public SettingsView getSettingsWindow(){

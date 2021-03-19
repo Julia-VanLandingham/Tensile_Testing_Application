@@ -64,6 +64,29 @@ public class InputController {
         });
     }
 
+    /*
+     * Resets all the text fields back to their initial values (nothing or default values)
+     */
+    public void clear(){
+        inputWindow.getWidthInputField().setText("");
+        inputWindow.getDepthInputField().setText("");
+        inputWindow.getDiameterInputField().setText("");
+    }
+
+    public void onUnitSystemChange(){
+        //convert the values to the correct unit system
+        double convertedValue;
+        if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
+            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, inputWindow.getGaugeLengthInput());
+            inputWindow.setCurrentUnitSystem(Units.ENGLISH);
+        }else{
+            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, inputWindow.getGaugeLengthInput());
+            inputWindow.setCurrentUnitSystem(Units.METRIC);
+        }
+
+        inputWindow.getGaugeLengthInputField().setText(String.format("%.10f", convertedValue));
+    }
+
     /**
      * Determines if the cross section rectangular radio button is selected,
      * if not the circular is selected
