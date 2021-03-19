@@ -23,22 +23,25 @@ public class MainController {
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
         updater = new GraphUpdater(mainWindow.getSeries());
+        updater.start();
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
+        mainWindow.getReset().addActionListener(e -> reset());
         mainWindow.getExit().addActionListener(e -> disposeAll());
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
                 mainWindow.getStartButton().setText("Stop");
+                updater.collect();
                 isStart = false;
-                updater.start();
             }else {
                 mainWindow.getStartButton().setText("Start");
                 isStart = true;
-                updater.terminate();
+                updater.pause();
                 mainWindow.getStartButton().setEnabled(false);
             }
         });
+        mainWindow.getGraphReset().addActionListener(e -> {mainWindow.getSeries().clear(); updater.pause(); mainWindow.getStartButton().setEnabled(true);});
         //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
@@ -75,8 +78,22 @@ public class MainController {
         }
     }
 
-    public MainWindow getMainWindow(){
+
+    public MainWindow getMainWindow() {
         return mainWindow;
+    }
+    private void reset(){
+        int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
+        if(option == JOptionPane.YES_OPTION){
+            mainWindow.getSeries().clear();
+            if(updater != null){
+                updater.pause();
+            }
+            mainWindow.getStartButton().setEnabled(true);
+            inputController.clear();
+            settingsController.updateUnitsSystem();
+            inputController.onUnitSystemChange();
+        }
     }
 
     public static void main(String[] args){

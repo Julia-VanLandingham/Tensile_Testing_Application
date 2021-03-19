@@ -194,19 +194,6 @@ public class UserInputWindow extends JFrame {
         return unitSelectionPanel;
     }
 
-    /*
-     * Resets all the text fields back to their initial values (nothing or default values)
-     */
-    // **NOTE: This needs fixed, it does not do what it is supposed to do **
-    /*
-    private void clear(){
-        gaugeLengthInputField.setText("0.5");
-        widthInputField.setText("");
-        depthInputField.setText("");
-        diameterInputField.setText("");
-    }
-    */
-
     /**
      * Gets the width that was input from the user
      * @return the width value
@@ -257,6 +244,12 @@ public class UserInputWindow extends JFrame {
     }
 
     public JTextField getGaugeLengthInputField(){ return gaugeLengthInputField;}
+
+    public JTextField getWidthInputField(){ return widthInputField;}
+
+    public JTextField getDiameterInputField(){ return diameterInputField;}
+
+    public JTextField getDepthInputField(){ return depthInputField;}
 
     public JComboBox<String> getUnitSelectionBox(){ return unitSelectionBox; }
 

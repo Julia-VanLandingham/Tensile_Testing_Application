@@ -19,8 +19,14 @@ public class MainWindow extends JFrame {
     private final int frameHeight;
     private final int frameWidth;
 
+    private static final int VERTICAL_BUFFER = 10;
+    private static final int HORIZONTAL_BUFFER = 10;
+
     private JButton startButton;
+    private JButton graphReset;
     private JPanel valuePanel;
+    private JPanel eastPanel;
+    private JPanel optionsPanel;
     private JPanel graphPanel;
     private JMenuBar menuBar;
     private JMenuItem settings;
@@ -28,7 +34,8 @@ public class MainWindow extends JFrame {
     private JMenuItem export;
     private JMenuItem input;
     private JFreeChart chart;
-    private XYSeries series = new XYSeries("Stress");
+    private JMenuItem reset;
+    private XYSeries series = new XYSeries("Stress-Strain Curve");
 
     public MainWindow(){
 
@@ -42,10 +49,10 @@ public class MainWindow extends JFrame {
         setResizable(true);
 
         setupGraphPanel();
-        setupValuePanel();
+        setupEastPanel();
 
         add(graphPanel, BorderLayout.CENTER);
-        add(valuePanel, BorderLayout.EAST);
+        add(eastPanel, BorderLayout.EAST);
 
         setupMenuBar();
         this.setJMenuBar(menuBar);
@@ -62,10 +69,11 @@ public class MainWindow extends JFrame {
         graphPanel = new JPanel();
         graphPanel.setSize(new Dimension((int) ( frameWidth * .75), frameHeight));
         graphPanel.setLayout(new BorderLayout());
-        graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        graphPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER), BorderFactory.createLineBorder(Color.BLACK, 1)));
 
         XYSeriesCollection dataset = new XYSeriesCollection(series);
         chart = ChartFactory.createXYLineChart(null,"Strain","Stress",dataset, PlotOrientation.VERTICAL,true,true,true);
+
         ChartPanel chartPanel = new ChartPanel(chart);
 
         graphPanel.add(chartPanel,BorderLayout.CENTER);
@@ -80,10 +88,37 @@ public class MainWindow extends JFrame {
         valuePanel.add(new JLabel("Wombats"));
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
         valuePanel.add(Box.createVerticalGlue());
-        startButton = new JButton("Start");
-        startButton.setFocusable(false);
-        valuePanel.add(startButton);
+
         valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(50,50,50,50)));
+    }
+
+    private void setupOptionPanel(){
+        optionsPanel = new JPanel();
+        optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
+        //optionsPanel.add(Box.createVerticalGlue());
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
+
+        startButton = new JButton("Start");
+        graphReset = new JButton("Clear");
+        startButton.setFocusable(false);
+        graphReset.setFocusable(false);
+
+        optionsPanel.add(startButton);
+        optionsPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
+        optionsPanel.add(graphReset);
+    }
+
+    private void setupEastPanel(){
+        eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+        eastPanel.setBorder(BorderFactory.createEmptyBorder(HORIZONTAL_BUFFER,0,HORIZONTAL_BUFFER,VERTICAL_BUFFER));
+
+        setupValuePanel();
+        setupOptionPanel();
+
+        eastPanel.add(valuePanel);
+        eastPanel.add(Box.createVerticalGlue());
+        eastPanel.add(optionsPanel);
     }
 
     /*
@@ -102,7 +137,9 @@ public class MainWindow extends JFrame {
 
         JMenu edit = new JMenu("Edit");
         input = new JMenuItem("Input Measurements");
+        reset = new JMenuItem("Reset");
         edit.add(input);
+        edit.add(reset);
 
         menuBar.add(file);
         menuBar.add(edit);
@@ -119,6 +156,8 @@ public class MainWindow extends JFrame {
     public JButton getStartButton() {
         return startButton;
     }
+
+    public JButton getGraphReset(){ return graphReset;}
 
     public JPanel getValuePanel() {
         return valuePanel;
@@ -144,10 +183,14 @@ public class MainWindow extends JFrame {
         return export;
     }
 
+    public JMenuItem getReset() { return reset; }
+
     public JMenuItem getInput() {
         return input;
     }
+
     public XYSeries getSeries() {
         return series;
     }
+
 }
