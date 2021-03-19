@@ -19,6 +19,9 @@ public class MainWindow extends JFrame {
     private final int frameHeight;
     private final int frameWidth;
 
+    private static final int VERTICAL_BUFFER = 10;
+    private static final int HORIZONTAL_BUFFER = 10;
+
     private JButton startButton;
     private JButton graphReset;
     private JPanel valuePanel;
@@ -30,7 +33,7 @@ public class MainWindow extends JFrame {
     private JMenuItem input;
     private JFreeChart chart;
     private JMenuItem reset;
-    private XYSeries series = new XYSeries("Stress");
+    private XYSeries series = new XYSeries("Stress-Strain Curve");
 
     public MainWindow(){
 
@@ -69,9 +72,6 @@ public class MainWindow extends JFrame {
         XYSeriesCollection dataset = new XYSeriesCollection(series);
         chart = ChartFactory.createXYLineChart(null,"Strain","Stress",dataset, PlotOrientation.VERTICAL,true,true,true);
 
-        XYSeriesCollection dataSet = new XYSeriesCollection(series);
-        JFreeChart chart = ChartFactory.createXYLineChart(null,"Strain","Stress", dataSet, PlotOrientation.VERTICAL,true,true,true);
-
         ChartPanel chartPanel = new ChartPanel(chart);
 
         graphPanel.add(chartPanel,BorderLayout.CENTER);
@@ -86,11 +86,14 @@ public class MainWindow extends JFrame {
         valuePanel.add(new JLabel("Wombats"));
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
         valuePanel.add(Box.createVerticalGlue());
+
         startButton = new JButton("Start");
-        graphReset = new JButton("Reset");
+        graphReset = new JButton("Clear");
         startButton.setFocusable(false);
         graphReset.setFocusable(false);
+
         valuePanel.add(startButton);
+        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
         valuePanel.add(graphReset);
         valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(50,50,50,50)));
     }

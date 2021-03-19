@@ -58,7 +58,6 @@ public class SettingsController {
         settingsWindow.getSaveButton().addActionListener(e -> {
             try {
                 double value = settingsWindow.getDefaultGaugeLength();
-                inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(value)); //settings gauge length to input gauge length
                 updateUnitsSystem();
 
                 PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
@@ -102,6 +101,8 @@ public class SettingsController {
     }
 
     public void updateUnitsSystem(){
+        double value = settingsWindow.getDefaultGaugeLength();
+        inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(value)); //settings gauge length to input gauge length
         if (settingsWindow.getDefaultUnits().equals("English")){
             inputController.getInputWindow().setCurrentUnitSystem(Units.ENGLISH);
         }else{
