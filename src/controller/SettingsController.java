@@ -11,9 +11,9 @@ import controller.Calculations.Units;
 
 public class SettingsController {
     private static final String CONFIG_FILE = "settings.cfg"; //file settings are stored in
-    private SettingsView settingsWindow;
-    private InputController inputController;
 
+    private final SettingsView settingsWindow;
+    private final InputController inputController;
 
     public SettingsController(InputController inputController, MainController mainController){
         this.inputController = inputController;

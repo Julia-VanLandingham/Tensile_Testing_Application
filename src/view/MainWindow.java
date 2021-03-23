@@ -95,11 +95,11 @@ public class MainWindow extends JFrame {
     private void setupOptionPanel(){
         optionsPanel = new JPanel();
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
-        //optionsPanel.add(Box.createVerticalGlue());
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
 
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
+        graphReset.setEnabled(false);
         startButton.setFocusable(false);
         graphReset.setFocusable(false);
 
@@ -157,7 +157,7 @@ public class MainWindow extends JFrame {
         return startButton;
     }
 
-    public JButton getGraphReset(){ return graphReset;}
+    public JButton getClearButton(){ return graphReset;}
 
     public JPanel getValuePanel() {
         return valuePanel;
