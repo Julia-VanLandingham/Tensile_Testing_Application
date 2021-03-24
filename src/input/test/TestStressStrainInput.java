@@ -27,9 +27,11 @@ public class TestStressStrainInput {
     private static NiDaq daq = new NiDaq();
     // 5 min :      1500000
     // 2.5 min :     750000
+    private static final int seconds = 3;
 
-    private static final int inputBufferSize = 4000;
-    private static final double samplesPerSecond = 1000.0;
+
+    private static final double samplesPerSecond = 100.0;
+    private static final int inputBufferSize = (int) Math.ceil(seconds * samplesPerSecond);
     private static final int samplesInChannel = inputBufferSize;
     private static final int mode = Nicaiu.DAQmx_Val_Diff;
 
@@ -83,7 +85,7 @@ public class TestStressStrainInput {
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
-        String channel = "0:0";
+        String channel = "3";
         double [] out = null;
         System.out.println("Test Started...");
         long startTime = System.currentTimeMillis();
@@ -110,21 +112,26 @@ public class TestStressStrainInput {
         catch ( IOException e) {
         }
         System.out.println("Average of output is: " + (total / (double) out.length));
-        double [] cleanedData = new double[out.length / 100];
+        int averagingWindow = 10;
+        double [] cleanedData = new double[out.length / averagingWindow];
         int cleanedDataIndex = 0;
-        double [] buffer = new double[100];
+
+        double [] buffer = new double[averagingWindow];
         total = 0.0;
+
+
         for(int i = 0; i < out.length; ++i){
-            int indexBuffer = i % 100;
+            int indexBuffer = i % averagingWindow;
             buffer[indexBuffer] = out[i];
-            if(indexBuffer == 99){
+            if(indexBuffer == averagingWindow - 1){
                 for(double num : buffer){
                     total += num;
                 }
-                cleanedData[cleanedDataIndex++] = total / 100.0;
+                cleanedData[cleanedDataIndex++] = total / averagingWindow;
                 total = 0.0;
             }
         }
+
         System.out.println("CLEANED DATA:\t" + cleanedData.length + " values");
         System.out.println("Output to outfile_cleaned.txt");
         try {
