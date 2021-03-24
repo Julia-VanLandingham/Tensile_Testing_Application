@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 /**
- * Root of the entire program
+ * Root of the entire program, controls all the main window functionality and some interactions between windows
  * NOTE: This should be the only main method ever actually run
  */
 public class MainController {
@@ -29,6 +29,7 @@ public class MainController {
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
         mainWindow.getExit().addActionListener(e -> disposeAll());
+        mainWindow.getClearButton().addActionListener(e -> clearGraph());
 
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
@@ -37,7 +38,7 @@ public class MainController {
                     JOptionPane.showMessageDialog(null, "No cross section inputs given!", "Input Warning", JOptionPane.ERROR_MESSAGE);
                 //if the input values are from the previous round
                 }else if(inputController.areInputsFromPreviousRun()) {
-                    int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\n Do you want to update them?", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, null);
+                    int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\nDo you want to update them?\n", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, JOptionPane.YES_OPTION);
                     if (option == JOptionPane.NO_OPTION) {
                         inputController.pullInputValues();
                         startDataCollection();
@@ -51,13 +52,6 @@ public class MainController {
             }else {
                 stopDataCollection();
             }
-        });
-
-        mainWindow.getClearButton().addActionListener(e -> {
-            mainWindow.getSeries().clear();
-            updater.pause();
-            mainWindow.getStartButton().setEnabled(true);
-            mainWindow.getClearButton().setEnabled(false);
         });
 
         //disposes of all windows when the main window is closed
@@ -101,6 +95,7 @@ public class MainController {
     private void startDataCollection(){
         mainWindow.getStartButton().setText("Stop");
         mainWindow.getClearButton().setEnabled(false);
+        mainWindow.getReset().setEnabled(false);//do not allow rest while data is being pulled
         updater.collect();
         isStart = false;
     }
@@ -112,12 +107,20 @@ public class MainController {
         mainWindow.getStartButton().setText("Start");
         mainWindow.getClearButton().setEnabled(true);
         mainWindow.getStartButton().setEnabled(false);
+        mainWindow.getReset().setEnabled(true);
         isStart = true;
-        updater.pause();
+        if(updater != null) {
+            updater.pause();
+        }
     }
 
-    public MainWindow getMainWindow() {
-        return mainWindow;
+    /*
+     * Clear the graph and reset buttons appropriately
+     */
+    private void clearGraph(){
+        mainWindow.getSeries().clear();
+        mainWindow.getStartButton().setEnabled(true);
+        mainWindow.getClearButton().setEnabled(false);
     }
 
     /*
@@ -126,16 +129,18 @@ public class MainController {
     private void reset(){
         int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
         if(option == JOptionPane.YES_OPTION){
-            mainWindow.getSeries().clear();
-            if(updater != null){
-                updater.pause();
-            }
-            mainWindow.getStartButton().setEnabled(true);
-            mainWindow.getClearButton().setEnabled(false);
+            stopDataCollection();
+            clearGraph();
+
+            //clear the inputs convert back to the default units from the settings
             inputController.clear();
             settingsController.updateUnitsSystem();
             inputController.onUnitSystemChange();
         }
+    }
+
+    public MainWindow getMainWindow() {
+        return mainWindow;
     }
 
     public static void main(String[] args){
