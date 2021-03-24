@@ -11,11 +11,11 @@ import javax.swing.*;
  */
 public class MainController {
 
-    private MainWindow mainWindow;
-    private InputController inputController;
-    private SettingsController settingsController;
+    private final MainWindow mainWindow;
+    private final InputController inputController;
+    private final SettingsController settingsController;
     private boolean isStart = true;
-    private GraphUpdater updater;
+    private final GraphUpdater updater;
 
     public MainController(){
         setLookAndFeel();
@@ -29,25 +29,42 @@ public class MainController {
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
         mainWindow.getExit().addActionListener(e -> disposeAll());
+
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
-                mainWindow.getStartButton().setText("Stop");
-                updater.collect();
-                isStart = false;
+                //if no input values at all give a warning
+                if(!inputController.haveInputs()){
+                    JOptionPane.showMessageDialog(null, "No cross section inputs given!", "Input Warning", JOptionPane.ERROR_MESSAGE);
+                //if the input values are from the previous round
+                }else if(inputController.areInputsFromPreviousRun()) {
+                    int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\n Do you want to update them?", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, null);
+                    if (option == JOptionPane.NO_OPTION) {
+                        inputController.pullInputValues();
+                        startDataCollection();
+                    } else {
+                        inputController.getInputWindow().setVisible(true);
+                    }
+                }else{
+                    inputController.pullInputValues();
+                    startDataCollection();
+                }
             }else {
-                mainWindow.getStartButton().setText("Start");
-                isStart = true;
-                updater.pause();
-                mainWindow.getStartButton().setEnabled(false);
+                stopDataCollection();
             }
         });
-        mainWindow.getGraphReset().addActionListener(e -> {mainWindow.getSeries().clear(); updater.pause(); mainWindow.getStartButton().setEnabled(true);});
+
+        mainWindow.getClearButton().addActionListener(e -> {
+            mainWindow.getSeries().clear();
+            updater.pause();
+            mainWindow.getStartButton().setEnabled(true);
+            mainWindow.getClearButton().setEnabled(false);
+        });
+
         //disposes of all windows when the main window is closed
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                disposeAll();
-
             }
         });
     }
@@ -78,10 +95,34 @@ public class MainController {
         }
     }
 
+    /*
+     * Starts collecting data
+     */
+    private void startDataCollection(){
+        mainWindow.getStartButton().setText("Stop");
+        mainWindow.getClearButton().setEnabled(false);
+        updater.collect();
+        isStart = false;
+    }
+
+    /*
+     * Stops collecting data
+     */
+    private void stopDataCollection(){
+        mainWindow.getStartButton().setText("Start");
+        mainWindow.getClearButton().setEnabled(true);
+        mainWindow.getStartButton().setEnabled(false);
+        isStart = true;
+        updater.pause();
+    }
 
     public MainWindow getMainWindow() {
         return mainWindow;
     }
+
+    /*
+     * Resets the graph, data, and input values
+     */
     private void reset(){
         int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
         if(option == JOptionPane.YES_OPTION){
@@ -90,6 +131,7 @@ public class MainController {
                 updater.pause();
             }
             mainWindow.getStartButton().setEnabled(true);
+            mainWindow.getClearButton().setEnabled(false);
             inputController.clear();
             settingsController.updateUnitsSystem();
             inputController.onUnitSystemChange();

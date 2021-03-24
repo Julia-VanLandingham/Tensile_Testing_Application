@@ -8,14 +8,18 @@ import controller.Calculations.Units;
  */
 public class InputController {
 
-    private UserInputWindow inputWindow;
-    private MainController mainController;
+    private final UserInputWindow inputWindow;
+    private final MainController mainController;
     private double width;
     private double depth;
     private double diameter;
 
     public InputController(MainController mainController){
         this.mainController = mainController;
+        width = 0.0;
+        depth = 0.0;
+        diameter = 0.0;
+
         inputWindow = new UserInputWindow();
 
         inputWindow.getCancelButton().addActionListener(e -> inputWindow.setVisible(false));
@@ -38,19 +42,27 @@ public class InputController {
     }
 
     /*
-     * Resets all the text fields back to their initial values (nothing or default values)
+     * Resets all the text fields back to their initial values
+     * Resets all stored input values to 0.0
      */
-    public void clear(){
-        inputWindow.getWidthInputField().setText("");
-        inputWindow.getDepthInputField().setText("");
-        inputWindow.getDiameterInputField().setText("");
+    protected void clear(){
+        inputWindow.getWidthInputField().setText("0.0");
+        inputWindow.getDepthInputField().setText("0.0");
+        inputWindow.getDiameterInputField().setText("0.0");
+
+        width = 0.0;
+        depth = 0.0;
+        diameter = 0.0;
     }
 
-    public void onUnitSystemChange(){
+    /*
+     * Converts the gauge length to the appropriate units and updates all labels
+     */
+    protected void onUnitSystemChange(){
         //convert the values to the correct unit system
         double convertedValue;
         if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
-            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, inputWindow.getGaugeLengthInput());
+            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, getGaugeLengthInput());
             inputWindow.setCurrentUnitSystem(Units.ENGLISH);
 
             //update the graph labels
@@ -63,7 +75,7 @@ public class InputController {
             inputWindow.getDiameterLabel().setText("Diameter (in): ");
             inputWindow.getWidthLabel().setText("Width (in): ");
         }else {
-            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, inputWindow.getGaugeLengthInput());
+            convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, getGaugeLengthInput());
             inputWindow.setCurrentUnitSystem(Units.METRIC);
 
             //update the graph labels
@@ -86,6 +98,93 @@ public class InputController {
      */
     public boolean isRectangularSelected() {
         return inputWindow.getRectangularButton().isSelected();
+    }
+
+    /**
+     * Returns if the user has input values for the appropriate cross section type
+     * @return if values have been input
+     */
+    public boolean haveInputs(){
+        if (isRectangularSelected()){
+            return getWidthInput() != 0.0 && getDepthInput() != 0.0;
+        }else{
+            return getDiameterInput() != 0.0;
+        }
+    }
+
+    /**
+     * Checks if the values input from the user are the same as the previous time the data was run
+     * @return if the input values are the same
+     */
+    public boolean areInputsFromPreviousRun(){
+        if(isRectangularSelected()){
+            return width == getWidthInput() && depth == getDepthInput();
+        }else{
+            return diameter == getDiameterInput();
+        }
+    }
+
+    /**
+     * Stores the input values from the input window
+     */
+    public void pullInputValues(){
+        width = getWidthInput();
+        depth = getDepthInput();
+        diameter = getDiameterInput();
+    }
+
+    /*
+     * Gets the width that was input from the user
+     */
+    private double getWidthInput(){
+        return Double.parseDouble(inputWindow.getWidthInputField().getText().trim());
+    }
+
+    /*
+     * Gets the depth that was input from the user
+     */
+    private double getDepthInput(){
+        return Double.parseDouble(inputWindow.getDepthInputField().getText().trim());
+    }
+
+    /*
+     * Gets the diameter that was input from the user
+     */
+    private double getDiameterInput(){
+        return Double.parseDouble(inputWindow.getDiameterInputField().getText().trim());
+    }
+
+    /*
+     * Gets the gauge length that was input from the user (more likely this is still just the default value)
+     */
+    private double getGaugeLengthInput(){
+        return Double.parseDouble(inputWindow.getGaugeLengthInputField().getText().trim());
+    }
+
+    //getters and setters
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getDepth() {
+        return depth;
+    }
+
+    public void setDepth(double depth) {
+        this.depth = depth;
+    }
+
+    public double getDiameter() {
+        return diameter;
+    }
+
+    public void setDiameter(double diameter) {
+        this.diameter = diameter;
     }
 
     public UserInputWindow getInputWindow(){

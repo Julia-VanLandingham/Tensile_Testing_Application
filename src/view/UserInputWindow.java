@@ -106,8 +106,8 @@ public class UserInputWindow extends JFrame {
         widthLabel = new JLabel("Width: ");
         depthLabel = new JLabel("Depth: ");
 
-        widthInputField = new JTextField(10);
-        depthInputField = new JTextField(10);
+        widthInputField = new JTextField("0.0", 10);
+        depthInputField = new JTextField("0.0", 10);
 
         rectangularInputPanel.add(widthLabel);
         rectangularInputPanel.add(widthInputField);
@@ -126,7 +126,7 @@ public class UserInputWindow extends JFrame {
 
         diameterLabel = new JLabel("Diameter: ");
 
-        diameterInputField = new JTextField(10);
+        diameterInputField = new JTextField("0.0",10);
 
         circularInputPanel.add(diameterLabel);
         circularInputPanel.add(diameterInputField);
@@ -192,38 +192,6 @@ public class UserInputWindow extends JFrame {
         unitSelectionPanel.add(Box.createHorizontalGlue());
 
         return unitSelectionPanel;
-    }
-
-    /**
-     * Gets the width that was input from the user
-     * @return the width value
-     */
-    public double getWidthInput(){
-        return Double.parseDouble(widthInputField.getText().trim());
-    }
-
-    /**
-     * Gets the depth that was input from the user
-     * @return the depth value
-     */
-    public double getDepthInput(){
-        return Double.parseDouble(depthInputField.getText().trim());
-    }
-
-    /**
-     * Gets the diameter that was input from the user
-     * @return the diameter value
-     */
-    public double getDiameterInput(){
-        return Double.parseDouble(diameterInputField.getText().trim());
-    }
-
-    /**
-     * Gets the gauge length that was input from the user (more likely this is still just the default value)
-     * @return the gauge length value
-     */
-    public double getGaugeLengthInput(){
-        return Double.parseDouble(gaugeLengthInputField.getText().trim());
     }
 
     //Getters
