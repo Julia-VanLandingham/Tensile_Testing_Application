@@ -23,21 +23,23 @@ public class Calculations {
         if (value > EPSILON) {
             switch (startingUnits) {
                 case ENGLISH:
+                default :
                     switch (endingUnits) {
                         case METRIC:
                             return value * 25.4;//inches to mm
                         case ENGLISH:
+                        default:
                             return value;
                     }
                 case METRIC:
                     switch (endingUnits) {
                         case METRIC:
+                        default:
                             return value;
                         case ENGLISH:
                             return value / 25.4;//mm to inches
                     }
             }
-            return -1d;
         }
         throw new IllegalArgumentException("Length cannot be less than or equal to zero");
     }
@@ -55,21 +57,23 @@ public class Calculations {
         if (value > EPSILON) {
             switch (startingUnits) {
                 case ENGLISH:
+                default :
                     switch (endingUnits) {
                         case METRIC:
                             return value * 4.4482216;//pounds to newtons
                         case ENGLISH:
+                        default :
                             return value;
                     }
                 case METRIC:
                     switch (endingUnits) {
                         case METRIC:
+                        default :
                             return value;
                         case ENGLISH:
                             return value / 4.4482216;//newtons to pounds
                     }
             }
-            return -1d;
         }
         throw new IllegalArgumentException("Force cannot be less than or equal to zero");
     }
@@ -87,21 +91,23 @@ public class Calculations {
         if (value > EPSILON) {
             switch (startingUnits) {
                 case ENGLISH:
+                default :
                     switch (endingUnits) {
                         case METRIC:
                             return value * 6.89475728 ;//KSI to MPa
                         case ENGLISH:
+                        default :
                             return value;
                     }
                 case METRIC:
                     switch (endingUnits) {
                         case METRIC:
+                        default :
                             return value;
                         case ENGLISH:
                             return value / 6.89475728 ;//MPa to KSI
                     }
             }
-            return -1d;
         }
         throw new IllegalArgumentException("Pressure cannot be less than or equal to zero");
     }

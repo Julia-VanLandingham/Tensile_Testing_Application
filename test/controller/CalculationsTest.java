@@ -26,12 +26,12 @@ class CalculationsTest {
 
     @Test
     void convertLengthEnglishToEnglish(){
-        assertEquals(6.0, Calculations.convertLength(Units.ENGLISH, Units.ENGLISH, 6.0));
+        assertEquals(6.0, Calculations.convertLength(Units.ENGLISH, Units.ENGLISH, 6.0), DELTA);//added delta
     }
 
     @Test
     void convertLengthMetricToMetric(){
-        assertEquals(3.0, Calculations.convertLength(Units.METRIC, Units.METRIC, 3.0));
+        assertEquals(3.0, Calculations.convertLength(Units.METRIC, Units.METRIC, 3.0), DELTA);//added delta
     }
 
     @Test
@@ -56,12 +56,12 @@ class CalculationsTest {
 
     @Test
     void convertForceEnglishToEnglish(){
-        assertEquals(31.0, Calculations.convertForce(Units.ENGLISH, Units.ENGLISH, 31.0));
+        assertEquals(31.0, Calculations.convertForce(Units.ENGLISH, Units.ENGLISH, 31.0), DELTA);//added delta
     }
 
     @Test
     void convertForceMetricToMetric(){
-        assertEquals(70.3, Calculations.convertForce(Units.METRIC, Units.METRIC, 70.3));
+        assertEquals(70.3, Calculations.convertForce(Units.METRIC, Units.METRIC, 70.3), DELTA);//added delta
     }
 
     @Test
@@ -86,12 +86,12 @@ class CalculationsTest {
 
     @Test
     void convertPressureEnglishToEnglish(){
-        assertEquals(27.5, Calculations.convertPressure(Units.ENGLISH, Units.ENGLISH, 27.5));
+        assertEquals(27.5, Calculations.convertPressure(Units.ENGLISH, Units.ENGLISH, 27.5), DELTA);//added delta
     }
 
     @Test
     void convertPressureMetricToMetric(){
-        assertEquals(139.2741, Calculations.convertPressure(Units.METRIC, Units.METRIC, 139.2741));
+        assertEquals(139.2741, Calculations.convertPressure(Units.METRIC, Units.METRIC, 139.2741), DELTA);//added delta
     }
 
     @Test
@@ -131,8 +131,8 @@ class CalculationsTest {
 
     @Test
     void calculateAreaRectangle(){
-        assertEquals(7.5*3.192, Calculations.calculateArea(7.5, 3.192));
-    }
+        assertEquals(7.5*3.192, Calculations.calculateArea(7.5, 3.192), DELTA);
+    }//added delta
 
     @Test
     void calculateAreaCircleZero(){
@@ -146,6 +146,6 @@ class CalculationsTest {
 
     @Test
     void calculateAreaCircle() {
-        assertEquals(Math.PI * 3.254 * 3.254, Calculations.calculateArea(6.508));
-    }
+        assertEquals(Math.PI * 3.254 * 3.254, Calculations.calculateArea(6.508), DELTA);
+    }//added delta
 }
