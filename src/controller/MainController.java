@@ -28,7 +28,7 @@ public class MainController {
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
-        mainWindow.getExit().addActionListener(e -> { if(isStart == false){exitMidPull();} else{disposeAll();} });//change?
+        mainWindow.getExit().addActionListener(e -> { if(isStart == false){exitMidPull();} else{disposeAll();} });
 
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
@@ -64,7 +64,12 @@ public class MainController {
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-               exitMidPull();
+                if(isStart == false){
+                    exitMidPull();
+                }
+                else{
+                    disposeAll();
+                }
             }
         });
     }
