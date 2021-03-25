@@ -25,6 +25,7 @@ package kirkwood.nidaq.access;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import kirkwood.nidaq.jna.Nicaiu;
 
@@ -53,7 +54,8 @@ public class NiDaq {
 	 * @return
 	 */
 	public Pointer createTask(String taskName) throws NiDaqException {
-		byte[] btName = taskName.getBytes();
+		byte[] btName = toCString(taskName);
+		// This is my stuff
 		PointerByReference taskHandleRef = new PointerByReference();
 		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
 		Pointer taskHandle = taskHandleRef.getValue();
@@ -86,13 +88,13 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createDOChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, toCString(lines), toCString(nameToAssignToLines), lineGrouping));
 	}
 	
 
 	
 	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, toCString(lines), toCString(nameToAssignToLines), lineGrouping));
 	}
 	
 	/**
@@ -136,7 +138,7 @@ public class NiDaq {
 	
 	
 	public void createAIVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, toCString(physicalChannel), toCString(nameToAssignToChannel), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : toCString(customScaleName)));
 	}
 
 	/**
@@ -186,7 +188,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createAICurrentChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, int shuntResistorLoc, double extShuntResistorVal, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, customScaleName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, toCString(physicalChannel), toCString(nameToAssignToChannel), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, toCString(customScaleName)));
 	}
 	
 	/**
@@ -390,7 +392,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void cfgSampClkTiming(Pointer taskHandle, String source, double rate, int activeEdge, int sampleMode, long sampsPerChan) throws NiDaqException{
-		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, source.getBytes(), rate, activeEdge, sampleMode, sampsPerChan));
+		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, toCString(source), rate, activeEdge, sampleMode, sampsPerChan));
 	}
 	
 	/**
@@ -406,7 +408,7 @@ public class NiDaq {
 	}
 	
 	public void resetDevice(String devName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(toCString(devName)));
 	}
 
 	
@@ -428,6 +430,11 @@ public class NiDaq {
 		
 		
 		
+	}
+
+	private static byte [] toCString(String str){
+		byte [] bytes = str.getBytes();
+		return Arrays.copyOf(bytes, bytes.length + 1);
 	}
 	
 	
