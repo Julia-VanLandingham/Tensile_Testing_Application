@@ -28,7 +28,13 @@ public class MainController {
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
-        mainWindow.getExit().addActionListener(e -> { if(isStart == false){exitMidPull();} else{disposeAll();} });
+        mainWindow.getExit().addActionListener(e -> {
+            if(!isStart){
+                exitMidPull();
+            }else{
+                disposeAll();
+            }
+        });
         mainWindow.getClearButton().addActionListener(e -> clearGraph());
 
         mainWindow.getStartButton().addActionListener(e -> {
@@ -58,10 +64,9 @@ public class MainController {
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if(isStart == false){
+                if(!isStart){
                     exitMidPull();
-                }
-                else{
+                }else{
                     disposeAll();
                 }
             }
@@ -155,9 +160,6 @@ public class MainController {
         if(exitMessage == JOptionPane.YES_OPTION) {
             stopDataCollection();
             disposeAll();
-        }
-        if(exitMessage == JOptionPane.NO_OPTION) {
-            return;
         }
     }
 
