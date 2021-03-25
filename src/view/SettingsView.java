@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -71,11 +70,11 @@ public class SettingsView extends JFrame{
                 double gaugeLength = userInput.nextDouble();
                 gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 12);
                 defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
-                defaultUnitSelectionBox.setFocusable(false);
                 defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
                 readSucceeded = true;
             }
             catch( NoSuchElementException | IllegalStateException e) {
+                //do nothing
             }
         }
 
@@ -83,7 +82,6 @@ public class SettingsView extends JFrame{
             gaugeLengthField = new JTextField("0.5");
             defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
             currentUnitSystem = Units.ENGLISH;
-            defaultUnitSelectionBox.setFocusable(false);
         }
 
         northPanel.add(unitsSelectionLabel);
@@ -106,7 +104,6 @@ public class SettingsView extends JFrame{
     private JPanel createSouthPanel(){
         JPanel southPanel = new JPanel();
         saveButton = new JButton("Save");
-        saveButton.setFocusable(false);
         southPanel.add(saveButton);
         return southPanel;
     }

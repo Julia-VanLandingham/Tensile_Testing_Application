@@ -81,8 +81,6 @@ public class UserInputWindow extends JFrame {
         ButtonGroup crossSectionButtons = new ButtonGroup();
         circular = new JRadioButton("Circular");
         rectangular = new JRadioButton("Rectangular");
-        circular.setFocusable(false);
-        rectangular.setFocusable(false);
         crossSectionButtons.add(rectangular);
         crossSectionButtons.add(circular);
 
@@ -163,9 +161,6 @@ public class UserInputWindow extends JFrame {
         ok = new JButton("OK");
         cancel = new JButton("Cancel");
 
-        ok.setFocusable(false);
-        cancel.setFocusable(false);
-
         optionsPanel.add(Box.createHorizontalGlue());
         optionsPanel.add(ok);
         optionsPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
@@ -184,7 +179,6 @@ public class UserInputWindow extends JFrame {
 
         JLabel unitSelectionLabel = new JLabel("Unit System: ");
         unitSelectionBox = new JComboBox<>(MEASUREMENTS);
-        unitSelectionBox.setFocusable(false);
 
         unitSelectionPanel.add(unitSelectionLabel);
         unitSelectionPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));

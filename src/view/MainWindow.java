@@ -100,8 +100,6 @@ public class MainWindow extends JFrame {
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
         graphReset.setEnabled(false);
-        startButton.setFocusable(false);
-        graphReset.setFocusable(false);
 
         optionsPanel.add(startButton);
         optionsPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
