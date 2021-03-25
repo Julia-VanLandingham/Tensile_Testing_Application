@@ -85,7 +85,7 @@ public class TestStressStrainInput {
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
-        String channel = "3";
+        String channel = "0:1";
         double [] out = null;
         System.out.println("Test Started...");
         long startTime = System.currentTimeMillis();

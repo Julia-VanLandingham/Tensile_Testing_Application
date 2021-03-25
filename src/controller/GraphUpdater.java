@@ -1,7 +1,13 @@
 package controller;
 
+import com.sun.jna.Pointer;
+import kirkwood.nidaq.access.NiDaq;
+import kirkwood.nidaq.access.NiDaqException;
+import kirkwood.nidaq.jna.Nicaiu;
 import org.jfree.data.xy.XYSeries;
 
+import java.nio.DoubleBuffer;
+import java.nio.IntBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -12,10 +18,36 @@ public class GraphUpdater extends Thread {
     private XYSeries series;
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
+    private static NiDaq daq = new NiDaq();
+    private static final int INPUT_BUFFER_SIZE = 1000;
+    private double[] buffer = new double[INPUT_BUFFER_SIZE];
+    private IntBuffer samplesPerChannelRead;
+    private Pointer aiTask = null;
+    private DoubleBuffer inputBuffer;
 
     public GraphUpdater(XYSeries series) {
+        try {
+            String physicalChan = "Dev1/ai0:1";
+            aiTask = daq.createTask("AITask");
+            daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, INPUT_BUFFER_SIZE);
+            daq.startTask(aiTask);
+            Integer read = new Integer(0);
+            inputBuffer = DoubleBuffer.wrap(buffer);
+            samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
+        } catch(NiDaqException e) {
+            try {
+                System.out.println("Trying to stop task");
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                daq.stopTask(aiTask);
+                daq.clearTask(aiTask);
+            } catch(NiDaqException e2) {}
+
+        }
         this.series = series;
     }
+
     @Override
     public void run() {
         boolean keepGoing = true;
@@ -31,10 +63,20 @@ public class GraphUpdater extends Thread {
             } catch (InterruptedException e) {
                 keepGoing = false;
             }
-            series.add(x,Math.random());
-            x++;
+            try {
+                daq.readAnalogF64(aiTask, -1, -1, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, INPUT_BUFFER_SIZE, samplesPerChannelRead);
+            } catch (NiDaqException e) {
+                e.printStackTrace();
+            }
+            // first half of buffer is one channel and other half is other channel
+            for(int i = 0; i < buffer.length/2; i++){
+                series.add(x,buffer[i]);
+                x++;
+            }
+
         }
     }
+
     public void pause(){
         run.set(false);
     }
@@ -47,5 +89,10 @@ public class GraphUpdater extends Thread {
     public synchronized void terminate() {
         done.set(true);
         notifyAll();
+    }
+
+    public void cleanup() throws NiDaqException {
+        daq.stopTask(aiTask);
+        daq.clearTask(aiTask);
     }
 }
