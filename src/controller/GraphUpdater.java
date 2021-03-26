@@ -20,7 +20,8 @@ public class GraphUpdater extends Thread {
     private AtomicBoolean run = new AtomicBoolean(false);
     private static NiDaq daq = new NiDaq();
     private static final int INPUT_BUFFER_SIZE = 1000;
-    private double[] buffer = new double[INPUT_BUFFER_SIZE];
+    private double[] buffer = new double[INPUT_BUFFER_SIZE*2];
+    private static final int SAMPLES_PER_SECOND = 100;
     private IntBuffer samplesPerChannelRead;
     private Pointer aiTask = null;
     private DoubleBuffer inputBuffer;
@@ -30,7 +31,7 @@ public class GraphUpdater extends Thread {
             String physicalChan = "Dev1/ai0:1";
             aiTask = daq.createTask("AITask");
             daq.createAIVoltageChannel(aiTask, physicalChan, "", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-            daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, INPUT_BUFFER_SIZE);
+            daq.cfgSampClkTiming(aiTask, "", SAMPLES_PER_SECOND, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, INPUT_BUFFER_SIZE);
             daq.startTask(aiTask);
             Integer read = new Integer(0);
             inputBuffer = DoubleBuffer.wrap(buffer);
@@ -51,7 +52,6 @@ public class GraphUpdater extends Thread {
     @Override
     public void run() {
         boolean keepGoing = true;
-        int x = 0;
         while(!done.get()) {//call code from class that gets data from the chip.
             try {
                 if(!run.get()){
@@ -69,9 +69,17 @@ public class GraphUpdater extends Thread {
                 e.printStackTrace();
             }
             // first half of buffer is one channel and other half is other channel
-            for(int i = 0; i < buffer.length/2; i++){
-                series.add(x,buffer[i]);
-                x++;
+            double [] channel0 = new double[INPUT_BUFFER_SIZE];
+            double [] channel1 = new double[INPUT_BUFFER_SIZE];
+            for(int i = 0; i < INPUT_BUFFER_SIZE/SAMPLES_PER_SECOND; i++){
+                for(int j = 0; j < SAMPLES_PER_SECOND; j++){
+                    channel0[i*SAMPLES_PER_SECOND + j] = buffer[2*i*SAMPLES_PER_SECOND + j];
+                    channel1[i*SAMPLES_PER_SECOND + j] = buffer[(2*i+1)*SAMPLES_PER_SECOND + j];
+                }
+            }
+
+            for(int i = 0; i < INPUT_BUFFER_SIZE; i++){
+                series.add(channel0[i],channel1[i]);
             }
 
         }
