@@ -28,7 +28,13 @@ public class MainController {
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
-        mainWindow.getExit().addActionListener(e -> disposeAll());
+        mainWindow.getExit().addActionListener(e -> {
+            if(!isStart){
+                exitMidPull();
+            }else{
+                disposeAll();
+            }
+        });
         mainWindow.getClearButton().addActionListener(e -> clearGraph());
 
         mainWindow.getStartButton().addActionListener(e -> {
@@ -58,7 +64,11 @@ public class MainController {
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-               disposeAll();
+                if(!isStart){
+                    exitMidPull();
+                }else{
+                    disposeAll();
+                }
             }
         });
     }
@@ -141,6 +151,16 @@ public class MainController {
 
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    private void exitMidPull() {
+        //display yes/no message box
+        int exitMessage = JOptionPane.showOptionDialog(null,"You are currently pulling data. Are you sure you want to close the program?","Attempting to close",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"yes", "no"},JOptionPane.YES_OPTION);
+        //if yes call close method
+        if(exitMessage == JOptionPane.YES_OPTION) {
+            stopDataCollection();
+            disposeAll();
+        }
     }
 
     public static void main(String[] args){
