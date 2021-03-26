@@ -105,7 +105,10 @@ public class MainController {
     private void startDataCollection(){
         mainWindow.getStartButton().setText("Stop");
         mainWindow.getClearButton().setEnabled(false);
-        mainWindow.getReset().setEnabled(false);//do not allow rest while data is being pulled
+        //do not allow any of these while data is being pulled
+        mainWindow.getReset().setEnabled(false);
+        mainWindow.getSettings().setEnabled(false);
+        mainWindow.getInput().setEnabled(false);
         updater.collect();
         isStart = false;
     }
@@ -117,7 +120,10 @@ public class MainController {
         mainWindow.getStartButton().setText("Start");
         mainWindow.getClearButton().setEnabled(true);
         mainWindow.getStartButton().setEnabled(false);
+        //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
+        mainWindow.getSettings().setEnabled(true);
+        mainWindow.getInput().setEnabled(true);
         isStart = true;
         if(updater != null) {
             updater.pause();
