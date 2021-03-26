@@ -21,7 +21,7 @@ public class Channel {
     String channelName;
     int samplesPerSecond;
     int bufferSize;
-    private static NiDaq daq ;
+    private NiDaq daq ;
     private int mode;
     private Pointer aiTask;
     int[] read;
@@ -32,13 +32,13 @@ public class Channel {
 
     /** Constructor creates task and assigns Analog Input channel to that task and provides
      *
-     * @param name channel name you are using EX: "Dev1/ai0"
+     * @param channelNumber number of channel (0-7) depending on the mode
      * @param samplesPerSecond rate of samples you would like to read
      * @param bufferSize number of samples you would like to read
      * @param mode has to be a Mode enum
      */
-    public Channel(String name, int samplesPerSecond, int bufferSize, Mode mode, NiDaq daq){
-        channelName = name;
+    public Channel(int channelNumber, int samplesPerSecond, int bufferSize, Mode mode, NiDaq daq){
+        channelName = "Dev1/ai" + channelNumber;
         this.samplesPerSecond = samplesPerSecond;
         this.bufferSize = bufferSize;
         this.daq = daq;
@@ -56,7 +56,8 @@ public class Channel {
         }
 
         try {
-            aiTask = daq.createTask("Channel: " + name.substring(name.length() - 3));
+            aiTask = daq.createTask("Task" + channelNumber);
+
             daq.createAIVoltageChannel(aiTask, channelName, "", this.mode, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
             daq.cfgSampClkTiming(aiTask, "", this.samplesPerSecond, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, this.bufferSize);
             daq.startTask(aiTask);
@@ -75,17 +76,17 @@ public class Channel {
         }
     }
 
-    public int[] read(){
+    public int read(){
         try {
             daq.readAnalogF64(aiTask, -1, -1, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, this.bufferSize * 2, samplesPerChannelRead);
         } catch (NiDaqException e) {
             e.printStackTrace();
         }
-        return this.read;
+        return this.read[0];
     }
 
-    public double[] getBuffer(){
-        return this.buffer;
+    public DoubleBuffer getBuffer(){
+        return this.inputBuffer;
     }
 
     public void cleanup(){

@@ -19,7 +19,6 @@ public class GraphUpdater extends Thread {
     private XYSeries series;
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
-    private static NiDaq daq = new NiDaq();
     private static final int INPUT_BUFFER_SIZE = 1000;
     private static final int SAMPLES_PER_SECOND = 100;
     private Channel channel0;
@@ -27,8 +26,10 @@ public class GraphUpdater extends Thread {
 
     public GraphUpdater(XYSeries series) {
         // Create Channels here:
-        channel0 = new Channel("Dev1/ai0", SAMPLES_PER_SECOND, INPUT_BUFFER_SIZE, Channel.Mode.DIFFERENTIAL, daq);
-        channel1 = new Channel("Dev1/ai1", SAMPLES_PER_SECOND, INPUT_BUFFER_SIZE, Channel.Mode.RSE, daq);
+        NiDaq daq = new NiDaq();
+        //TODO: Create Task up here and pass it into channels
+        channel0 = new Channel(0, SAMPLES_PER_SECOND, INPUT_BUFFER_SIZE, Channel.Mode.DIFFERENTIAL, daq);
+        channel1 = new Channel(1, SAMPLES_PER_SECOND, INPUT_BUFFER_SIZE, Channel.Mode.RSE, new NiDaq());
 
         this.series = series;
     }
@@ -50,20 +51,19 @@ public class GraphUpdater extends Thread {
             }
 
             // first half of buffer is one channel and other half is other channel
-            int[] channel0Read = channel0.read();
-            int[] channel1Read = channel1.read();
-            double[] channel0Buffer = channel0.getBuffer();
-            double[] channel1Buffer = channel1.getBuffer();
+            int channel0Read = channel0.read();
+            int channel1Read = channel1.read();
+            DoubleBuffer channel0Buffer = channel0.getBuffer();
+            DoubleBuffer channel1Buffer = channel1.getBuffer();
 
-            if(channel0Read[0]<= channel1Read[0]){
-                for(int i = 0; i < channel0Read[0]; i++ ){
-                    series.add(channel1Buffer[i],channel0Buffer[i]);
-                }
-            }else{
-                for(int i = 0; i < channel1Read[0]; i++){
-                    series.add(channel1Buffer[i],channel0Buffer[i]);
-                }
+
+            for(int i = 0; i < channel0Read && i < channel1Read; i++ ){
+                series.add(channel1Buffer.get(),channel0Buffer.get());
             }
+            channel0Buffer.clear();
+            channel1Buffer.clear();
+
+
 
 
         }
