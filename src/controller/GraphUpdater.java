@@ -1,16 +1,8 @@
 package controller;
 
-import com.sun.corba.se.impl.resolver.INSURLOperationImpl;
-import com.sun.jna.Pointer;
-import kirkwood.nidaq.access.NiDaq;
-import kirkwood.nidaq.access.NiDaqException;
-import kirkwood.nidaq.jna.Nicaiu;
 import model.AITask;
-import model.Channel;
 import org.jfree.data.xy.XYSeries;
 
-import java.nio.DoubleBuffer;
-import java.nio.IntBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
