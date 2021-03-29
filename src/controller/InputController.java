@@ -28,16 +28,18 @@ public class InputController {
         inputWindow.getCircularButton().addActionListener(e -> {
             inputWindow.getCircularInputPanel().setVisible(true);
             inputWindow.getRectangularInputPanel().setVisible(false);
+            inputWindow.getDiameterInputField().setText("0.0");
         });
 
         inputWindow.getRectangularButton().addActionListener(e -> {
             inputWindow.getCircularInputPanel().setVisible(false);
             inputWindow.getRectangularInputPanel().setVisible(true);
+            inputWindow.getDepthInputField().setText("0.0");
+            inputWindow.getWidthInputField().setText("0.0");
         });
 
         inputWindow.getUnitSelectionBox().addActionListener(e -> {
            onUnitSystemChange();
-
         });
     }
 
