@@ -161,7 +161,7 @@ public class MainController {
 
     private void exitMidPull() {
         //display yes/no message box
-        int exitMessage = JOptionPane.showOptionDialog(null,"You are currently pulling data. Are you sure you want to close the program?","Attempting to close",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"yes", "no"},JOptionPane.YES_OPTION);
+        int exitMessage = JOptionPane.showOptionDialog(null,"You are currently pulling data. Are you sure you want to close the program?","Attempting to close",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"Yes", "No"},JOptionPane.YES_OPTION);
         //if yes call close method
         if(exitMessage == JOptionPane.YES_OPTION) {
             stopDataCollection();
