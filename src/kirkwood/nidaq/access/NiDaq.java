@@ -25,6 +25,7 @@ package kirkwood.nidaq.access;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import kirkwood.nidaq.jna.Nicaiu;
@@ -433,8 +434,8 @@ public class NiDaq {
 	}
 
 	private static byte [] toCString(String str){
-		byte [] bytes = str.getBytes();
-		return Arrays.copyOf(bytes, bytes.length + 1);
+		String result = str + "\0";
+		return result.getBytes(StandardCharsets.UTF_8);
 	}
 	
 	
