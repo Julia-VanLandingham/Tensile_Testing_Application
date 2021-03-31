@@ -9,8 +9,8 @@ import controller.Calculations.Units;
 public class UserInputWindow extends JFrame {
 
     //constants used for formatting
-    private static final int VERTICAL_BUFFER = 10;
-    private static final int HORIZONTAL_BUFFER = 10;
+    private final int VERTICAL_BUFFER;
+    private final int HORIZONTAL_BUFFER;
 
     private final String[] MEASUREMENTS = {"English", "Metric"};
 
@@ -33,6 +33,9 @@ public class UserInputWindow extends JFrame {
 
     public UserInputWindow(){
         setTitle("Measurements Input");
+
+        HORIZONTAL_BUFFER = MainWindow.HORIZONTAL_BUFFER;
+        VERTICAL_BUFFER = MainWindow.VERTICAL_BUFFER;
 
         JPanel outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));

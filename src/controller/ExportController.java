@@ -5,7 +5,6 @@ import view.ExportWindow;
 /**
  * Sets up and controls the functions of the ExportWindow
  */
-
 public class ExportController {
     private final ExportWindow exportWindow;
     protected boolean isUnsaved;
