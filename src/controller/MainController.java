@@ -1,5 +1,6 @@
 package controller;
 
+import view.ExportWindow;
 import view.MainWindow;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -14,6 +15,7 @@ public class MainController {
     private final MainWindow mainWindow;
     private final InputController inputController;
     private final SettingsController settingsController;
+    private final ExportController exportController;
     private boolean isStart = true;
     private final GraphUpdater updater;
 
@@ -22,12 +24,18 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
+        exportController = new ExportController();
         updater = new GraphUpdater(mainWindow.getSeries());
         updater.start();
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
         mainWindow.getReset().addActionListener(e -> reset());
+        mainWindow.getExport().addActionListener(e -> {
+            exportController.getExportWindow().setVisible(true);
+            exportController.getExportWindow().getExportData().setSelected(true);
+            exportController.getExportWindow().getExportImage().setSelected(false);
+        });
         mainWindow.getExit().addActionListener(e -> {
             if(!isStart){
                 exitMidPull();
@@ -93,6 +101,7 @@ public class MainController {
     private void disposeAll(){
         inputController.getInputWindow().dispose();
         settingsController.getSettingsWindow().dispose();
+        exportController.getExportWindow().dispose();
         mainWindow.dispose();
         if(updater != null){
             updater.terminate();
