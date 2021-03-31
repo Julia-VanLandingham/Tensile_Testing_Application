@@ -55,10 +55,9 @@ public class NiDaq {
 	 * @return
 	 */
 	public Pointer createTask(String taskName) throws NiDaqException {
-		byte[] btName = toCString(taskName);
 		// This is my stuff
 		PointerByReference taskHandleRef = new PointerByReference();
-		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(taskName.getBytes(StandardCharsets.UTF_8), taskHandleRef));
 		Pointer taskHandle = taskHandleRef.getValue();
 		return taskHandle;
 	}
@@ -89,13 +88,13 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createDOChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, toCString(lines), toCString(nameToAssignToLines), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, lines.getBytes(StandardCharsets.UTF_8), nameToAssignToLines.getBytes(StandardCharsets.UTF_8), lineGrouping));
 	}
 	
 
 	
 	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, toCString(lines), toCString(nameToAssignToLines), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(StandardCharsets.UTF_8), nameToAssignToLines.getBytes(StandardCharsets.UTF_8), lineGrouping));
 	}
 	
 	/**
@@ -139,7 +138,7 @@ public class NiDaq {
 	
 	
 	public void createAIVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, toCString(physicalChannel), toCString(nameToAssignToChannel), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : toCString(customScaleName)));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(StandardCharsets.UTF_8), nameToAssignToChannel.getBytes(StandardCharsets.UTF_8), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	/**
@@ -189,7 +188,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createAICurrentChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, int shuntResistorLoc, double extShuntResistorVal, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, toCString(physicalChannel), toCString(nameToAssignToChannel), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, toCString(customScaleName)));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, physicalChannel.getBytes(StandardCharsets.UTF_8), nameToAssignToChannel.getBytes(StandardCharsets.UTF_8), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, customScaleName.getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	/**
@@ -393,7 +392,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void cfgSampClkTiming(Pointer taskHandle, String source, double rate, int activeEdge, int sampleMode, long sampsPerChan) throws NiDaqException{
-		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, toCString(source), rate, activeEdge, sampleMode, sampsPerChan));
+		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, source.getBytes(StandardCharsets.UTF_8), rate, activeEdge, sampleMode, sampsPerChan));
 	}
 	
 	/**
@@ -409,7 +408,7 @@ public class NiDaq {
 	}
 	
 	public void resetDevice(String devName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(toCString(devName)));
+		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	
@@ -428,15 +427,6 @@ public class NiDaq {
 		}
 		}
 		checkError(Nicaiu.INSTANCE.DAQmxGetPhysicalChanName(taskHandle, chan, chan, new NativeLong(256)));
-		
-		
-		
-	}
 
-	private static byte [] toCString(String str){
-		String result = str + "\0";
-		return result.getBytes(StandardCharsets.UTF_8);
 	}
-	
-	
 }

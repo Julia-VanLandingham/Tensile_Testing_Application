@@ -1,7 +1,7 @@
 package input.test;
 
 import com.sun.jna.Pointer;
-import jdk.jfr.internal.tool.Main;
+//import jdk.jfr.internal.tool.Main;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
@@ -44,11 +44,11 @@ public class TestStressStrainInput {
     private static double[] analogInputTest(String channel) throws NiDaqException, InterruptedException {
         Pointer aiTask = null;
         try {
-            String physicalChan = "Dev1/ai" + channel;
-            aiTask = daq.createTask("AITask");
+            String physicalChan = "Dev1/ai" + channel + "\0";
+            aiTask = daq.createTask("AITask\0");
             System.out.println("aiTask assigned" + aiTask);
-            daq.createAIVoltageChannel(aiTask, physicalChan, "", mode, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-            daq.cfgSampClkTiming(aiTask, "", samplesPerSecond, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, samplesInChannel);
+            daq.createAIVoltageChannel(aiTask, physicalChan, "\0", mode, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+            daq.cfgSampClkTiming(aiTask, "\0", samplesPerSecond, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, samplesInChannel);
             daq.startTask(aiTask);
             System.out.println("Task Started!");
             Integer read = new Integer(0);
