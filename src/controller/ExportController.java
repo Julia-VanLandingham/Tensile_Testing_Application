@@ -4,12 +4,17 @@ import view.ExportWindow;
 
 public class ExportController {
     private final ExportWindow exportWindow;
+    protected boolean isUnsaved;
 
     public ExportController(){
         exportWindow = new ExportWindow();
+        isUnsaved = false;
 
         exportWindow.getCancel().addActionListener(e -> exportWindow.setVisible(false));
-        exportWindow.getExport().addActionListener(e -> exportWindow.setVisible(false));
+        exportWindow.getExport().addActionListener(e -> {
+            exportWindow.setVisible(false);
+            isUnsaved = false;
+        });
 
         exportWindow.getExportData().addActionListener(e -> {
             exportWindow.getExportValuesWithDataPanel().setVisible(isExportDataSelected());

@@ -82,6 +82,7 @@ public class ExportWindow extends JFrame {
         exportDataPanel.setLayout(new BoxLayout(exportDataPanel, BoxLayout.X_AXIS));
 
         exportData = new JCheckBox("Export Data");
+        exportData.setSelected(true);
 
         exportDataPanel.add(exportData);
         exportDataPanel.add(Box.createHorizontalGlue());
