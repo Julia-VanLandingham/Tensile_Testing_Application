@@ -1,5 +1,10 @@
 package controller;
 
+import org.jfree.data.xy.XYDataItem;
+import org.jfree.data.xy.XYSeries;
+
+import java.util.Collections;
+
 public class Calculations {
 
     //used to ensure entered values for area are not zero
@@ -157,5 +162,35 @@ public class Calculations {
             throw new IllegalArgumentException("Diameter cannot be zero");
         }
         return Math.PI * (diameter/2) * (diameter/2);
+    }
+    //Find the max y value of the data points, Collections.max()
+    public static double findUltimatePoint(XYSeries data){
+        double ultimatePoint = data.getMaxY();
+        return ultimatePoint;
+    }
+    //Find the point at which the force is 0 (may need user input)
+    public static double findFailurePoint(XYSeries data){
+        double failurePoint = 0.0;
+        //actually find failurePoint
+        return failurePoint;
+    }
+    /*
+     Take a moving derivative of the data
+     During the linear part this will be relatively average.
+     Store all these values for later use.
+     When this derivative goes to zero (may need to have some tolerance)
+     then we have hit the yield point.
+     */
+    public static double findYieldPoint(XYSeries data){
+        double yieldPoint = 0.0;
+        //actually find the yieldPoint
+        return yieldPoint;
+    }
+    //After we found the yield point, take the average of all the derivatives from the start to the yield point
+    public static double findYoungsModulus(XYSeries data){
+        double youngsModulus = 0.0;
+        double yieldPoint = findYieldPoint(data);
+        //actually find the young's modulus
+        return youngsModulus;
     }
 }
