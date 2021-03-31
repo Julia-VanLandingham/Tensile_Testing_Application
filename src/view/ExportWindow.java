@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.*;
 
+/**
+ * Creates a pop-up frame for user to select exporting options
+ */
 public class ExportWindow extends JFrame {
 
     //constants used for formatting
@@ -41,6 +44,9 @@ public class ExportWindow extends JFrame {
         setVisible(false);
     }
 
+    /*
+     * Panel with export image check box
+     */
     private JPanel createExportImagePanel(){
         JPanel exportImagePanel = new JPanel();
         exportImagePanel.setLayout(new BoxLayout(exportImagePanel, BoxLayout.X_AXIS));
@@ -77,6 +83,9 @@ public class ExportWindow extends JFrame {
         imageOptionPanel.setVisible(true);
     }
 
+    /*
+     * Panel with export data check box
+     */
     private JPanel createExportDataPanel(){
         JPanel exportDataPanel = new JPanel();
         exportDataPanel.setLayout(new BoxLayout(exportDataPanel, BoxLayout.X_AXIS));
@@ -90,6 +99,10 @@ public class ExportWindow extends JFrame {
         return exportDataPanel;
     }
 
+    /*
+     * Panel with check box that allows the user to export critical
+     * and input values if checked
+     */
     private void setupExportValuesWithDataPanel(){
         exportValuesWithDataPanel = new JPanel();
         exportValuesWithDataPanel.setLayout(new BoxLayout(exportValuesWithDataPanel, BoxLayout.X_AXIS));
@@ -122,6 +135,7 @@ public class ExportWindow extends JFrame {
 
         return buttonPanel;
     }
+
     public JPanel getImageOptionPanel() {
         return imageOptionPanel;
     }
