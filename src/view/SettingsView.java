@@ -26,7 +26,6 @@ public class SettingsView extends JFrame{
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
-        setResizable(false);
 
         JPanel outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
@@ -38,7 +37,7 @@ public class SettingsView extends JFrame{
 
         add(outerPanel);
 
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
         setVisible(false);
         pack();
         setLocationRelativeTo(null);

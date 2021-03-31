@@ -14,6 +14,7 @@ public class MainController {
     private final MainWindow mainWindow;
     private final InputController inputController;
     private final SettingsController settingsController;
+    private final ExportController exportController;
     private boolean isStart = true;
     private final GraphUpdater updater;
 
@@ -22,20 +23,52 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
+        exportController = new ExportController();
         updater = new GraphUpdater(mainWindow.getSeries());
         updater.start();
 
         mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
-        mainWindow.getReset().addActionListener(e -> reset());
+        mainWindow.getReset().addActionListener(e -> {
+            if(exportController.isUnsaved){
+                if(warnUnsavedData() == JOptionPane.NO_OPTION){
+                    reset();
+                }
+            }else{
+                int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
+                if(option == JOptionPane.YES_OPTION){
+                    reset();
+                }
+            }
+
+        });
+        mainWindow.getExport().addActionListener(e -> {
+            exportController.getExportWindow().setVisible(true);
+            exportController.getExportWindow().getExportData().setSelected(true);
+            exportController.getExportWindow().getExportImage().setSelected(false);
+        });
+
         mainWindow.getExit().addActionListener(e -> {
             if(!isStart){
                 exitMidPull();
+            }else if(exportController.isUnsaved){
+                if(warnUnsavedData() == JOptionPane.NO_OPTION){
+                    disposeAll();
+                }
             }else{
                 disposeAll();
             }
         });
-        mainWindow.getClearButton().addActionListener(e -> clearGraph());
+
+        mainWindow.getClearButton().addActionListener(e -> {
+            if(exportController.isUnsaved) {
+                if (warnUnsavedData() == JOptionPane.NO_OPTION) {
+                    clearGraph();
+                }
+            }else{
+                clearGraph();
+            }
+        });
 
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
@@ -57,6 +90,10 @@ public class MainController {
                 }
             }else {
                 stopDataCollection();
+                int result = JOptionPane.showOptionDialog(null, "Data collection ended.\nDo you want to export data?\n", "Export Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Export", "Continue"}, JOptionPane.YES_OPTION);
+                if(result == JOptionPane.YES_OPTION){
+                    exportController.getExportWindow().setVisible(true);
+                }
             }
         });
 
@@ -66,7 +103,11 @@ public class MainController {
             public void windowClosing(WindowEvent e) {
                 if(!isStart){
                     exitMidPull();
-                }else{
+                }else if(exportController.isUnsaved){
+                    if(warnUnsavedData() == JOptionPane.NO_OPTION){
+                        disposeAll();
+                    }
+                }else {
                     disposeAll();
                 }
             }
@@ -93,6 +134,7 @@ public class MainController {
     private void disposeAll(){
         inputController.getInputWindow().dispose();
         settingsController.getSettingsWindow().dispose();
+        exportController.getExportWindow().dispose();
         mainWindow.dispose();
         if(updater != null){
             updater.terminate();
@@ -105,9 +147,13 @@ public class MainController {
     private void startDataCollection(){
         mainWindow.getStartButton().setText("Stop");
         mainWindow.getClearButton().setEnabled(false);
-        mainWindow.getReset().setEnabled(false);//do not allow rest while data is being pulled
+        //do not allow any of these while data is being pulled
+        mainWindow.getReset().setEnabled(false);
+        mainWindow.getSettings().setEnabled(false);
+        mainWindow.getInput().setEnabled(false);
         updater.collect();
         isStart = false;
+        exportController.isUnsaved = true;
     }
 
     /*
@@ -117,7 +163,10 @@ public class MainController {
         mainWindow.getStartButton().setText("Start");
         mainWindow.getClearButton().setEnabled(true);
         mainWindow.getStartButton().setEnabled(false);
+        //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
+        mainWindow.getSettings().setEnabled(true);
+        mainWindow.getInput().setEnabled(true);
         isStart = true;
         if(updater != null) {
             updater.pause();
@@ -131,36 +180,48 @@ public class MainController {
         mainWindow.getSeries().clear();
         mainWindow.getStartButton().setEnabled(true);
         mainWindow.getClearButton().setEnabled(false);
+        exportController.isUnsaved = false;
     }
 
     /*
      * Resets the graph, data, and input values
      */
     private void reset(){
-        int option = JOptionPane.showOptionDialog(null, "Do you want to reset?", "Reset", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION);
-        if(option == JOptionPane.YES_OPTION){
-            stopDataCollection();
-            clearGraph();
+        stopDataCollection();
+        clearGraph();
 
-            //clear the inputs convert back to the default units from the settings
-            inputController.clear();
-            settingsController.updateUnitsSystem();
-            inputController.onUnitSystemChange();
-        }
+        //clear the inputs convert back to the default units from the settings
+        inputController.clear();
+        settingsController.updateUnitsSystem();
+        inputController.onUnitSystemChange();
     }
 
-    public MainWindow getMainWindow() {
-        return mainWindow;
-    }
-
+    /*
+     * Confirm exit of program while actively pulling data
+     */
     private void exitMidPull() {
         //display yes/no message box
-        int exitMessage = JOptionPane.showOptionDialog(null,"You are currently pulling data. Are you sure you want to close the program?","Attempting to close",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"yes", "no"},JOptionPane.YES_OPTION);
+        int exitMessage = JOptionPane.showOptionDialog(null,"You are currently pulling data. \nAre you sure you want to close the program?","Confirm Close",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"Yes", "No"},JOptionPane.YES_OPTION);
         //if yes call close method
         if(exitMessage == JOptionPane.YES_OPTION) {
             stopDataCollection();
             disposeAll();
         }
+    }
+
+    /*
+     * Option box warning the user of unsaved data
+     */
+    private int warnUnsavedData(){
+        int result = JOptionPane.showOptionDialog(null,"Export your data?","Unsaved Changes" ,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,null, new Object[] {"Export", "Continue"},JOptionPane.YES_OPTION);
+        if(result == JOptionPane.YES_OPTION){
+            exportController.getExportWindow().setVisible(true);
+        }
+        return result;
+    }
+
+    public MainWindow getMainWindow() {
+        return mainWindow;
     }
 
     public static void main(String[] args){

@@ -22,22 +22,29 @@ public class InputController {
 
         inputWindow = new UserInputWindow();
 
-        inputWindow.getCancelButton().addActionListener(e -> inputWindow.setVisible(false));
-        inputWindow.getOkButton().addActionListener(e -> inputWindow.setVisible(false)); //Pull input values and do stuff with them
+        inputWindow.getCancelButton().addActionListener(e -> {
+            inputWindow.setVisible(false);
+            inputWindow.getWidthInputField().setText(String.valueOf(width));
+            inputWindow.getDepthInputField().setText(String.valueOf(depth));
+            inputWindow.getDiameterInputField().setText(String.valueOf(diameter));
+        });
+        inputWindow.getOkButton().addActionListener(e -> inputWindow.setVisible(false));
 
         inputWindow.getCircularButton().addActionListener(e -> {
             inputWindow.getCircularInputPanel().setVisible(true);
             inputWindow.getRectangularInputPanel().setVisible(false);
+            inputWindow.getDiameterInputField().setText("0.0");
         });
 
         inputWindow.getRectangularButton().addActionListener(e -> {
             inputWindow.getCircularInputPanel().setVisible(false);
             inputWindow.getRectangularInputPanel().setVisible(true);
+            inputWindow.getDepthInputField().setText("0.0");
+            inputWindow.getWidthInputField().setText("0.0");
         });
 
         inputWindow.getUnitSelectionBox().addActionListener(e -> {
            onUnitSystemChange();
-
         });
     }
 
