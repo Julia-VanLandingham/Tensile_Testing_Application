@@ -18,6 +18,12 @@ public class MainController {
     private boolean isStart = true;
     private final GraphUpdater updater;
 
+    //These are the values we are only going to populate when we start pulling data
+    private double width;
+    private double depth;
+    private double diameter;
+    private double gaugeLength;
+
     public MainController(){
         setLookAndFeel();
         mainWindow = new MainWindow();
@@ -27,8 +33,9 @@ public class MainController {
         updater = new GraphUpdater(mainWindow.getSeries());
         updater.start();
 
-        mainWindow.getInput().addActionListener(e -> inputController.getInputWindow().setVisible(true));
+        mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
+
         mainWindow.getReset().addActionListener(e -> {
             if(exportController.isUnsaved){
                 if(warnUnsavedData() == JOptionPane.NO_OPTION){
@@ -40,8 +47,8 @@ public class MainController {
                     reset();
                 }
             }
-
         });
+
         mainWindow.getExport().addActionListener(e -> {
             exportController.getExportWindow().setVisible(true);
             exportController.getExportWindow().getExportData().setSelected(true);
@@ -76,16 +83,16 @@ public class MainController {
                 if(!inputController.haveInputs()){
                     JOptionPane.showMessageDialog(null, "No cross section inputs given!", "Input Warning", JOptionPane.ERROR_MESSAGE);
                 //if the input values are from the previous round
-                }else if(inputController.areInputsFromPreviousRun()) {
+                }else if(areInputsFromPreviousRun()) {
                     int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\nDo you want to update them?\n", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, JOptionPane.YES_OPTION);
                     if (option == JOptionPane.NO_OPTION) {
-                        inputController.pullInputValues();
+                        getInputValues();
                         startDataCollection();
                     } else {
                         inputController.getInputWindow().setVisible(true);
                     }
                 }else{
-                    inputController.pullInputValues();
+                    getInputValues();
                     startDataCollection();
                 }
             }else {
@@ -210,6 +217,17 @@ public class MainController {
     }
 
     /*
+     * Checks if the values input from the user are the same as the previous time the data was run
+     */
+    private boolean areInputsFromPreviousRun(){
+        if(inputController.isRectangularSelected()){
+            return width == inputController.getWidth() && depth == inputController.getDepth();
+        }else{
+            return diameter == inputController.getDiameter();
+        }
+    }
+
+    /*
      * Option box warning the user of unsaved data
      */
     private int warnUnsavedData(){
@@ -220,6 +238,17 @@ public class MainController {
         return result;
     }
 
+    /*
+     * Get the input values that we want to use in our calculations
+     */
+    private void getInputValues(){
+        width = inputController.getWidth();
+        depth = inputController.getDepth();
+        diameter = inputController.getDiameter();
+        gaugeLength = inputController.getGaugeLength();
+    }
+
+    //getters
     public MainWindow getMainWindow() {
         return mainWindow;
     }

@@ -223,10 +223,6 @@ public class UserInputWindow extends JFrame {
         return cancel;
     }
 
-    public Units getCurrentUnitSystem(){
-        return currentUnitSystem;
-    }
-
     public JLabel getGaugeLengthLabel(){
         return gaugeLengthLabel;
     }
@@ -243,8 +239,13 @@ public class UserInputWindow extends JFrame {
         return depthLabel;
     }
 
+    public Units getCurrentUnitSystem(){
+        return currentUnitSystem;
+    }
+
     public void setCurrentUnitSystem(Units currentUnitSystem){
         this.currentUnitSystem = currentUnitSystem;
     }
+
 }
 

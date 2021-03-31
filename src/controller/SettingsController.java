@@ -98,8 +98,18 @@ public class SettingsController {
 
             settingsWindow.getDefaultGaugeLengthField().setText(String.format("%.10f", convertedValue));
         });
+
+        /*
+         * Note that we must do this here because the input controller must be made before
+         * the settings in order to pass it in, but the settings must update the gauge length
+         * before we can pull the input values
+         */
+        inputController.pullInputValues(); //Initialize the stored values
     }
 
+    /**
+     * Update the unit system and convert the gauge length appropriately
+     */
     public void updateUnitsSystem(){
         double value = settingsWindow.getDefaultGaugeLength();
         inputController.getInputWindow().getGaugeLengthInputField().setText(String.valueOf(value)); //settings gauge length to input gauge length
@@ -111,6 +121,7 @@ public class SettingsController {
         inputController.getInputWindow().getUnitSelectionBox().setSelectedItem(settingsWindow.getDefaultUnits());
     }
 
+    //getters
     public SettingsView getSettingsWindow(){
         return settingsWindow;
     }
