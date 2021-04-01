@@ -3,6 +3,7 @@ package controller;
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class Calculations {
@@ -14,6 +15,8 @@ public class Calculations {
         ENGLISH,
         METRIC
     }
+    public static final double LINEAR_TOLERANCE = 0.01;
+    public static final double ZERO_TOLERANCE = 0.001;
 
     /**
      * Converts length value from one unit system to a different unit system.
@@ -181,15 +184,45 @@ public class Calculations {
      When this derivative goes to zero (may need to have some tolerance)
      then we have hit the yield point.
      */
-    public static double findYieldPoint(XYSeries data){
-        double yieldPoint = 0.0;
-        //actually find the yieldPoint
-        return yieldPoint;
+    public static int findYieldPoint(XYSeries data){//should take an X array and Y array and a derivative
+        int yieldPoint = 0;
+        double[][] dataArray = data.toArray();
+        final int X = 0;
+        final int Y = 1;
+        //This code finds the derivative might need to be in a separate method.
+        double[] derivative = new double[dataArray[X].length];
+        derivative[0] = (dataArray[Y][1]-dataArray[Y][0])/(dataArray[X][1]-dataArray[X][0]);
+        for(int i = 1; i < derivative.length -1; i ++){
+            //average slope from i-1 to i with slope from i to i+
+            double slope1 = (dataArray[Y][i]-dataArray[Y][i-1])/(dataArray[X][i]-dataArray[X][i-1]);
+            double slope2 = (dataArray[Y][i+1]-dataArray[Y][i])/(dataArray[X][i+1]-dataArray[X][i]);
+            derivative[i] = (slope1 + slope2) *.5;
+        }
+        //Derivative found
+        int last = derivative.length -1;
+        derivative[last] = (dataArray[Y][last]-dataArray[Y][last-1])/(dataArray[X][last]-dataArray[X][last-1]);
+        //two ways to find linear portions of graph. Best way may be determined through testing
+        //1.linear portion by seeing if slope of several points are similar
+        //Currently using this for this method -> 2. Or try to find points where derivative is zero
+        //-zero points are: gone from positive slope to negative slope or negative slope to positive slope
+        ArrayList<Integer> zeroes = new ArrayList<>();//list of zero points on graph
+        for(int i = 1; i < derivative.length; i++){
+            if((derivative[i -1]  >= 0 && derivative[i] < 0)||(derivative[i]  >= 0 && derivative[i-1] < 0)){
+                zeroes.add(i);
+            }
+        }
+        //finds yield point but is not a realistic estimate.
+        if(zeroes.size() > 0){
+            return zeroes.get(0);
+        }
+        else{
+            return -1;
+        }
     }
     //After we found the yield point, take the average of all the derivatives from the start to the yield point
     public static double findYoungsModulus(XYSeries data){
         double youngsModulus = 0.0;
-        double yieldPoint = findYieldPoint(data);
+        int yieldPoint = findYieldPoint(data);
         //actually find the young's modulus
         return youngsModulus;
     }
