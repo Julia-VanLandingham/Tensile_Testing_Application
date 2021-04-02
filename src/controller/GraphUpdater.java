@@ -28,7 +28,6 @@ public class GraphUpdater extends Thread {
      */
     @Override
     public void run() {
-        boolean keepGoing = true;
         int x = 0;
         while(!done.get()) {//call code from class that gets data from the chip.
             try {
@@ -39,7 +38,6 @@ public class GraphUpdater extends Thread {
                 }
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                keepGoing = false;
             }
 
             aiTask.collectData();

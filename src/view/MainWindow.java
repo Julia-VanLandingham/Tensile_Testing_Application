@@ -17,11 +17,9 @@ import java.awt.event.KeyEvent;
 
 public class MainWindow extends JFrame {
 
-    private final int frameHeight;
-    private final int frameWidth;
-
-    private static final int VERTICAL_BUFFER = 10;
-    private static final int HORIZONTAL_BUFFER = 10;
+    //constants used for formatting
+    protected static final int VERTICAL_BUFFER = 10;
+    protected static final int HORIZONTAL_BUFFER = 10;
 
     private JButton startButton;
     private JButton graphReset;
@@ -41,8 +39,8 @@ public class MainWindow extends JFrame {
     public MainWindow(){
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frameHeight = (int) (screenSize.getHeight() * .95);
-        frameWidth = (int) (screenSize.getWidth() * .95);
+        int frameHeight = (int) (screenSize.getHeight() * .95);
+        int frameWidth = (int) (screenSize.getWidth() * .95);
 
         setTitle("Tensile Testing");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -68,7 +66,6 @@ public class MainWindow extends JFrame {
      */
     private void setupGraphPanel(){
         graphPanel = new JPanel();
-        graphPanel.setSize(new Dimension((int) ( frameWidth * .75), frameHeight));
         graphPanel.setLayout(new BorderLayout());
         graphPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER), BorderFactory.createLineBorder(Color.BLACK, 1)));
 
@@ -82,7 +79,7 @@ public class MainWindow extends JFrame {
     }
 
     /*
-     * Creates value panel and start/stop button
+     * Creates value panel
      */
     private void setupValuePanel(){
         valuePanel = new JPanel();
@@ -93,6 +90,9 @@ public class MainWindow extends JFrame {
         valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(50,50,50,50)));
     }
 
+    /*
+     * Sets up the panel that holds the buttons for start/stop and clear
+     */
     private void setupOptionPanel(){
         optionsPanel = new JPanel();
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
@@ -107,6 +107,9 @@ public class MainWindow extends JFrame {
         optionsPanel.add(graphReset);
     }
 
+    /*
+     * Sets up the far right panel that holds the values and the button options
+     */
     private void setupEastPanel(){
         eastPanel = new JPanel();
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
@@ -158,28 +161,13 @@ public class MainWindow extends JFrame {
         menuBar.add(file);
         menuBar.add(edit);
     }
-    
-    public int getFrameHeight() {
-        return frameHeight;
-    }
 
-    public int getFrameWidth() {
-        return frameWidth;
-    }
-
+    //getters
     public JButton getStartButton() {
         return startButton;
     }
 
     public JButton getClearButton(){ return graphReset;}
-
-    public JPanel getValuePanel() {
-        return valuePanel;
-    }
-
-    public JPanel getGraphPanel() {
-        return graphPanel;
-    }
 
     public JFreeChart getChart(){
         return chart;
@@ -206,5 +194,4 @@ public class MainWindow extends JFrame {
     public XYSeries getSeries() {
         return series;
     }
-
 }

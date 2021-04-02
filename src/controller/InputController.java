@@ -10,25 +10,28 @@ public class InputController {
 
     private final UserInputWindow inputWindow;
     private final MainController mainController;
+
+    //These are the values that will be updated before the program starts pulling data
+    private String unitSystem;
     private double width;
     private double depth;
     private double diameter;
+    private double gaugeLength;
 
     public InputController(MainController mainController){
         this.mainController = mainController;
-        width = 0.0;
-        depth = 0.0;
-        diameter = 0.0;
 
         inputWindow = new UserInputWindow();
 
         inputWindow.getCancelButton().addActionListener(e -> {
             inputWindow.setVisible(false);
-            inputWindow.getWidthInputField().setText(String.valueOf(width));
-            inputWindow.getDepthInputField().setText(String.valueOf(depth));
-            inputWindow.getDiameterInputField().setText(String.valueOf(diameter));
+            updateInputFields();//revert back to previous inputs
         });
-        inputWindow.getOkButton().addActionListener(e -> inputWindow.setVisible(false));
+
+        inputWindow.getOkButton().addActionListener(e -> {
+            inputWindow.setVisible(false);
+            pullInputValues(); //actually store the inputs
+        });
 
         inputWindow.getCircularButton().addActionListener(e -> {
             inputWindow.getCircularInputPanel().setVisible(true);
@@ -43,9 +46,7 @@ public class InputController {
             inputWindow.getWidthInputField().setText("0.0");
         });
 
-        inputWindow.getUnitSelectionBox().addActionListener(e -> {
-           onUnitSystemChange();
-        });
+        inputWindow.getUnitSelectionBox().addActionListener(e -> onUnitSystemChange());
     }
 
     /*
@@ -119,25 +120,26 @@ public class InputController {
         }
     }
 
-    /**
-     * Checks if the values input from the user are the same as the previous time the data was run
-     * @return if the input values are the same
+    /*
+     * Stores the input values locally from the input window
      */
-    public boolean areInputsFromPreviousRun(){
-        if(isRectangularSelected()){
-            return width == getWidthInput() && depth == getDepthInput();
-        }else{
-            return diameter == getDiameterInput();
-        }
-    }
-
-    /**
-     * Stores the input values from the input window
-     */
-    public void pullInputValues(){
+    protected void pullInputValues(){
         width = getWidthInput();
         depth = getDepthInput();
         diameter = getDiameterInput();
+        gaugeLength = getGaugeLengthInput();
+        unitSystem = (String) inputWindow.getUnitSelectionBox().getSelectedItem();
+    }
+
+    /*
+     * Updates the input fields to be what the stored values are
+     * This will likely be reverting the fields back to what they were previously after the cancel is selected
+     */
+    private void updateInputFields(){
+        inputWindow.getWidthInputField().setText(String.valueOf(width));
+        inputWindow.getDepthInputField().setText(String.valueOf(depth));
+        inputWindow.getDiameterInputField().setText(String.valueOf(diameter));
+        inputWindow.getUnitSelectionBox().setSelectedItem(unitSystem);
     }
 
     /*
@@ -174,24 +176,16 @@ public class InputController {
         return width;
     }
 
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
     public double getDepth() {
         return depth;
-    }
-
-    public void setDepth(double depth) {
-        this.depth = depth;
     }
 
     public double getDiameter() {
         return diameter;
     }
 
-    public void setDiameter(double diameter) {
-        this.diameter = diameter;
+    public double getGaugeLength(){
+        return gaugeLength;
     }
 
     public UserInputWindow getInputWindow(){

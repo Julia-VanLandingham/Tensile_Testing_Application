@@ -8,12 +8,11 @@ import javax.swing.*;
 public class ExportWindow extends JFrame {
 
     //constants used for formatting
-    private static final int VERTICAL_BUFFER = 10;
-    private static final int HORIZONTAL_BUFFER = 10;
+    private final int VERTICAL_BUFFER;
+    private final int HORIZONTAL_BUFFER;
 
     private JPanel imageOptionPanel;
     private JPanel exportValuesWithDataPanel;
-
     private JRadioButton jpg;
     private JRadioButton png;
     private JButton export;
@@ -24,6 +23,10 @@ public class ExportWindow extends JFrame {
 
     public ExportWindow(){
         setTitle("Export");
+
+        HORIZONTAL_BUFFER = MainWindow.HORIZONTAL_BUFFER;
+        VERTICAL_BUFFER = MainWindow.VERTICAL_BUFFER;
+
         JPanel outerPanel =  new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
         outerPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
@@ -136,6 +139,7 @@ public class ExportWindow extends JFrame {
         return buttonPanel;
     }
 
+    //getters
     public JPanel getImageOptionPanel() {
         return imageOptionPanel;
     }
@@ -171,5 +175,4 @@ public class ExportWindow extends JFrame {
     public JCheckBox getExportData() {
         return exportData;
     }
-
 }
