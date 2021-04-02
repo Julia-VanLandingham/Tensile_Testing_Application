@@ -55,8 +55,27 @@ public interface Nicaiu extends StdCallLibrary {
 	public static final int DAQmx_Val_FiniteSamps = (int)10178;
 	public static final int DAQmx_Val_ContSamps = (int)10123;
 	public static final int DAQmx_Val_OnDemand = (int)10390;
-	public static final int DAQmx_Val_Diff = 10106;
+	// Added these from header file "NIDAQmx.h"  :
+	public static final int DAQmx_Val_Bit_TermCfg_RSE               =                          (1<<0); // RSE terminal configuration
+	public static final int DAQmx_Val_Bit_TermCfg_NRSE              =                          (1<<1); // NRSE terminal configuration
+	public static final int DAQmx_Val_Bit_TermCfg_Diff              =                          (1<<2); // Differential terminal configuration
+	public static final int DAQmx_Val_Bit_TermCfg_PseudoDIFF        =                          (1<<3); // Pseudodifferential terminal configuration
+	public static final int DAQmx_Val_RSE                           =                          10083; // RSE
+	public static final int DAQmx_Val_NRSE                          =                          10078; // NRSE
+	public static final int DAQmx_Val_Diff                          =                          10106; // Differential
+	public static final int DAQmx_Val_PseudoDiff                    =                          12529; // Pseudodifferential
+
+
 	//#define DAQmx_Val_Diff                                                    10106 // Differential
+	/*
+	*** Values for DAQmx_PhysicalChan_AI_TermCfgs and DAQmx_PhysicalChan_AO_TermCfgs
+	*** Value set TerminalConfigurationBits ***
+	#define DAQmx_Val_Bit_TermCfg_RSE                                         (1<<0) // RSE terminal configuration
+	#define DAQmx_Val_Bit_TermCfg_NRSE                                        (1<<1) // NRSE terminal configuration
+	#define DAQmx_Val_Bit_TermCfg_Diff                                        (1<<2) // Differential terminal configuration
+	#define DAQmx_Val_Bit_TermCfg_PseudoDIFF                                  (1<<3) // Pseudodifferential terminal configuration
+
+	 */
 	
 
 	

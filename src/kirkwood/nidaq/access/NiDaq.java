@@ -25,6 +25,8 @@ package kirkwood.nidaq.access;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import kirkwood.nidaq.jna.Nicaiu;
 
@@ -53,9 +55,9 @@ public class NiDaq {
 	 * @return
 	 */
 	public Pointer createTask(String taskName) throws NiDaqException {
-		byte[] btName = taskName.getBytes();
+		// This is my stuff
 		PointerByReference taskHandleRef = new PointerByReference();
-		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(taskName.getBytes(StandardCharsets.UTF_8), taskHandleRef));
 		Pointer taskHandle = taskHandleRef.getValue();
 		return taskHandle;
 	}
@@ -86,13 +88,13 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createDOChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, lines.getBytes(StandardCharsets.UTF_8), nameToAssignToLines.getBytes(StandardCharsets.UTF_8), lineGrouping));
 	}
 	
 
 	
 	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(StandardCharsets.UTF_8), nameToAssignToLines.getBytes(StandardCharsets.UTF_8), lineGrouping));
 	}
 	
 	/**
@@ -136,7 +138,7 @@ public class NiDaq {
 	
 	
 	public void createAIVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(StandardCharsets.UTF_8), nameToAssignToChannel.getBytes(StandardCharsets.UTF_8), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	/**
@@ -186,7 +188,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createAICurrentChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, int shuntResistorLoc, double extShuntResistorVal, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, customScaleName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, physicalChannel.getBytes(StandardCharsets.UTF_8), nameToAssignToChannel.getBytes(StandardCharsets.UTF_8), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, customScaleName.getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	/**
@@ -390,7 +392,7 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void cfgSampClkTiming(Pointer taskHandle, String source, double rate, int activeEdge, int sampleMode, long sampsPerChan) throws NiDaqException{
-		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, source.getBytes(), rate, activeEdge, sampleMode, sampsPerChan));
+		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, source.getBytes(StandardCharsets.UTF_8), rate, activeEdge, sampleMode, sampsPerChan));
 	}
 	
 	/**
@@ -406,7 +408,7 @@ public class NiDaq {
 	}
 	
 	public void resetDevice(String devName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes()));
+		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	
@@ -425,10 +427,6 @@ public class NiDaq {
 		}
 		}
 		checkError(Nicaiu.INSTANCE.DAQmxGetPhysicalChanName(taskHandle, chan, chan, new NativeLong(256)));
-		
-		
-		
+
 	}
-	
-	
 }
