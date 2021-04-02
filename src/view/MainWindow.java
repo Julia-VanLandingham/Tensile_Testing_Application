@@ -9,6 +9,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * This class creates the main window named "Tensile Testing"
@@ -141,6 +142,21 @@ public class MainWindow extends JFrame {
         reset = new JMenuItem("Reset");
         edit.add(input);
         edit.add(reset);
+
+        //set hotkeys
+        file.setMnemonic(KeyEvent.VK_F);
+        edit.setMnemonic(KeyEvent.VK_E);
+        exit.setMnemonic(KeyEvent.VK_X);
+
+        KeyStroke keyStrokeToInput = KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK);
+        input.setAccelerator(keyStrokeToInput);
+        KeyStroke keyStrokeToReset = KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK);
+        reset.setAccelerator(keyStrokeToReset);
+        KeyStroke keyStrokeToExport = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+        export.setAccelerator(keyStrokeToExport);
+        KeyStroke keyStrokeToSettings = KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK);
+        settings.setAccelerator(keyStrokeToSettings);
+
 
         menuBar.add(file);
         menuBar.add(edit);
