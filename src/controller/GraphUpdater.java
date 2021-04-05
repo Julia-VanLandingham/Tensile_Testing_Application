@@ -2,6 +2,8 @@ package controller;
 
 import model.AITask;
 import org.jfree.data.xy.XYSeries;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -11,7 +13,10 @@ public class GraphUpdater extends Thread {
     private XYSeries series;
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
-    AITask aiTask;
+    private AITask aiTask;
+
+    private double stressZero = 0.0; //force = stress
+    private double strainZero = 0.0; //elongation = strain (Extensometer)
 
     public GraphUpdater(XYSeries series) {
         aiTask = new AITask();
@@ -70,6 +75,31 @@ public class GraphUpdater extends Thread {
     public synchronized void terminate() {
         done.set(true);
         notifyAll();
+    }
+
+    public void updateZeros(){
+        ArrayList<Double> force = new ArrayList<>();
+        ArrayList<Double> elongation = new ArrayList<>();
+        double forceTotal = 0.0;
+        double elongationTotal = 0.0;
+        for(int i = 0; i < 5; i++){
+            aiTask.collectData();
+            double [] channel0 = aiTask.getChannelData(0);
+            double [] channel1 = aiTask.getChannelData(1);
+            for(int j = 0; j < channel0.length; j++){
+                force.add(channel0[j]);
+                elongation.add(channel1[j]);
+            }
+        }
+        for(double num : force){
+            forceTotal += num;
+        }
+        for(double num : elongation){
+            elongationTotal += num;
+        }
+
+        stressZero = forceTotal / force.size();
+        strainZero = elongationTotal / elongation.size();
     }
 
 }

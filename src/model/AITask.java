@@ -23,7 +23,7 @@ public class AITask {
     private int channels;
     private NiDaq daq ;
     private Pointer aiTask;
-    int[] read;
+    private int[] read;
     private double[] buffer;
     private double [][] data;
     private DoubleBuffer inputBuffer;
