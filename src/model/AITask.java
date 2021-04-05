@@ -30,14 +30,12 @@ public class AITask {
     private IntBuffer samplesPerChannelRead;
     private boolean readyToRun;
 
-    public AITask(){
-        try {
-            daq = new NiDaq();
-            aiTask = daq.createTask("AITask\0");
-            readyToRun = false;
-        }catch (NiDaqException e){
-            e.printStackTrace();
-        }
+    public AITask() throws NiDaqException{
+
+        daq = new NiDaq();
+        aiTask = daq.createTask("AITask\0");
+        readyToRun = false;
+
     }
 
     /**
@@ -45,24 +43,22 @@ public class AITask {
      * @param channelNumber the port that the National Instruments Chip will read from
      * @param channelMode the mode that the National Instruments Chip reads in (see the chip manual for more information)
      */
-    public void createAIChannel(int channelNumber, Mode channelMode){
+    public void createAIChannel(int channelNumber, Mode channelMode) throws NiDaqException{
         if(!readyToRun) {
             String channelName = "Dev1/ai" + channelNumber + "\0";
-            try {
-                switch (channelMode) {
-                    case DIFFERENTIAL:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                        break;
-                    case RSE:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                        break;
-                    default:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                }
-                channels++;
-            } catch (NiDaqException e) {
-                e.printStackTrace();
+
+            switch (channelMode) {
+                case DIFFERENTIAL:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+                    break;
+                case RSE:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+                    break;
+                default:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
             }
+            channels++;
+
         }else{
             System.err.println("AITask: Ready to run function already called.");
         }
@@ -72,18 +68,15 @@ public class AITask {
      * Should be called before starting to try and pull data and after creating Analog Input Channels
      * Sets everything up to be ready to run
      */
-    public void readyToRun(){
-        try {
-            daq.cfgSampClkTiming(aiTask, "\0", SAMPLES_PER_SECOND, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, channels * INPUT_BUFFER_SIZE);
-            read = new int[] {0};
-            buffer = new double[channels * INPUT_BUFFER_SIZE];
-            inputBuffer = DoubleBuffer.wrap(buffer);
-            samplesPerChannelRead = IntBuffer.wrap(read);
-            data = new double[channels][INPUT_BUFFER_SIZE];
-            readyToRun = true;
-        } catch (NiDaqException e) {
-            e.printStackTrace();
-        }
+    public void readyToRun() throws NiDaqException{
+        daq.cfgSampClkTiming(aiTask, "\0", SAMPLES_PER_SECOND, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, channels * INPUT_BUFFER_SIZE);
+        read = new int[] {0};
+        buffer = new double[channels * INPUT_BUFFER_SIZE];
+        inputBuffer = DoubleBuffer.wrap(buffer);
+        samplesPerChannelRead = IntBuffer.wrap(read);
+        data = new double[channels][INPUT_BUFFER_SIZE];
+        readyToRun = true;
+
     }
 
     /**
