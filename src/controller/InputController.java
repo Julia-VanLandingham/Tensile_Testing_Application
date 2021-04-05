@@ -17,6 +17,7 @@ public class InputController {
     private double depth;
     private double diameter;
     private double gaugeLength;
+    private double area;
 
     public InputController(MainController mainController){
         this.mainController = mainController;
@@ -129,6 +130,11 @@ public class InputController {
         diameter = getDiameterInput();
         gaugeLength = getGaugeLengthInput();
         unitSystem = (String) inputWindow.getUnitSelectionBox().getSelectedItem();
+        if(diameter == 0.0 && width != 0.0){
+            area = Calculations.calculateArea(width, depth);
+        }else if (diameter != 0.0){
+            area = Calculations.calculateArea(diameter);
+        }
     }
 
     /*
@@ -186,6 +192,10 @@ public class InputController {
 
     public double getGaugeLength(){
         return gaugeLength;
+    }
+
+    public double getArea(){
+        return area;
     }
 
     public UserInputWindow getInputWindow(){

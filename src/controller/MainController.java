@@ -30,7 +30,7 @@ public class MainController {
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
         exportController = new ExportController();
-        updater = new GraphUpdater(mainWindow.getSeries());
+        updater = new GraphUpdater(mainWindow.getSeries(), inputController);
         updater.start();
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));

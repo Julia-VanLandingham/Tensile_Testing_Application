@@ -14,16 +14,17 @@ public class GraphUpdater extends Thread {
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
     private AITask aiTask;
+    private InputController inputController;
 
     private double stressZero = 0.0; //force = stress
     private double strainZero = 0.0; //elongation = strain (Extensometer)
 
-    public GraphUpdater(XYSeries series) {
+    public GraphUpdater(XYSeries series, InputController inputController) {
         aiTask = new AITask();
         aiTask.createAIChannel(0, AITask.Mode.DIFFERENTIAL);
         aiTask.createAIChannel(1, AITask.Mode.RSE);
         aiTask.readyToRun();
-
+        this.inputController = inputController;
         this.series = series;
     }
 
@@ -33,7 +34,6 @@ public class GraphUpdater extends Thread {
      */
     @Override
     public void run() {
-        int x = 0;
         while(!done.get()) {//call code from class that gets data from the chip.
             try {
                 if(!run.get()){
@@ -49,7 +49,10 @@ public class GraphUpdater extends Thread {
             double [] force = aiTask.getChannelData(0);
             double [] length = aiTask.getChannelData(1); // raw voltage data
             for(int i = 0; i < AITask.INPUT_BUFFER_SIZE; i++){
-                series.add(force[i], length[i]);
+                double stressValue = Calculations.calculateStress((force[i] * 1960.574197 + stressZero), inputController.getArea());
+                double strainValue = Calculations.calculateStrain((length[i] * 0.041814743 + strainZero), inputController.getGaugeLength());
+
+                series.add(strainValue, stressValue);
             }
         }
     }
