@@ -27,6 +27,7 @@ public class MainWindow extends JFrame {
     private JPanel eastPanel;
     private JPanel optionsPanel;
     private JPanel graphPanel;
+
     private JMenuBar menuBar;
     private JMenuItem settings;
     private JMenuItem exit;
@@ -83,7 +84,7 @@ public class MainWindow extends JFrame {
      */
     private void setupValuePanel(){
         valuePanel = new JPanel();
-        valuePanel.add(new JLabel("Wombats"));
+
         valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
         valuePanel.add(Box.createVerticalGlue());
 
@@ -168,6 +169,14 @@ public class MainWindow extends JFrame {
     }
 
     public JButton getClearButton(){ return graphReset;}
+    
+    public JPanel getValuePanel() {
+        return valuePanel;
+    }
+
+    public JPanel getGraphPanel() {
+        return graphPanel;
+    }
 
     public JFreeChart getChart(){
         return chart;
