@@ -101,7 +101,9 @@ public class MainController {
                         startDataCollection();
                     }
                 }catch (NiDaqException exception){
-                    JOptionPane.showMessageDialog(null, "Failed to start data collection.\nCheck that National Instruments device is connected via USB port.", "Device Connected?", JOptionPane.ERROR_MESSAGE);
+                    updater = null;
+                    JOptionPane.showMessageDialog(null, "Failed to start data collection.\nCheck that National Instruments device is connected via USB port, then restart this program.", "Device Connected?", JOptionPane.ERROR_MESSAGE);
+                    disposeAll();
                 }
             }else {
                 stopDataCollection();
