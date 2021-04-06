@@ -16,8 +16,7 @@ public class Calculations {
         ENGLISH,
         METRIC
     }
-    public static final double LINEAR_TOLERANCE = 0.01;
-    public static final double ZERO_TOLERANCE = 0.001;
+    public static final double LINEAR_TOLERANCE = 1;
 
     /**
      * Converts length value from one unit system to a different unit system.
@@ -179,7 +178,7 @@ public class Calculations {
         }
         return derivative;
     }
-
+    //Find an ArrayList of points on the graph where the slope is zero.
     public static  ArrayList<Integer> findZeros(double [] XArray, double [] YArray){
         ArrayList<Integer> zeroes = new ArrayList<>();
         double [] derivative = findDerivative(XArray, YArray);
@@ -191,17 +190,6 @@ public class Calculations {
         return zeroes;
     }
 
-    //1st way to find linear portions of a graph: through comparing the slope of different points and seeing if they are similar.
-    public  static ArrayList<Integer> linearSlope(){//Not needed?
-        ArrayList<Integer> slopePoints = new ArrayList<>();
-        return slopePoints;
-    }
-    //2nd way to find linear portions of a graph: by finding points where derivative is zero.
-    public static ArrayList<Integer> zeroDerivative(double[] derivative){//NOT needed?
-        ArrayList<Integer> zeroPoints = new ArrayList<>();
-        int last = derivative.length -1;
-        return zeroPoints;
-    }
     //Find the max y value of the data points.
     public static Point2D.Double findUltimatePoint(double [] XArray, double [] YArray){
         int index = 0;
@@ -237,7 +225,7 @@ public class Calculations {
      */
     public static Point2D.Double findYieldPoint(double [] XArray, double [] YArray, ArrayList<Integer> zeros){
         if(zeros.size() > 0){
-            //get this index into a variable to return the point where the first time the index was zero.
+            //index of the  point where the first time the index was zero.
             int firstZero = zeros.get(0);
             return new Point2D.Double(XArray[firstZero], YArray[firstZero]);
         }
@@ -249,15 +237,16 @@ public class Calculations {
     //After we found the yield point, take the average of all the derivatives from the start to the yield point
     // }NOT DONE!{
     public static double findYoungsModulus(double [] XArray, double [] YArray,ArrayList<Integer> zeros){
-        double youngsModulus = 0.0;
-        double sumOfDerivatives = 0.0;
-        double[] derivative = findDerivative(XArray,YArray);// we want the index in our derivative array.
-        //find the midpoint
+        int count = 0;
+        int stepsFromMidpoint = 0;
         int midPoint = zeros.get(0)/2;
-        for(int i = 0; midPoint < zeros.get(0); i++){
-            sumOfDerivatives = sumOfDerivatives + derivative[i];
+        double[] derivative = findDerivative(XArray,YArray);// we want the index in our derivative array.
+        double currentAverage = derivative[midPoint];
+        while(count < midPoint || Math.abs((derivative[midPoint + stepsFromMidpoint] - currentAverage)) < LINEAR_TOLERANCE || Math.abs((derivative[midPoint - stepsFromMidpoint] - currentAverage)) < LINEAR_TOLERANCE){
+            currentAverage = (currentAverage * count) + (derivative[midPoint + stepsFromMidpoint]) + (derivative[midPoint - stepsFromMidpoint]);
+            count += 2;
+            currentAverage /= count;
         }
-        youngsModulus = sumOfDerivatives/derivative.length;
-        return youngsModulus;
+        return currentAverage;
     }
 }
