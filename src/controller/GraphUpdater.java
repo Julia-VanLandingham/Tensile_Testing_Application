@@ -1,5 +1,6 @@
 package controller;
 
+import kirkwood.nidaq.access.NiDaqException;
 import model.AITask;
 import org.jfree.data.xy.XYSeries;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Live graphs data
  */
-public class GraphUpdater extends Thread {
+public class GraphUpdater extends Thread{
     private XYSeries series;
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
@@ -36,6 +37,7 @@ public class GraphUpdater extends Thread {
      */
     @Override
     public void run() {
+        int x = 0;
         while(!done.get()) {//call code from class that gets data from the chip.
             try {
                 if(!run.get()){

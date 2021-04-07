@@ -50,24 +50,22 @@ public class AITask {
      * @param channelNumber the port that the National Instruments Chip will read from
      * @param channelMode the mode that the National Instruments Chip reads in (see the chip manual for more information)
      */
-    public void createAIChannel(int channelNumber, Mode channelMode){
+    public void createAIChannel(int channelNumber, Mode channelMode) throws NiDaqException{
         if(!readyToRun) {
             String channelName = "Dev1/ai" + channelNumber + "\0";
-            try {
-                switch (channelMode) {
-                    case DIFFERENTIAL:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                        break;
-                    case RSE:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                        break;
-                    default:
-                        daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-                }
-                channels++;
-            } catch (NiDaqException e) {
-                e.printStackTrace();
+
+            switch (channelMode) {
+                case DIFFERENTIAL:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Diff, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+                    break;
+                case RSE:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_RSE, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+                    break;
+                default:
+                    daq.createAIVoltageChannel(aiTask, channelName, "\0", Nicaiu.DAQmx_Val_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
             }
+            channels++;
+
         }else{
             System.err.println("AITask: Ready to run function already called.");
         }
