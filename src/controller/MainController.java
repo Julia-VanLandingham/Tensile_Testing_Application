@@ -29,9 +29,9 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
-        exportController = new ExportController();
-        updater = new GraphUpdater(mainWindow.getSeries(), inputController);
+        updater = new GraphUpdater(mainWindow.getSeries(), this);
         updater.start();
+        exportController = new ExportController(mainWindow.getSeries());
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
@@ -254,7 +254,20 @@ public class MainController {
         return mainWindow;
     }
 
+    public double getGaugeLength() {
+        return gaugeLength;
+    }
+
+    public double findArea(){
+        if(inputController.isRectangularSelected()){
+            return Calculations.calculateArea(width, depth);
+        }else{
+            return Calculations.calculateArea(diameter);
+        }
+    }
+
     public static void main(String[] args){
         new MainController();
     }
+
 }

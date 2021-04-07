@@ -18,8 +18,11 @@ public class AITask {
         DIFFERENTIAL, RSE, DEFAULT
     }
 
-    public static final int INPUT_BUFFER_SIZE = 2;
-    public static final int SAMPLES_PER_SECOND = 10;
+
+    public static final int SAMPLES_PER_SECOND = 50;
+    public static final int AVERAGE_FACTOR = 5;
+    public static final int UPDATES_PER_SECOND = 2;
+    public static final int INPUT_BUFFER_SIZE = SAMPLES_PER_SECOND / UPDATES_PER_SECOND;
     private int channels;
     private NiDaq daq ;
     private Pointer aiTask;
@@ -29,12 +32,14 @@ public class AITask {
     private DoubleBuffer inputBuffer;
     private IntBuffer samplesPerChannelRead;
     private boolean readyToRun;
+    private double[] cleanedData;
 
     public AITask(){
         try {
             daq = new NiDaq();
             aiTask = daq.createTask("AITask\0");
             readyToRun = false;
+            cleanedData = new double [INPUT_BUFFER_SIZE/AVERAGE_FACTOR];
         }catch (NiDaqException e){
             e.printStackTrace();
         }
@@ -115,6 +120,14 @@ public class AITask {
      * @return a double array of data from the channel given
      */
     public double [] getChannelData(int channelNumber){
-        return data[channelNumber];
+        cleanedData = new double[AVERAGE_FACTOR];
+        for(int i = 0; i < AVERAGE_FACTOR; i++){
+            for(int j = 0; j < AVERAGE_FACTOR; j++){
+                cleanedData[i] += data[channelNumber][i * AVERAGE_FACTOR + j];
+            }
+            cleanedData[i] /= AVERAGE_FACTOR;
+        }
+
+        return cleanedData;
     }
 }

@@ -1,6 +1,12 @@
 package controller;
 
+import org.jfree.data.xy.XYSeries;
 import view.ExportWindow;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 
 /**
  * Sets up and controls the functions of the ExportWindow
@@ -8,14 +14,27 @@ import view.ExportWindow;
 public class ExportController {
     private final ExportWindow exportWindow;
     protected boolean isUnsaved;
+    private XYSeries xySeries;
 
-    public ExportController(){
+    public ExportController(XYSeries xySeries){
         exportWindow = new ExportWindow();
         isUnsaved = false;
+        this.xySeries = xySeries;
 
         exportWindow.getCancel().addActionListener(e -> exportWindow.setVisible(false));
         exportWindow.getExport().addActionListener(e -> {
             exportWindow.setVisible(false);
+            try {
+                PrintWriter outfile = new PrintWriter(new FileOutputStream("stress_strain_data.csv"));
+                double [][] data = xySeries.toArray();
+                for(int i = 0; i < data[0].length; i++){
+                    outfile.format("%.6f,%.6f%n", data[0][i], data[1][i]);
+                }
+                outfile.close();
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
             isUnsaved = false;
         });
 

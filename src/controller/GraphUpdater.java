@@ -14,17 +14,19 @@ public class GraphUpdater extends Thread {
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
     private AITask aiTask;
-    private InputController inputController;
-
+    private MainController mainController;
     private double stressZero = 0.0; //force = stress
     private double strainZero = 0.0; //elongation = strain (Extensometer)
 
-    public GraphUpdater(XYSeries series, InputController inputController) {
+    private static final double LBS_PER_VOLT = 1960.574197;
+    private static final double INCHES_PER_VOLT = 0.041814743;
+
+    public GraphUpdater(XYSeries series, MainController mainController) {
         aiTask = new AITask();
-        aiTask.createAIChannel(0, AITask.Mode.DIFFERENTIAL);
+        aiTask.createAIChannel(3, AITask.Mode.DIFFERENTIAL);
         aiTask.createAIChannel(1, AITask.Mode.RSE);
         aiTask.readyToRun();
-        this.inputController = inputController;
+        this.mainController = mainController;
         this.series = series;
     }
 
@@ -44,13 +46,14 @@ public class GraphUpdater extends Thread {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
             }
+            if(done.get()) return;
 
             aiTask.collectData();
             double [] force = aiTask.getChannelData(0);
             double [] length = aiTask.getChannelData(1); // raw voltage data
-            for(int i = 0; i < AITask.INPUT_BUFFER_SIZE; i++){
-                double stressValue = Calculations.calculateStress((force[i] * 1960.574197 + stressZero), inputController.getArea());
-                double strainValue = Calculations.calculateStrain((length[i] * 0.041814743 + strainZero), inputController.getGaugeLength());
+            for(int i = 0; i < AITask.AVERAGE_FACTOR; i++){
+                double stressValue = Calculations.calculateStress((LBS_PER_VOLT * (force[i]  - stressZero)) / 1000, mainController.findArea());
+                double strainValue = Calculations.calculateStrain((INCHES_PER_VOLT * (length[i]  - strainZero)), mainController.getGaugeLength());
 
                 series.add(strainValue, stressValue);
             }
@@ -85,15 +88,14 @@ public class GraphUpdater extends Thread {
         ArrayList<Double> elongation = new ArrayList<>();
         double forceTotal = 0.0;
         double elongationTotal = 0.0;
-        for(int i = 0; i < 5; i++){
-            aiTask.collectData();
-            double [] channel0 = aiTask.getChannelData(0);
-            double [] channel1 = aiTask.getChannelData(1);
-            for(int j = 0; j < channel0.length; j++){
-                force.add(channel0[j]);
-                elongation.add(channel1[j]);
-            }
+        aiTask.collectData();
+        double [] channel0 = aiTask.getChannelData(0);
+        double [] channel1 = aiTask.getChannelData(1);
+        for(int j = 0; j < channel0.length; j++){
+            force.add(channel0[j]);
+            elongation.add(channel1[j]);
         }
+
         for(double num : force){
             forceTotal += num;
         }
