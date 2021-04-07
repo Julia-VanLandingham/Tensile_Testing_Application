@@ -30,8 +30,6 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
-        updater = new GraphUpdater(mainWindow.getSeries(), this);
-        updater.start();
         exportController = new ExportController(mainWindow.getSeries());
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
@@ -82,7 +80,7 @@ public class MainController {
             if(isStart){
                 try {
                     if (updater == null) {
-                        updater = new GraphUpdater(mainWindow.getSeries());
+                        updater = new GraphUpdater(mainWindow.getSeries(), this);
                         updater.start();
                     }
                     //if no input values at all give a warning

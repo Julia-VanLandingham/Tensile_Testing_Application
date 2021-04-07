@@ -22,7 +22,7 @@ public class GraphUpdater extends Thread{
     private static final double LBS_PER_VOLT = 1960.574197;
     private static final double INCHES_PER_VOLT = 0.041814743;
 
-    public GraphUpdater(XYSeries series, MainController mainController) {
+    public GraphUpdater(XYSeries series, MainController mainController) throws NiDaqException {
         aiTask = new AITask();
         aiTask.createAIChannel(3, AITask.Mode.DIFFERENTIAL);
         aiTask.createAIChannel(1, AITask.Mode.RSE);
