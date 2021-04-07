@@ -166,22 +166,34 @@ public class Calculations {
         }
         return Math.PI * (diameter/2) * (diameter/2);
     }
-    //Find the derivative of the data.
-    public static double[] findDerivative(double [] XArray, double [] YArray){
-        double[] derivative = new double[XArray.length];
-        derivative[0] = (YArray[1]-YArray[0])/(XArray[1]-XArray[0]);
+    /**
+     * Find the derivative of the  graphed data
+     * @param xArray the x axis values of our graphed data
+     * @param yArray the y axis values of our graphed data
+     * @return an array of doubles containing the derivatives of our data
+     */
+
+    public static double[] findDerivative(double [] xArray, double [] yArray){
+        double[] derivative = new double[xArray.length];
+        derivative[0] = (yArray[1]-yArray[0])/(xArray[1]-xArray[0]);
         for(int i = 1; i < derivative.length -1; i ++){
             //average slope from i-1 to i with slope from i to i + 1
-            double slope1 = (YArray[i]-YArray[i-1])/(XArray[i]-XArray[i-1]);
-            double slope2 = (YArray[i+1]-YArray[i])/(XArray[i+1]-XArray[i]);
+            double slope1 = (yArray[i]-yArray[i-1])/(xArray[i]-xArray[i-1]);
+            double slope2 = (yArray[i+1]-yArray[i])/(xArray[i+1]-xArray[i]);
             derivative[i] = (slope1 + slope2) *.5;
         }
         return derivative;
     }
-    //Find an ArrayList of points on the graph where the slope is zero.
-    public static  ArrayList<Integer> findZeros(double [] XArray, double [] YArray){
+
+    /**
+     * Find the points on the graph where the slope is zero
+     * @param xArray the x axis values of our graphed data
+     * @param yArray the y axis values of our graphed data
+     * @return an ArrayList of indexes with a slope of zero
+     */
+    public static  ArrayList<Integer> findZeros(double [] xArray, double [] yArray){
         ArrayList<Integer> zeroes = new ArrayList<>();
-        double [] derivative = findDerivative(XArray, YArray);
+        double [] derivative = findDerivative(xArray, yArray);
         for(int i = 1; i < derivative.length; i++){
             if((derivative[i -1]  >= 0 && derivative[i] < 0)||(derivative[i]  >= 0 && derivative[i-1] < 0)){
                 zeroes.add(i);
@@ -190,15 +202,20 @@ public class Calculations {
         return zeroes;
     }
 
-    //Find the max y value of the data points.
-    public static Point2D.Double findUltimatePoint(double [] XArray, double [] YArray){
+    /**
+     * Find the max y value of the data points.
+     * @param xArray the x axis values of our graphed data
+     * @param yArray the y axis values of our graphed data
+     * @return The point on the graph with the largest Y value as an X and Y coordinate
+     */
+    public static Point2D.Double findUltimatePoint(double [] xArray, double [] yArray){
         int index = 0;
-        for(int i = 0; i < YArray.length; i++){
-            if(YArray[index] <= YArray[i]) {
+        for(int i = 0; i < yArray.length; i++){
+            if(yArray[index] <= yArray[i]) {
                 index = i;
             }
         }
-        return new Point2D.Double(XArray[index], YArray[index]);
+        return new Point2D.Double(xArray[index], yArray[index]);
     }
     //Find the point at which the force is 0 (may need user input).
     // Need to view  sample data to properly implement }NOT DONE!{
@@ -216,37 +233,45 @@ public class Calculations {
         }
         return -1;
     }
-    /*
-     Take a moving derivative of the data
-     During the linear part this will be relatively average.
-     Store all these values for later use.
-     When this derivative goes to zero (may need to have some tolerance)
-     then we have hit the yield point.
+
+    /**
+     * Finds the yield point on the graphed data
+     * @param xArray the x axis values of our graphed data
+     * @param yArray the y axis values of our graphed data
+     * @param zeros an ArrayList of indexes of linear points on the graph
+     * @return the point on the graph that represents the yield point as an X and Y coordinate
      */
-    public static Point2D.Double findYieldPoint(double [] XArray, double [] YArray, ArrayList<Integer> zeros){
+    public static Point2D.Double findYieldPoint(double [] xArray, double [] yArray, ArrayList<Integer> zeros){
         if(zeros.size() > 0){
             //index of the  point where the first time the index was zero.
             int firstZero = zeros.get(0);
-            return new Point2D.Double(XArray[firstZero], YArray[firstZero]);
+            return new Point2D.Double(xArray[firstZero], yArray[firstZero]);
         }
         else{
             //should probably throw an exception
             return null;
         }
     }
-    //After we found the yield point, take the average of all the derivatives from the start to the yield point
-    // }NOT DONE!{
-    public static double findYoungsModulus(double [] XArray, double [] YArray,ArrayList<Integer> zeros){
+
+    /**
+     * finds the Young's modulus of the graphed data
+     * @param xArray the x axis values of our graphed data
+     * @param yArray the y axis values of our graphed data
+     * @param derivative an array of doubles containing the derivatives of our data
+     * @param zeros an ArrayList of indexes of linear points on the graph
+     * @return a double that is the average of the derivatives
+     */
+    public static double findYoungsModulus(double [] xArray, double [] yArray,double [] derivative,ArrayList<Integer> zeros){
+        //find length of interval and cut of ten percent of interval- start at first ten percent and then go until length minus 1
+        //cut off some end of the values and average those
+        int start = derivative.length/10;
+        double sum = 0.0;
         int count = 0;
-        int stepsFromMidpoint = 0;
-        int midPoint = zeros.get(0)/2;
-        double[] derivative = findDerivative(XArray,YArray);// we want the index in our derivative array.
-        double currentAverage = derivative[midPoint];
-        while(count < midPoint || Math.abs((derivative[midPoint + stepsFromMidpoint] - currentAverage)) < LINEAR_TOLERANCE || Math.abs((derivative[midPoint - stepsFromMidpoint] - currentAverage)) < LINEAR_TOLERANCE){
-            currentAverage = (currentAverage * count) + (derivative[midPoint + stepsFromMidpoint]) + (derivative[midPoint - stepsFromMidpoint]);
-            count += 2;
-            currentAverage /= count;
+        //take middle 80%
+        for(int i = start; i < derivative.length - start; i++){
+            sum+= derivative[i];
+            count++;
         }
-        return currentAverage;
+        return sum/count;
     }
 }
