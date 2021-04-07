@@ -214,6 +214,14 @@ public class MainWindow extends JFrame {
     }
 
     public JButton getClearButton(){ return graphReset;}
+    
+    public JPanel getValuePanel() {
+        return valuePanel;
+    }
+
+    public JPanel getGraphPanel() {
+        return graphPanel;
+    }
 
     public JFreeChart getChart(){
         return chart;
