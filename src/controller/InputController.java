@@ -129,6 +129,7 @@ public class InputController {
         diameter = getDiameterInput();
         gaugeLength = getGaugeLengthInput();
         unitSystem = (String) inputWindow.getUnitSelectionBox().getSelectedItem();
+
     }
 
     /*
@@ -187,6 +188,7 @@ public class InputController {
     public double getGaugeLength(){
         return gaugeLength;
     }
+
 
     public UserInputWindow getInputWindow(){
         return inputWindow;

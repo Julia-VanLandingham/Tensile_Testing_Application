@@ -30,8 +30,7 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
-        exportController = new ExportController();
-
+        exportController = new ExportController(mainWindow.getSeries());
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
@@ -81,7 +80,7 @@ public class MainController {
             if(isStart){
                 try {
                     if (updater == null) {
-                        updater = new GraphUpdater(mainWindow.getSeries());
+                        updater = new GraphUpdater(mainWindow.getSeries(), this);
                         updater.start();
                     }
                     //if no input values at all give a warning
@@ -168,6 +167,7 @@ public class MainController {
         mainWindow.getReset().setEnabled(false);
         mainWindow.getSettings().setEnabled(false);
         mainWindow.getInput().setEnabled(false);
+        updater.updateZeros();
         updater.collect();
         isStart = false;
         exportController.isUnsaved = true;
@@ -261,6 +261,18 @@ public class MainController {
     //getters
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    public double getGaugeLength() {
+        return gaugeLength;
+    }
+
+    public double findArea(){
+        if(inputController.isRectangularSelected()){
+            return Calculations.calculateArea(width, depth);
+        }else{
+            return Calculations.calculateArea(diameter);
+        }
     }
 
     public static void main(String[] args){
