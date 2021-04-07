@@ -1,5 +1,6 @@
 package controller;
 
+import kirkwood.nidaq.access.NiDaqException;
 import model.AITask;
 import org.jfree.data.xy.XYSeries;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -7,13 +8,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Live graphs data
  */
-public class GraphUpdater extends Thread {
+public class GraphUpdater extends Thread{
     private XYSeries series;
     private AtomicBoolean done = new AtomicBoolean(false);
     private AtomicBoolean run = new AtomicBoolean(false);
     AITask aiTask;
 
-    public GraphUpdater(XYSeries series) {
+    public GraphUpdater(XYSeries series) throws NiDaqException {
         aiTask = new AITask();
         aiTask.createAIChannel(0, AITask.Mode.DIFFERENTIAL);
         aiTask.createAIChannel(1, AITask.Mode.RSE);

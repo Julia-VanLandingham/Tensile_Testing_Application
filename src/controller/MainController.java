@@ -1,5 +1,6 @@
 package controller;
 
+import kirkwood.nidaq.access.NiDaqException;
 import view.MainWindow;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,7 +17,7 @@ public class MainController {
     private final SettingsController settingsController;
     private final ExportController exportController;
     private boolean isStart = true;
-    private final GraphUpdater updater;
+    private GraphUpdater updater;
 
     //These are the values we are only going to populate when we start pulling data
     private double width;
@@ -30,8 +31,7 @@ public class MainController {
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
         exportController = new ExportController();
-        updater = new GraphUpdater(mainWindow.getSeries());
-        updater.start();
+
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
@@ -79,21 +79,31 @@ public class MainController {
 
         mainWindow.getStartButton().addActionListener(e -> {
             if(isStart){
-                //if no input values at all give a warning
-                if(!inputController.haveInputs()){
-                    JOptionPane.showMessageDialog(null, "No cross section inputs given!", "Input Warning", JOptionPane.ERROR_MESSAGE);
-                //if the input values are from the previous round
-                }else if(areInputsFromPreviousRun()) {
-                    int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\nDo you want to update them?\n", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, JOptionPane.YES_OPTION);
-                    if (option == JOptionPane.NO_OPTION) {
+                try {
+                    if (updater == null) {
+                        updater = new GraphUpdater(mainWindow.getSeries());
+                        updater.start();
+                    }
+                    //if no input values at all give a warning
+                    if (!inputController.haveInputs()) {
+                        JOptionPane.showMessageDialog(null, "No cross section inputs given!", "Input Warning", JOptionPane.ERROR_MESSAGE);
+                        //if the input values are from the previous round
+                    } else if (areInputsFromPreviousRun()) {
+                        int option = JOptionPane.showOptionDialog(null, "Input values have not been changed.\nDo you want to update them?\n", "Input Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Update", "Continue"}, JOptionPane.YES_OPTION);
+                        if (option == JOptionPane.NO_OPTION) {
+                            getInputValues();
+                            startDataCollection();
+                        } else {
+                            inputController.getInputWindow().setVisible(true);
+                        }
+                    } else {
                         getInputValues();
                         startDataCollection();
-                    } else {
-                        inputController.getInputWindow().setVisible(true);
                     }
-                }else{
-                    getInputValues();
-                    startDataCollection();
+                }catch (NiDaqException exception){
+                    updater = null;
+                    JOptionPane.showMessageDialog(null, "Failed to start data collection.\nCheck that National Instruments device is connected via USB port, then restart this program.", "Device Connected?", JOptionPane.ERROR_MESSAGE);
+                    disposeAll();
                 }
             }else {
                 stopDataCollection();
