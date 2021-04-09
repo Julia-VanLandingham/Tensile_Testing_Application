@@ -4,6 +4,8 @@ import org.jfree.data.xy.XYSeries;
 import view.ExportWindow;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FileChooserUI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,25 +39,30 @@ public class ExportController {
             int r = fc.showSaveDialog(null);
             if(r == JFileChooser.APPROVE_OPTION){
                 file = fc.getSelectedFile();
+                if(!file.getName().contains(".csv")){
+                    file = new File(file.getPath() + ".csv");
+                }
             }
 
             try {
-                outfile = new PrintWriter(new FileOutputStream(file));
-                if(isExportValuesSelected()){//unit system, input values, gauge length
-                    outfile.write("Unit System: " + mainController.getUnitSystem() + "\n");
-                    outfile.write("Gauge Length: " + mainController.getGaugeLength() + "\n");
-                    if(inputController.isRectangularSelected()){
-                        outfile.write("Width: " + mainController.getWidth() + "\n");
-                        outfile.write("Depth: " + mainController.getDepth() + "\n");
-                    }else{
-                        outfile.write("Diameter: " + mainController.getDiameter() + "\n");
+                if(file != null) {
+                    outfile = new PrintWriter(new FileOutputStream(file));
+                    if (isExportValuesSelected()) {//unit system, input values, gauge length
+                        outfile.write("Unit System: " + mainController.getUnitSystem() + "\n");
+                        outfile.write("Gauge Length: " + mainController.getGaugeLength() + "\n");
+                        if (inputController.isRectangularSelected()) {
+                            outfile.write("Width: " + mainController.getWidth() + "\n");
+                            outfile.write("Depth: " + mainController.getDepth() + "\n");
+                        } else {
+                            outfile.write("Diameter: " + mainController.getDiameter() + "\n");
+                        }
+                        outfile.write("\n");
                     }
-                    outfile.write("\n");
-                }
-                double [][] data = xySeries.toArray();
-                outfile.write("Strain,Stress\n");
-                for(int i = 0; i < data[0].length; i++){
-                    outfile.format("%.6f,%.6f%n", data[0][i], data[1][i]);
+                    double[][] data = xySeries.toArray();
+                    outfile.write("Strain,Stress\n");
+                    for (int i = 0; i < data[0].length; i++) {
+                        outfile.format("%.6f,%.6f%n", data[0][i], data[1][i]);
+                    }
                 }
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
