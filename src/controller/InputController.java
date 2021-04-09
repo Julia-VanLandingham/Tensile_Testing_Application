@@ -189,6 +189,7 @@ public class InputController {
         return gaugeLength;
     }
 
+    public String getUnitSystem() { return unitSystem; }
 
     public UserInputWindow getInputWindow(){
         return inputWindow;

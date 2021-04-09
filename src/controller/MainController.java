@@ -20,6 +20,7 @@ public class MainController {
     private GraphUpdater updater;
 
     //These are the values we are only going to populate when we start pulling data
+    private String unitSystem;
     private double width;
     private double depth;
     private double diameter;
@@ -30,7 +31,7 @@ public class MainController {
         mainWindow = new MainWindow();
         inputController = new InputController(this);
         settingsController = new SettingsController(inputController, this);
-        exportController = new ExportController(mainWindow.getSeries());
+        exportController = new ExportController(mainWindow.getSeries(), this, inputController);
 
         mainWindow.getInput().addActionListener(e ->inputController.getInputWindow().setVisible(true));
         mainWindow.getSettings().addActionListener(e -> settingsController.getSettingsWindow().setVisible(true));
@@ -48,11 +49,7 @@ public class MainController {
             }
         });
 
-        mainWindow.getExport().addActionListener(e -> {
-            exportController.getExportWindow().setVisible(true);
-            exportController.getExportWindow().getExportData().setSelected(true);
-            exportController.getExportWindow().getExportImage().setSelected(false);
-        });
+        mainWindow.getExport().addActionListener(e -> exportController.getExportWindow().setVisible(true));
 
         mainWindow.getExit().addActionListener(e -> {
             if(!isStart){
@@ -256,6 +253,7 @@ public class MainController {
         depth = inputController.getDepth();
         diameter = inputController.getDiameter();
         gaugeLength = inputController.getGaugeLength();
+        unitSystem = inputController.getUnitSystem();
     }
 
     //getters
@@ -274,6 +272,13 @@ public class MainController {
             return Calculations.calculateArea(diameter);
         }
     }
+    public String getUnitSystem() { return unitSystem; }
+
+    public double getWidth() { return width; }
+
+    public double getDepth() { return depth; }
+
+    public double getDiameter() { return diameter; }
 
     public static void main(String[] args){
         new MainController();
