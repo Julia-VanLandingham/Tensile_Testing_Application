@@ -18,7 +18,6 @@ public class AITask {
         DIFFERENTIAL, RSE, DEFAULT
     }
 
-
     public static final int SAMPLES_PER_SECOND = 50;
     public static final int AVERAGE_FACTOR = 5;
     public static final int UPDATES_PER_SECOND = 2;
