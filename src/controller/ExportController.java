@@ -53,6 +53,7 @@ public class ExportController {
                     outfile.write("\n");
                 }
                 double [][] data = xySeries.toArray();
+                outfile.write("Strain,Stress\n");
                 for(int i = 0; i < data[0].length; i++){
                     outfile.format("%.6f,%.6f%n", data[0][i], data[1][i]);
                 }
