@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
         setupOptionPanel();
 
         add(graphPanel, BorderLayout.CENTER);
-        add(optionsPanel, BorderLayout.EAST);
+        add(optionsPanel, BorderLayout.SOUTH);
 
         setupMenuBar();
         this.setJMenuBar(menuBar);
@@ -79,16 +79,16 @@ public class MainWindow extends JFrame {
      */
     private void setupOptionPanel(){
         optionsPanel = new JPanel();
-        optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
-        optionsPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER,0,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
+        optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.X_AXIS));
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(0,VERTICAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
         graphReset.setEnabled(false);
 
-        optionsPanel.add(Box.createVerticalGlue());
+        optionsPanel.add(Box.createHorizontalGlue());
         optionsPanel.add(startButton);
-        optionsPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
+        optionsPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
         optionsPanel.add(graphReset);
     }
 
