@@ -54,8 +54,17 @@ public class GraphUpdater extends Thread{
             double [] force = aiTask.getChannelData(0);
             double [] length = aiTask.getChannelData(1); // raw voltage data
             for(int i = 0; i < AITask.AVERAGE_FACTOR; i++){
-                double stressValue = Calculations.calculateStress((LBS_PER_VOLT * (force[i]  - stressZero)) / 1000, mainController.findArea());
-                double strainValue = Calculations.calculateStrain((INCHES_PER_VOLT * (length[i]  - strainZero)), mainController.getGaugeLength());
+                double forceValue = (LBS_PER_VOLT * (force[i]  - stressZero));
+                double elongationValue = (INCHES_PER_VOLT * (length[i]  - strainZero));
+                if(mainController.getUnitSystem().equals("Metric")){
+                    forceValue = Calculations.convertForce(Calculations.Units.ENGLISH, Calculations.Units.METRIC,forceValue);
+                    elongationValue = Calculations.convertLength(Calculations.Units.ENGLISH, Calculations.Units.METRIC, elongationValue);
+                }else{
+                    forceValue /= 1000;
+                }
+
+                double stressValue = Calculations.calculateStress(forceValue, mainController.findArea());
+                double strainValue = Calculations.calculateStrain(elongationValue, mainController.getGaugeLength());
 
                 series.add(strainValue, stressValue);
             }
