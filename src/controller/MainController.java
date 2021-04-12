@@ -179,7 +179,6 @@ public class MainController {
         mainWindow.getStartButton().setEnabled(false);
         //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
-        mainWindow.getSettings().setEnabled(true);
         mainWindow.getInput().setEnabled(true);
         isStart = true;
         if(updater != null) {
@@ -194,6 +193,7 @@ public class MainController {
         mainWindow.getSeries().clear();
         mainWindow.getStartButton().setEnabled(true);
         mainWindow.getClearButton().setEnabled(false);
+        mainWindow.getSettings().setEnabled(true);
         exportController.isUnsaved = false;
     }
 

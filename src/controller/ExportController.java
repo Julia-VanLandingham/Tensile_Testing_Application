@@ -2,10 +2,7 @@ package controller;
 
 import org.jfree.data.xy.XYSeries;
 import view.ExportWindow;
-
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.FileChooserUI;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -73,8 +70,6 @@ public class ExportController {
             }
             isUnsaved = false;
         });
-
-
     }
 
     /**
