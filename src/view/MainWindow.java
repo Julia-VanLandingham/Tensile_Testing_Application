@@ -6,7 +6,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,7 +13,6 @@ import java.awt.event.KeyEvent;
 /**
  * This class creates the main window named "Tensile Testing"
  */
-
 public class MainWindow extends JFrame {
 
     //constants used for formatting
@@ -23,17 +21,8 @@ public class MainWindow extends JFrame {
 
     private JButton startButton;
     private JButton graphReset;
-    private JPanel valuePanel;
-    private JPanel eastPanel;
     private JPanel optionsPanel;
     private JPanel graphPanel;
-    private JLabel youngsModulus = new JLabel("-");
-    private JLabel ultimatePointX = new JLabel("X: -");
-    private JLabel yieldPointX = new JLabel("X: -");
-    private JLabel failurePointX = new JLabel("X: -");
-    private JLabel ultimatePointY = new JLabel("Y: -");
-    private JLabel yieldPointY = new JLabel("Y: -");
-    private JLabel failurePointY = new JLabel("Y: -");
     private JMenuBar menuBar;
     private JMenuItem settings;
     private JMenuItem exit;
@@ -41,7 +30,7 @@ public class MainWindow extends JFrame {
     private JMenuItem input;
     private JFreeChart chart;
     private JMenuItem reset;
-    private XYSeries series = new XYSeries("Stress-Strain Curve");
+    private final XYSeries series = new XYSeries("Stress-Strain Curve");
 
     public MainWindow(){
 
@@ -55,10 +44,10 @@ public class MainWindow extends JFrame {
         setResizable(true);
 
         setupGraphPanel();
-        setupEastPanel();
+        setupOptionPanel();
 
         add(graphPanel, BorderLayout.CENTER);
-        add(eastPanel, BorderLayout.EAST);
+        add(optionsPanel, BorderLayout.EAST);
 
         setupMenuBar();
         this.setJMenuBar(menuBar);
@@ -86,87 +75,21 @@ public class MainWindow extends JFrame {
     }
 
     /*
-     * Creates value panel
-     */
-    private void setupValuePanel(){
-        valuePanel = new JPanel();
-        valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
-        valuePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Critical Values"),BorderFactory.createEmptyBorder(VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER)));
-
-        valuePanel.add(new JLabel("Young's Modulus:"));
-        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
-        panel1.setBorder(BorderFactory.createEmptyBorder(0, HORIZONTAL_BUFFER, 0 , 0));
-        panel1.add(youngsModulus);
-        valuePanel.add(panel1);
-        valuePanel.add(Box.createVerticalGlue());
-
-        valuePanel.add(new JLabel("Ultimate Point:"));
-        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
-        panel2.setBorder(BorderFactory.createEmptyBorder(0, HORIZONTAL_BUFFER, 0 , 0));
-        panel2.add(ultimatePointX);
-        panel2.add(ultimatePointY);
-        valuePanel.add(panel2);
-        valuePanel.add(Box.createVerticalGlue());
-
-        valuePanel.add(new JLabel("Yield Point:"));
-        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
-        panel3.setBorder(BorderFactory.createEmptyBorder(0, HORIZONTAL_BUFFER, 0 , 0));
-        panel3.add(yieldPointX);
-        panel3.add(yieldPointY);
-        valuePanel.add(panel3);
-        valuePanel.add(Box.createVerticalGlue());
-
-        valuePanel.add(new JLabel("Failure Point:"));
-        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-        JPanel panel4 = new JPanel();
-        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
-        panel4.setBorder(BorderFactory.createEmptyBorder(0, HORIZONTAL_BUFFER, 0 , 0));
-        panel4.add(failurePointX);
-        panel4.add(failurePointY);
-        valuePanel.add(panel4);
-        valuePanel.add(Box.createVerticalGlue());
-
-        valuePanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-    }
-
-    /*
      * Sets up the panel that holds the buttons for start/stop and clear
      */
     private void setupOptionPanel(){
         optionsPanel = new JPanel();
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
-        optionsPanel.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(VERTICAL_BUFFER,0,VERTICAL_BUFFER,HORIZONTAL_BUFFER));
 
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
         graphReset.setEnabled(false);
 
+        optionsPanel.add(Box.createVerticalGlue());
         optionsPanel.add(startButton);
         optionsPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
         optionsPanel.add(graphReset);
-    }
-
-    /*
-     * Sets up the far right panel that holds the values and the button options
-     */
-    private void setupEastPanel(){
-        eastPanel = new JPanel();
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-        eastPanel.setBorder(BorderFactory.createEmptyBorder(HORIZONTAL_BUFFER,0,HORIZONTAL_BUFFER,VERTICAL_BUFFER));
-
-        setupValuePanel();
-        setupOptionPanel();
-
-        eastPanel.add(valuePanel);
-        eastPanel.add(Box.createVerticalGlue());
-        eastPanel.add(optionsPanel);
-        eastPanel.add(Box.createVerticalGlue());
     }
 
     /*
@@ -203,7 +126,6 @@ public class MainWindow extends JFrame {
         KeyStroke keyStrokeToSettings = KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK);
         settings.setAccelerator(keyStrokeToSettings);
 
-
         menuBar.add(file);
         menuBar.add(edit);
     }
@@ -214,65 +136,9 @@ public class MainWindow extends JFrame {
     }
 
     public JButton getClearButton(){ return graphReset;}
-    
-    public JPanel getValuePanel() {
-        return valuePanel;
-    }
-
-    public JPanel getGraphPanel() {
-        return graphPanel;
-    }
 
     public JFreeChart getChart(){
         return chart;
-    }
-
-    public JLabel getYoungsModulus() { return youngsModulus; }
-
-    public JLabel getUltimatePointX() { return ultimatePointX; }
-
-    public JLabel getYieldPointX() { return yieldPointX; }
-
-    public JLabel getFailurePointX() { return failurePointX; }
-
-    public void setYoungsModulus(JLabel youngsModulus) {
-        this.youngsModulus = youngsModulus;
-    }
-
-    public void setUltimatePointX(JLabel ultimatePointX) {
-        this.ultimatePointX = ultimatePointX;
-    }
-
-    public void setYieldPointX(JLabel yieldPointX) {
-        this.yieldPointX = yieldPointX;
-    }
-
-    public void setFailurePointX(JLabel failurePointX) {
-        this.failurePointX = failurePointX;
-    }
-
-    public JLabel getUltimatePointY() {
-        return ultimatePointY;
-    }
-
-    public void setUltimatePointY(JLabel ultimatePointY) {
-        this.ultimatePointY = ultimatePointY;
-    }
-
-    public JLabel getYieldPointY() {
-        return yieldPointY;
-    }
-
-    public void setYieldPointY(JLabel yieldPointY) {
-        this.yieldPointY = yieldPointY;
-    }
-
-    public JLabel getFailurePointY() {
-        return failurePointY;
-    }
-
-    public void setFailurePointY(JLabel failurePointY) {
-        this.failurePointY = failurePointY;
     }
 
     public JMenuItem getSettings() {
