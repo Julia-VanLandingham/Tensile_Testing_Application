@@ -238,6 +238,7 @@ public class MainController {
         }
 
     }
+    
     /*
      * Confirm exit of program while actively pulling data
      */
