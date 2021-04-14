@@ -181,7 +181,7 @@ public class MainController {
         //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
         mainWindow.getInput().setEnabled(true);
-        updateInputFields(false);
+        setInputFieldsEnabled(false);
         isStart = true;
         if(updater != null) {
             updater.pause();
@@ -196,7 +196,7 @@ public class MainController {
         mainWindow.getStartButton().setEnabled(true);
         mainWindow.getClearButton().setEnabled(false);
         mainWindow.getSettings().setEnabled(true);
-        updateInputFields(true);
+        setInputFieldsEnabled(true);
         exportController.isUnsaved = false;
     }
 
@@ -212,7 +212,7 @@ public class MainController {
         unitSystem = "";
         //clear the inputs convert back to the default units from the settings and make text fields re-editable
         inputController.clear();
-        updateInputFields(true);
+        setInputFieldsEnabled(true);
         settingsController.updateUnitsSystem();
         inputController.onUnitSystemChange();
     }
@@ -220,7 +220,7 @@ public class MainController {
     /*
      * Update input fields from editable to not editable and vice versa
      */
-    private void updateInputFields(boolean b){
+    private void setInputFieldsEnabled(boolean b){
         if(b){
             inputController.getInputWindow().getGaugeLengthInputField().setEditable(true);
             inputController.getInputWindow().getWidthInputField().setEditable(true);
@@ -238,7 +238,7 @@ public class MainController {
         }
 
     }
-    
+
     /*
      * Confirm exit of program while actively pulling data
      */

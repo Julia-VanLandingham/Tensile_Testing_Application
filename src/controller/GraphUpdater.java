@@ -126,8 +126,7 @@ public class GraphUpdater extends Thread{
         for(int i = 0; i < series.getItemCount(); i++){
             double yValue = series.getY(i).doubleValue();
             yValue = Calculations.convertPressure(startingUnits, endingUnits, yValue);
-            series.updateByIndex(i, new Double(yValue));
+            series.updateByIndex(i, yValue);
         }
     }
-
 }
