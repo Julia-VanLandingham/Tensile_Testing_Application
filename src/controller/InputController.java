@@ -70,6 +70,9 @@ public class InputController {
         //convert the values to the correct unit system
         double convertedValue;
         if (inputWindow.getUnitSelectionBox().getSelectedItem().equals("English")) {
+            if(mainController.getUpdater() != null){
+                mainController.getUpdater().updateGraphUnits(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, mainController.getMainWindow().getSeries());
+            }
             convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.ENGLISH, getGaugeLengthInput());
             inputWindow.setCurrentUnitSystem(Units.ENGLISH);
 
@@ -83,6 +86,9 @@ public class InputController {
             inputWindow.getDiameterLabel().setText("Diameter (in): ");
             inputWindow.getWidthLabel().setText("Width (in): ");
         }else {
+            if(mainController.getUpdater() != null) {
+                mainController.getUpdater().updateGraphUnits(inputWindow.getCurrentUnitSystem(), Units.METRIC, mainController.getMainWindow().getSeries());
+            }
             convertedValue = Calculations.convertLength(inputWindow.getCurrentUnitSystem(), Units.METRIC, getGaugeLengthInput());
             inputWindow.setCurrentUnitSystem(Units.METRIC);
 
@@ -129,7 +135,6 @@ public class InputController {
         diameter = getDiameterInput();
         gaugeLength = getGaugeLengthInput();
         unitSystem = (String) inputWindow.getUnitSelectionBox().getSelectedItem();
-
     }
 
     /*

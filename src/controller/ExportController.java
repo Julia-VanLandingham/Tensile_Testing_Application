@@ -45,13 +45,17 @@ public class ExportController {
                 if(file != null) {
                     outfile = new PrintWriter(new FileOutputStream(file));
                     if (isExportValuesSelected()) {//unit system, input values, gauge length
-                        outfile.write("Unit System: " + mainController.getUnitSystem() + "\n");
-                        outfile.write("Gauge Length: " + mainController.getGaugeLength() + "\n");
+                        double gaugeLength = Calculations.convertLength(mainController.stringToUnits(mainController.getUnitSystem()), mainController.stringToUnits(inputController.getUnitSystem()), mainController.getGaugeLength());
+                        double width = Calculations.convertLength(mainController.stringToUnits(mainController.getUnitSystem()), mainController.stringToUnits(inputController.getUnitSystem()), mainController.getWidth());
+                        double depth = Calculations.convertLength(mainController.stringToUnits(mainController.getUnitSystem()), mainController.stringToUnits(inputController.getUnitSystem()), mainController.getDepth());
+                        double diameter = Calculations.convertLength(mainController.stringToUnits(mainController.getUnitSystem()), mainController.stringToUnits(inputController.getUnitSystem()), mainController.getDiameter());
+                        outfile.write("Unit System: " + inputController.getUnitSystem() + "\n");
+                        outfile.write("Gauge Length: " + gaugeLength + "\n");
                         if (inputController.isRectangularSelected()) {
-                            outfile.write("Width: " + mainController.getWidth() + "\n");
-                            outfile.write("Depth: " + mainController.getDepth() + "\n");
+                            outfile.write("Width: " + width + "\n");
+                            outfile.write("Depth: " + depth + "\n");
                         } else {
-                            outfile.write("Diameter: " + mainController.getDiameter() + "\n");
+                            outfile.write("Diameter: " + diameter + "\n");
                         }
                         outfile.write("\n");
                     }
