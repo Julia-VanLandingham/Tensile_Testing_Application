@@ -1,5 +1,6 @@
 package controller;
 
+import controller.Calculations.Units;
 import kirkwood.nidaq.access.NiDaqException;
 import view.MainWindow;
 import java.awt.event.WindowAdapter;
@@ -77,7 +78,7 @@ public class MainController {
             if(isStart){
                 try {
                     if (updater == null) {
-                        updater = new GraphUpdater(mainWindow.getSeries(), this);
+                        updater = new GraphUpdater(mainWindow.getSeries(), this, inputController);
                         updater.start();
                     }
                     //if no input values at all give a warning
@@ -180,6 +181,7 @@ public class MainController {
         //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
         mainWindow.getInput().setEnabled(true);
+        updateInputFields(false);
         isStart = true;
         if(updater != null) {
             updater.pause();
@@ -194,6 +196,7 @@ public class MainController {
         mainWindow.getStartButton().setEnabled(true);
         mainWindow.getClearButton().setEnabled(false);
         mainWindow.getSettings().setEnabled(true);
+        updateInputFields(true);
         exportController.isUnsaved = false;
     }
 
@@ -203,13 +206,38 @@ public class MainController {
     private void reset(){
         stopDataCollection();
         clearGraph();
-
-        //clear the inputs convert back to the default units from the settings
+        diameter = 0.0;
+        depth = 0.0;
+        width = 0.0;
+        unitSystem = "";
+        //clear the inputs convert back to the default units from the settings and make text fields re-editable
         inputController.clear();
+        updateInputFields(true);
         settingsController.updateUnitsSystem();
         inputController.onUnitSystemChange();
     }
 
+    /*
+     * Update input fields from editable to not editable and vice versa
+     */
+    private void updateInputFields(boolean b){
+        if(b){
+            inputController.getInputWindow().getGaugeLengthInputField().setEditable(true);
+            inputController.getInputWindow().getWidthInputField().setEditable(true);
+            inputController.getInputWindow().getDepthInputField().setEditable(true);
+            inputController.getInputWindow().getDiameterInputField().setEditable(true);
+            inputController.getInputWindow().getCircularButton().setEnabled(true);
+            inputController.getInputWindow().getRectangularButton().setEnabled(true);
+        }else{
+            inputController.getInputWindow().getGaugeLengthInputField().setEditable(false);
+            inputController.getInputWindow().getWidthInputField().setEditable(false);
+            inputController.getInputWindow().getDepthInputField().setEditable(false);
+            inputController.getInputWindow().getDiameterInputField().setEditable(false);
+            inputController.getInputWindow().getCircularButton().setEnabled(false);
+            inputController.getInputWindow().getRectangularButton().setEnabled(false);
+        }
+
+    }
     /*
      * Confirm exit of program while actively pulling data
      */
@@ -256,6 +284,14 @@ public class MainController {
         unitSystem = inputController.getUnitSystem();
     }
 
+    public Units stringToUnits(String unitSystem){
+        if(unitSystem.equals("English")){
+            return Units.ENGLISH;
+        }else{
+            return Units.METRIC;
+        }
+    }
+
     //getters
     public MainWindow getMainWindow() {
         return mainWindow;
@@ -279,6 +315,8 @@ public class MainController {
     public double getDepth() { return depth; }
 
     public double getDiameter() { return diameter; }
+
+    public GraphUpdater getUpdater() { return updater; }
 
     public static void main(String[] args){
         new MainController();
