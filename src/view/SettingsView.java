@@ -23,6 +23,10 @@ public class SettingsView extends JFrame{
     private JTextField gaugeLengthField;
     private JButton saveButton;
     private JLabel gaugeLengthLabel;
+    private JLabel modeLabel;//added label for mode field
+    //mode should be a drop down
+    //channel should be a
+
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
