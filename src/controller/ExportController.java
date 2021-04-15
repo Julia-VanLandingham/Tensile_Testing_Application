@@ -15,9 +15,9 @@ public class ExportController {
     private final ExportWindow exportWindow;
     protected boolean isUnsaved;
     private File file;
-    private XYSeries xySeries;
-    private MainController mainController;
-    private InputController inputController;
+    private final XYSeries xySeries;
+    private final MainController mainController;
+    private final InputController inputController;
 
     public ExportController(XYSeries xySeries, MainController mainController, InputController inputController){
         exportWindow = new ExportWindow();

@@ -249,6 +249,5 @@ public class UserInputWindow extends JFrame {
     public void setCurrentUnitSystem(Units currentUnitSystem){
         this.currentUnitSystem = currentUnitSystem;
     }
-
 }
 

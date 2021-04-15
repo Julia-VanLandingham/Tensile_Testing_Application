@@ -123,7 +123,7 @@ public class MainWindow extends JFrame {
         reset.setAccelerator(keyStrokeToReset);
         KeyStroke keyStrokeToExport = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
         export.setAccelerator(keyStrokeToExport);
-        KeyStroke keyStrokeToSettings = KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK);
+        KeyStroke keyStrokeToSettings = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.ALT_DOWN_MASK + KeyEvent.CTRL_DOWN_MASK);
         settings.setAccelerator(keyStrokeToSettings);
 
         menuBar.add(file);

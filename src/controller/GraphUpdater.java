@@ -4,7 +4,6 @@ import kirkwood.nidaq.access.NiDaqException;
 import model.AITask;
 import org.jfree.data.xy.XYSeries;
 import controller.Calculations.Units;
-
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
