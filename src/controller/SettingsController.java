@@ -50,8 +50,8 @@ public class SettingsController {
 
         //stores settings in a file and updates the values in the input window
         settingsWindow.getSaveButton().addActionListener(e -> {
-            int option = JOptionPane.showOptionDialog(null, "You are about to change settings that will persist " +
-                    "between instances of the program \n" +
+            int option = JOptionPane.showOptionDialog(null, "\nYou are about to change settings that will persist " +
+                    "between instances of the program.\n" +
                     "These changes will also affect all other users.\n" +
                     "These values should not be changed unless you are sure what you are changing is correct.\n\n" +
                     "Do you wish to continue?", "Confirm Settings Change", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.NO_OPTION);
