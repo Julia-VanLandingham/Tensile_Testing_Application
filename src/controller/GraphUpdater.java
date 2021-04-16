@@ -121,6 +121,12 @@ public class GraphUpdater extends Thread{
         strainZero = elongationTotal / elongation.size();
     }
 
+    /**
+     * Updates the graph units based on starting and ending units
+     * @param startingUnits the units that currently appear on the graph
+     * @param endingUnits the units a user wants to convert to
+     * @param series that data in (x,y) format that is shown on the graph
+     */
     public void updateGraphUnits(Units startingUnits, Units endingUnits, XYSeries series){
         for(int i = 0; i < series.getItemCount(); i++){
             double yValue = series.getY(i).doubleValue();
