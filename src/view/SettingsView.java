@@ -33,12 +33,6 @@ public class SettingsView extends JFrame{
     private JTextField forceVoltage2UnitConstant;
     private JTextField elongationVoltage2UnitConstant;
 
-
-
-
-
-
-
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
 
@@ -48,10 +42,11 @@ public class SettingsView extends JFrame{
         JPanel outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
-        outerPanel.add(createInputSettingsPanel(userInput));
         outerPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
         outerPanel.add(createMachineSettingsPanel());
         outerPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
+
+        outerPanel.add(createInputSettingsPanel(userInput));
         outerPanel.add(createSaveButtonPanel());
         outerPanel.add(Box.createVerticalGlue());
 
@@ -101,6 +96,13 @@ public class SettingsView extends JFrame{
             gaugeLengthField = new JTextField("0.5");
             defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
             currentUnitSystem = Units.ENGLISH;
+            forceVoltage2UnitConstant.setText("1960.574197");
+            elongationVoltage2UnitConstant.setText("0.041814743");
+            forceModeComboBox.setSelectedItem("RSE");
+            forceChannelComboBox.setSelectedItem(1);
+            elongationModeComboBox.setSelectedItem("Differential");
+            elongationChannelComboBox.setSelectedItem(3);
+
         }
 
         northPanel.add(unitsSelectionLabel);
@@ -144,6 +146,7 @@ public class SettingsView extends JFrame{
         elongationChannelComboBox = new JComboBox<>(CHANNEL_OPTIONS);
         forceVoltage2UnitConstant = new JTextField();
         elongationVoltage2UnitConstant = new JTextField();
+
         //Force Machine Settings
         forceMachineSettings.add(modeLabel);
         modeLabel.setLabelFor(forceModeComboBox);
@@ -194,9 +197,7 @@ public class SettingsView extends JFrame{
 
     public JTextField getDefaultGaugeLengthField(){ return gaugeLengthField; }
 
-    public double getDefaultGaugeLength(){
-        return Double.parseDouble(gaugeLengthField.getText().trim());
-    }
+    public double getDefaultGaugeLength(){ return Double.parseDouble(gaugeLengthField.getText().trim()); }
 
     public String getDefaultUnits(){
         return (String) defaultUnitSelectionBox.getSelectedItem();
@@ -209,4 +210,16 @@ public class SettingsView extends JFrame{
     public Units getCurrentUnitSystem(){ return currentUnitSystem; }
 
     public void setCurrentUnitSystem(Units currentUnitSystem){ this.currentUnitSystem = currentUnitSystem; }
+
+    public JComboBox<Integer> getForceChannelComboBox() { return forceChannelComboBox; }
+
+    public JComboBox<Integer> getElongationChannelComboBox() { return elongationChannelComboBox; }
+
+    public JComboBox<String> getForceModeComboBox() { return forceModeComboBox; }
+
+    public JComboBox<String> getElongationModeComboBox() { return elongationModeComboBox; }
+
+    public double getForceVoltage2UnitConstant() { return Double.parseDouble(forceVoltage2UnitConstant.getText().trim()); }
+
+    public double getElongationVoltage2UnitConstant() { return Double.parseDouble(elongationVoltage2UnitConstant.getText().trim()); }
 }
