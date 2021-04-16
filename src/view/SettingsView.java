@@ -23,6 +23,7 @@ public class SettingsView extends JFrame{
     private Units currentUnitSystem;
     private JTextField gaugeLengthField;
     private JButton saveButton;
+    private JButton closeButton;
     private JLabel gaugeLengthLabel;
     private JComboBox <Integer> forceChannelComboBox;
     private JComboBox <Integer> elongationChannelComboBox;
@@ -63,14 +64,14 @@ public class SettingsView extends JFrame{
      * that will be used throughout the test. Those settings include sample rate, units, and gauge length
      * Takes a scanner to aid in persisting the settings throughout
      */
-    private JPanel createInputSettingsPanel(Scanner userInput){
+    private JPanel createInputSettingsPanel(Scanner input){
         JPanel northPanel = new JPanel(new SpringLayout());
         JLabel unitsSelectionLabel = new JLabel("Unit System:");
         gaugeLengthLabel = new JLabel("");
         boolean readSucceeded = false;
-        if(userInput != null)  { //if user input values on settings window, they remain through closing and reopening
+        if(input != null)  { //if user input values on settings window, they remain through closing and reopening
             try{
-                String selectedUnitType = userInput.next();
+                String selectedUnitType = input.next();
                 if (selectedUnitType.equals("English")){
                     currentUnitSystem = Units.ENGLISH;
                     //update the units displayed on input fields
@@ -81,12 +82,28 @@ public class SettingsView extends JFrame{
                     gaugeLengthLabel.setText("Gauge Length (mm):");
                 }
 
-                double gaugeLength = userInput.nextDouble();
+                double gaugeLength = input.nextDouble();
                 gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 12);
                 gaugeLengthField.setToolTipText("Default value for gauge length, not used in calculations. Saved upon close");
+
                 defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
                 defaultUnitSelectionBox.setToolTipText("Default unit system, not used in calculations. Saved upon close");
                 defaultUnitSelectionBox.setSelectedItem(selectedUnitType);
+
+                int forceChannel = input.nextInt();
+                forceChannelComboBox.setSelectedItem(forceChannel);
+                String forceMode = input.next();
+                forceModeComboBox.setSelectedItem(forceMode);
+                double forceConstant = input.nextDouble();
+                forceVoltage2UnitConstant.setText(String.valueOf(forceConstant));
+
+                int elongationChannel = input.nextInt();
+                elongationChannelComboBox.setSelectedItem(elongationChannel);
+                String elongationMode = input.next();
+                elongationModeComboBox.setSelectedItem(elongationMode);
+                double elongationConstant = input.nextDouble();
+                elongationVoltage2UnitConstant.setText(String.valueOf(elongationConstant));
+
                 readSucceeded = true;
             }
             catch( NoSuchElementException | IllegalStateException e) {
@@ -104,7 +121,6 @@ public class SettingsView extends JFrame{
             forceChannelComboBox.setSelectedItem(1);
             elongationModeComboBox.setSelectedItem("Differential");
             elongationChannelComboBox.setSelectedItem(3);
-
         }
 
         northPanel.add(unitsSelectionLabel);
@@ -127,7 +143,9 @@ public class SettingsView extends JFrame{
     private JPanel createSaveButtonPanel(){
         JPanel southPanel = new JPanel();
         saveButton = new JButton("Save");
+        closeButton = new JButton("Close");
         southPanel.add(saveButton);
+        southPanel.add(closeButton);
         return southPanel;
     }
 
@@ -195,6 +213,10 @@ public class SettingsView extends JFrame{
 
     public JButton getSaveButton(){ return saveButton;  }
 
+    public JButton getCloseButton(){
+        return closeButton;
+    }
+
     public JComboBox<String> getDefaultUnitSelectionBox(){return defaultUnitSelectionBox; }
 
     public JTextField getDefaultGaugeLengthField(){ return gaugeLengthField; }
@@ -224,4 +246,20 @@ public class SettingsView extends JFrame{
     public double getForceVoltage2UnitConstant() { return Double.parseDouble(forceVoltage2UnitConstant.getText().trim()); }
 
     public double getElongationVoltage2UnitConstant() { return Double.parseDouble(elongationVoltage2UnitConstant.getText().trim()); }
+
+    public JTextField getForceVoltage2UnitConstantField(){
+        return forceVoltage2UnitConstant;
+    }
+
+    public JTextField getElongationVoltage2UnitConstantField(){
+        return elongationVoltage2UnitConstant;
+    }
+
+    public int getForceChannel(){
+        return (Integer) forceChannelComboBox.getSelectedItem();
+    }
+
+    public int getElongationChannel(){
+        return (int) elongationChannelComboBox.getSelectedItem();
+    }
 }

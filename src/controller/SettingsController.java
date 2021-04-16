@@ -2,6 +2,8 @@ package controller;
 
 import view.SettingsView;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,6 +21,15 @@ public class SettingsController {
     private final InputController inputController;
     private final MainController mainController;
 
+    private String unitSystem;
+    private double gaugeLength;
+    private int forceChannel;
+    private int elongationChannel;
+    private String forceMode;
+    private String elongationMode;
+    private double forceVoltageConstant;
+    private double elongationVoltageConstant;
+
     public SettingsController(InputController inputController, MainController mainController){
         this.inputController = inputController;
         this.mainController = mainController;
@@ -31,39 +42,61 @@ public class SettingsController {
 
         settingsWindow = new SettingsView(input);
         initializeInputWindowValues();
-
-        settingsWindow.getSaveButton().addActionListener(e -> settingsWindow.setVisible(false));
         if(input != null){
             input.close();
         }
 
+        storeSettings();
+
         //stores settings in a file and updates the values in the input window
         settingsWindow.getSaveButton().addActionListener(e -> {
-            try {
-                double value = settingsWindow.getDefaultGaugeLength();
-                double forceConstant = settingsWindow.getForceVoltage2UnitConstant();
-                double elongationConstant = settingsWindow.getElongationVoltage2UnitConstant();
-                updateUnitsSystem();
+            int option = JOptionPane.showOptionDialog(null, "You are about to change settings that will persist " +
+                    "between instances of the program \n" +
+                    "These changes will also affect all other users.\n" +
+                    "These values should not be changed unless you are sure what you are changing is correct.\n\n" +
+                    "Do you wish to continue?", "Confirm Settings Change", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.NO_OPTION);
+            if(option == JOptionPane.YES_OPTION) {
+                try {
+                    double value = settingsWindow.getDefaultGaugeLength();
+                    double forceConstant = settingsWindow.getForceVoltage2UnitConstant();
+                    double elongationConstant = settingsWindow.getElongationVoltage2UnitConstant();
+                    updateUnitsSystem();
 
-                PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
-                out.println(value);
-                out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
-                out.println(settingsWindow.getForceChannelComboBox().getSelectedItem());
-                out.println(settingsWindow.getForceModeComboBox().getSelectedItem());
-                out.println(forceConstant);
-                out.println(settingsWindow.getElongationChannelComboBox().getSelectedItem());
-                out.println(settingsWindow.getElongationModeComboBox().getSelectedItem());
-                out.println(elongationConstant);
+                    PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
+                    out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
+                    out.println(value);
+                    out.println(settingsWindow.getForceChannelComboBox().getSelectedItem());
+                    out.println(settingsWindow.getForceModeComboBox().getSelectedItem());
+                    out.println(forceConstant);
+                    out.println(settingsWindow.getElongationChannelComboBox().getSelectedItem());
+                    out.println(settingsWindow.getElongationModeComboBox().getSelectedItem());
+                    out.println(elongationConstant);
 
-                out.close();
-            } catch (FileNotFoundException exception) {
+                    out.close();
+                    storeSettings();
+                } catch (FileNotFoundException exception) {
+                    //do nothing
+                } catch (NumberFormatException exception) {
+                    JOptionPane.showMessageDialog(settingsWindow, "Default Gauge Length is not a properly formatted number.", " Bad Gauge Length", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                revertSettings();//put all the settings back to as they were before the user changed them
             }
-            catch (NumberFormatException exception) {
-                JOptionPane.showMessageDialog(settingsWindow,"Default Gauge Length is not a properly formatted number."," Bad Gauge Length",JOptionPane.ERROR_MESSAGE);
-            }
+            settingsWindow.setVisible(false);
         });
 
         settingsWindow.getDefaultUnitSelectionBox().addActionListener(e -> onUnitSystemChanged());
+        settingsWindow.getCloseButton().addActionListener(e -> {
+            revertSettings();
+            settingsWindow.setVisible(false);
+        });
+
+        settingsWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                 revertSettings();
+            }
+        });
     }
 
     /*
@@ -146,6 +179,34 @@ public class SettingsController {
          * before we can pull the input values
          */
         inputController.pullInputValues(); //Initialize the stored values
+    }
+
+    /*
+     * Stores the saved values locally so we can revert back to them later
+     */
+    private void storeSettings(){
+        unitSystem = settingsWindow.getDefaultUnits();
+        gaugeLength = settingsWindow.getDefaultGaugeLength();
+        forceVoltageConstant = settingsWindow.getForceVoltage2UnitConstant();
+        elongationVoltageConstant = settingsWindow.getElongationVoltage2UnitConstant();
+        forceChannel = settingsWindow.getForceChannel();
+        elongationChannel = settingsWindow.getElongationChannel();
+        forceMode = (String) settingsWindow.getForceModeComboBox().getSelectedItem();
+        elongationMode = (String) settingsWindow.getElongationModeComboBox().getSelectedItem();
+    }
+
+    /*
+     * Restores all settings back to the last stored state
+     */
+    private void revertSettings(){
+        settingsWindow.getDefaultUnitSelectionBox().setSelectedItem(unitSystem);
+        settingsWindow.getDefaultGaugeLengthField().setText(String.valueOf(gaugeLength));
+        settingsWindow.getForceVoltage2UnitConstantField().setText(String.valueOf(forceVoltageConstant));
+        settingsWindow.getElongationVoltage2UnitConstantField().setText(String.valueOf(elongationVoltageConstant));
+        settingsWindow.getForceChannelComboBox().setSelectedItem(forceChannel);
+        settingsWindow.getElongationChannelComboBox().setSelectedItem(elongationChannel);
+        settingsWindow.getForceModeComboBox().setSelectedItem(forceMode);
+        settingsWindow.getElongationModeComboBox().setSelectedItem(elongationMode);
     }
 
     //getters
