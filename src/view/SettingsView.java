@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -23,6 +24,14 @@ public class SettingsView extends JFrame{
     private JTextField gaugeLengthField;
     private JButton saveButton;
     private JLabel gaugeLengthLabel;
+    private JComboBox <Integer> forceChannelComboBox;
+    private JComboBox <Integer> elongationChannelComboBox;
+    private JComboBox <String> forceModeComboBox;
+    private JComboBox <String> elongationModeComboBox;
+    private final String [] MODE_OPTIONS = {"RSE", "Differential"};
+    private final Integer [] CHANNEL_OPTIONS = {0,1,2,3,4,5,6,7};  //Starts with maximum number of channels
+    private JTextField forceVoltage2UnitConstant;
+    private JTextField elongationVoltage2UnitConstant;
 
     public SettingsView (Scanner userInput) {
         setTitle("Settings");
@@ -33,9 +42,12 @@ public class SettingsView extends JFrame{
         JPanel outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
 
-        outerPanel.add(createNorthPanel(userInput));
         outerPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
-        outerPanel.add(createSouthPanel());
+        outerPanel.add(createMachineSettingsPanel());
+        outerPanel.add(Box.createVerticalStrut(VERTICAL_BUFFER));
+
+        outerPanel.add(createInputSettingsPanel(userInput));
+        outerPanel.add(createSaveButtonPanel());
         outerPanel.add(Box.createVerticalGlue());
 
         add(outerPanel);
@@ -51,7 +63,7 @@ public class SettingsView extends JFrame{
      * that will be used throughout the test. Those settings include sample rate, units, and gauge length
      * Takes a scanner to aid in persisting the settings throughout
      */
-    private JPanel createNorthPanel(Scanner userInput){
+    private JPanel createInputSettingsPanel(Scanner userInput){
         JPanel northPanel = new JPanel(new SpringLayout());
         JLabel unitsSelectionLabel = new JLabel("Unit System:");
         gaugeLengthLabel = new JLabel("");
@@ -86,6 +98,13 @@ public class SettingsView extends JFrame{
             gaugeLengthField = new JTextField("0.5");
             defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
             currentUnitSystem = Units.ENGLISH;
+            forceVoltage2UnitConstant.setText("1960.574197");
+            elongationVoltage2UnitConstant.setText("0.041814743");
+            forceModeComboBox.setSelectedItem("RSE");
+            forceChannelComboBox.setSelectedItem(1);
+            elongationModeComboBox.setSelectedItem("Differential");
+            elongationChannelComboBox.setSelectedItem(3);
+
         }
 
         northPanel.add(unitsSelectionLabel);
@@ -105,11 +124,69 @@ public class SettingsView extends JFrame{
      * Creates a save button that will allow a user to
      * save the settings that were decided on and will persist throughout the test
      */
-    private JPanel createSouthPanel(){
+    private JPanel createSaveButtonPanel(){
         JPanel southPanel = new JPanel();
         saveButton = new JButton("Save");
         southPanel.add(saveButton);
         return southPanel;
+    }
+
+    private JPanel createMachineSettingsPanel(){
+        JPanel machineSettingsPanel = new JPanel( new BorderLayout());
+        JPanel forceMachineSettings = new JPanel(new SpringLayout());
+        JPanel elongationMachineSettings = new JPanel(new SpringLayout());
+        JLabel modeLabel = new JLabel("Mode: ");
+        JLabel modeLabel2 = new JLabel("Mode: ");
+        JLabel channelLabel = new JLabel("Channel: ");
+        JLabel channelLabel2 = new JLabel("Channel: ");
+        JLabel voltageConstantLabel = new JLabel("Voltage to Units Constant: ");
+        JLabel voltageConstantLabel2 = new JLabel("Voltage to Units Constant: ");
+
+        forceModeComboBox = new JComboBox<>(MODE_OPTIONS);
+        elongationModeComboBox = new JComboBox<>(MODE_OPTIONS);
+        forceChannelComboBox = new JComboBox<>(CHANNEL_OPTIONS);
+        elongationChannelComboBox = new JComboBox<>(CHANNEL_OPTIONS);
+        forceVoltage2UnitConstant = new JTextField();
+        elongationVoltage2UnitConstant = new JTextField();
+
+        //Force Machine Settings
+        forceMachineSettings.add(modeLabel);
+        modeLabel.setLabelFor(forceModeComboBox);
+        forceMachineSettings.add(forceModeComboBox);
+
+        forceMachineSettings.add(channelLabel);
+        channelLabel.setLabelFor(forceChannelComboBox);
+        forceMachineSettings.add(forceChannelComboBox);
+
+        forceMachineSettings.add(voltageConstantLabel);
+        voltageConstantLabel.setLabelFor(forceVoltage2UnitConstant);
+        forceMachineSettings.add(forceVoltage2UnitConstant);
+
+        SpringUtilities.makeCompactGrid(forceMachineSettings,3,2, HORIZONTAL_BUFFER, VERTICAL_BUFFER, HORIZONTAL_BUFFER, VERTICAL_BUFFER);
+
+
+        //Elongation Machine Settings
+        elongationMachineSettings.add(modeLabel2);
+        modeLabel2.setLabelFor(elongationModeComboBox);
+        elongationMachineSettings.add(elongationModeComboBox);
+
+        elongationMachineSettings.add(channelLabel2);
+        channelLabel2.setLabelFor(elongationChannelComboBox);
+        elongationMachineSettings.add(elongationChannelComboBox);
+
+        elongationMachineSettings.add(voltageConstantLabel2);
+        voltageConstantLabel2.setLabelFor(elongationVoltage2UnitConstant);
+        elongationMachineSettings.add(elongationVoltage2UnitConstant);
+        //TODO: Fix ArrayOutOfBounds Exception thrown by the following code
+        SpringUtilities.makeCompactGrid(elongationMachineSettings,3,2, HORIZONTAL_BUFFER, VERTICAL_BUFFER, HORIZONTAL_BUFFER, VERTICAL_BUFFER);
+
+        forceMachineSettings.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Force Machine Settings"), BorderFactory.createEmptyBorder(VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER)));
+        elongationMachineSettings.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Elongation Machine Settings"), BorderFactory.createEmptyBorder(VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER)));
+
+
+        machineSettingsPanel.add(forceMachineSettings,BorderLayout.NORTH);
+        machineSettingsPanel.add(elongationMachineSettings, BorderLayout.SOUTH);
+        return machineSettingsPanel;
     }
 
     public ArrayList<String> getInput(){ //for getting all the inputs from the fields before closing
@@ -122,9 +199,7 @@ public class SettingsView extends JFrame{
 
     public JTextField getDefaultGaugeLengthField(){ return gaugeLengthField; }
 
-    public double getDefaultGaugeLength(){
-        return Double.parseDouble(gaugeLengthField.getText().trim());
-    }
+    public double getDefaultGaugeLength(){ return Double.parseDouble(gaugeLengthField.getText().trim()); }
 
     public String getDefaultUnits(){
         return (String) defaultUnitSelectionBox.getSelectedItem();
@@ -137,4 +212,16 @@ public class SettingsView extends JFrame{
     public Units getCurrentUnitSystem(){ return currentUnitSystem; }
 
     public void setCurrentUnitSystem(Units currentUnitSystem){ this.currentUnitSystem = currentUnitSystem; }
+
+    public JComboBox<Integer> getForceChannelComboBox() { return forceChannelComboBox; }
+
+    public JComboBox<Integer> getElongationChannelComboBox() { return elongationChannelComboBox; }
+
+    public JComboBox<String> getForceModeComboBox() { return forceModeComboBox; }
+
+    public JComboBox<String> getElongationModeComboBox() { return elongationModeComboBox; }
+
+    public double getForceVoltage2UnitConstant() { return Double.parseDouble(forceVoltage2UnitConstant.getText().trim()); }
+
+    public double getElongationVoltage2UnitConstant() { return Double.parseDouble(elongationVoltage2UnitConstant.getText().trim()); }
 }

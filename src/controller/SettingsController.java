@@ -41,11 +41,20 @@ public class SettingsController {
         settingsWindow.getSaveButton().addActionListener(e -> {
             try {
                 double value = settingsWindow.getDefaultGaugeLength();
+                double forceConstant = settingsWindow.getForceVoltage2UnitConstant();
+                double elongationConstant = settingsWindow.getElongationVoltage2UnitConstant();
                 updateUnitsSystem();
 
                 PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
-                out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
                 out.println(value);
+                out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
+                out.println(settingsWindow.getForceChannelComboBox().getSelectedItem());
+                out.println(settingsWindow.getForceModeComboBox().getSelectedItem());
+                out.println(forceConstant);
+                out.println(settingsWindow.getElongationChannelComboBox().getSelectedItem());
+                out.println(settingsWindow.getElongationModeComboBox().getSelectedItem());
+                out.println(elongationConstant);
+
                 out.close();
             } catch (FileNotFoundException exception) {
             }

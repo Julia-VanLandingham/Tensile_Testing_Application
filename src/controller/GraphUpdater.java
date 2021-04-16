@@ -26,8 +26,8 @@ public class GraphUpdater extends Thread{
 
     public GraphUpdater(XYSeries series, MainController mainController, InputController inputController) throws NiDaqException {
         aiTask = new AITask();
-        aiTask.createAIChannel(3, AITask.Mode.DIFFERENTIAL);
-        aiTask.createAIChannel(1, AITask.Mode.RSE);
+        aiTask.createAIChannel(3, AITask.Mode.DIFFERENTIAL); //Elongation
+        aiTask.createAIChannel(1, AITask.Mode.RSE); //Force
         aiTask.readyToRun();
         this.mainController = mainController;
         this.inputController = inputController;
