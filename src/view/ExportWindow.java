@@ -31,6 +31,7 @@ public class ExportWindow extends JFrame {
         outerPanel.add(exportValuesWithDataPanel);
         outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(createButtonPanel());
+        outerPanel.add(Box.createVerticalGlue());
 
         add(outerPanel);
         setResizable(false);
@@ -47,6 +48,7 @@ public class ExportWindow extends JFrame {
         exportDataPanel.setLayout(new BoxLayout(exportDataPanel, BoxLayout.X_AXIS));
 
         JLabel exportData = new JLabel("Export Data (.csv)");
+        exportData.setToolTipText("csv files are opened in excel by default");
 
         exportDataPanel.add(exportData);
         exportDataPanel.add(Box.createHorizontalGlue());
@@ -62,8 +64,9 @@ public class ExportWindow extends JFrame {
         exportValuesWithDataPanel = new JPanel();
         exportValuesWithDataPanel.setLayout(new BoxLayout(exportValuesWithDataPanel, BoxLayout.X_AXIS));
 
-        exportValuesCheckBox = new JCheckBox("Include input and critical values");
+        exportValuesCheckBox = new JCheckBox("Include associated input values");
         exportValuesCheckBox.setSelected(true);
+        exportValuesCheckBox.setToolTipText("Includes unit system, width and depth, diameter, and gauge length");
 
         exportValuesWithDataPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
         exportValuesWithDataPanel.add(exportValuesCheckBox);
@@ -85,6 +88,7 @@ public class ExportWindow extends JFrame {
         buttonPanel.add(export);
         buttonPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
         buttonPanel.add(cancel);
+        buttonPanel.add(Box.createHorizontalGlue());
 
         return buttonPanel;
     }
