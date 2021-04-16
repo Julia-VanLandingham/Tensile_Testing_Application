@@ -83,6 +83,7 @@ public class MainWindow extends JFrame {
 
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
+        graphReset.setToolTipText("Click this to clear graph, but not inputs");
         graphReset.setEnabled(false);
 
         optionsPanel.add(Box.createHorizontalGlue());
@@ -108,6 +109,7 @@ public class MainWindow extends JFrame {
         JMenu edit = new JMenu("Edit");
         input = new JMenuItem("Input Measurements");
         reset = new JMenuItem("Reset");
+        reset.setToolTipText("Click this to reset both graph and inputs");
         edit.add(input);
         edit.add(reset);
 
