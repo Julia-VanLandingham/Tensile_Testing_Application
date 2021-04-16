@@ -102,5 +102,4 @@ public class ExportWindow extends JFrame {
     public JCheckBox getExportValuesCheckBox() {
         return exportValuesCheckBox;
     }
-
 }
