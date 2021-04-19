@@ -20,17 +20,21 @@ public class GraphUpdater extends Thread{
     private InputController inputController;
     private double stressZero = 0.0; //force = stress
     private double strainZero = 0.0; //elongation = strain (Extensometer)
+    private SettingsController settingsController;
 
-    private static final double LBS_PER_VOLT = 1960.574197;
-    private static final double INCHES_PER_VOLT = 0.041814743;
+    private static double LBS_PER_VOLT;
+    private static double INCHES_PER_VOLT;
 
-    public GraphUpdater(XYSeries series, MainController mainController, InputController inputController) throws NiDaqException {
+    public GraphUpdater(XYSeries series, MainController mainController, InputController inputController, SettingsController settingsController) throws NiDaqException {
         aiTask = new AITask();
-        aiTask.createAIChannel(3, AITask.Mode.DIFFERENTIAL);
-        aiTask.createAIChannel(1, AITask.Mode.RSE);
+        aiTask.createAIChannel(settingsController.getSettingsWindow().getElongationChannel(), settingsController.getSettingsWindow().getElongationMode()); //Elongation
+        aiTask.createAIChannel(settingsController.getSettingsWindow().getForceChannel(), settingsController.getSettingsWindow().getForceMode()); //Force
         aiTask.readyToRun();
+        LBS_PER_VOLT = settingsController.getSettingsWindow().getForceVoltage2UnitConstant();
+        INCHES_PER_VOLT = settingsController.getSettingsWindow().getElongationVoltage2UnitConstant();
         this.mainController = mainController;
         this.inputController = inputController;
+        this.settingsController = settingsController;
         this.series = series;
     }
 
