@@ -56,7 +56,7 @@ public class GraphUpdater extends Thread{
                     }
                 }
                 //Thread.sleep(Math.max((1000 / AITask.UPDATES_PER_SECOND) - measurementTime, 0));
-                //Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
             }
             if(done.get()) return;
