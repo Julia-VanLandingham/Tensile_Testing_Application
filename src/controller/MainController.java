@@ -78,7 +78,7 @@ public class MainController {
             if(isStart){
                 try {
                     if (updater == null) {
-                        updater = new GraphUpdater(mainWindow.getSeries(), this, inputController);
+                        updater = new GraphUpdater(mainWindow.getSeries(), this, inputController, settingsController);
                         updater.start();
                     }
                     //if no input values at all give a warning

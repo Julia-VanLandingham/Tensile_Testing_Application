@@ -3,6 +3,9 @@ package controller;
 import view.UserInputWindow;
 import controller.Calculations.Units;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 /**
  * Sets up and controls the functions of the UserInputWindow
  */
@@ -47,6 +50,13 @@ public class InputController {
         });
 
         inputWindow.getUnitSelectionBox().addActionListener(e -> onUnitSystemChange());
+
+        inputWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                updateInputFields();
+            }
+        });
     }
 
     /*
