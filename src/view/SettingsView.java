@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.SpringLayout;
 import controller.Calculations.Units;
+import model.AITask;
 
 /**
  * Creates a pop-up frame which displays settings options
@@ -205,6 +206,22 @@ public class SettingsView extends JFrame{
         machineSettingsPanel.add(forceMachineSettings,BorderLayout.NORTH);
         machineSettingsPanel.add(elongationMachineSettings, BorderLayout.SOUTH);
         return machineSettingsPanel;
+    }
+
+    public AITask.Mode getForceMode(){
+        if(forceModeComboBox.getSelectedItem().equals("RSE")){
+            return  AITask.Mode.RSE;
+        } else  {
+            return AITask.Mode.DIFFERENTIAL;
+        }
+    }
+
+    public AITask.Mode getElongationMode(){
+        if(elongationModeComboBox.getSelectedItem().equals("RSE")){
+            return  AITask.Mode.RSE;
+        } else  {
+            return AITask.Mode.DIFFERENTIAL;
+        }
     }
 
     public ArrayList<String> getInput(){ //for getting all the inputs from the fields before closing
