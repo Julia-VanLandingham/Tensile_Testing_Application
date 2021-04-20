@@ -50,6 +50,7 @@ public class SettingsController {
 
         //stores settings in a file and updates the values in the input window
         settingsWindow.getSaveButton().addActionListener(e -> {
+            checkSettingsData();
             int option = JOptionPane.showOptionDialog(null, "\nYou are about to change settings that will persist " +
                     "between instances of the program.\n" +
                     "These changes will also affect all other users.\n" +
@@ -207,6 +208,41 @@ public class SettingsController {
         settingsWindow.getElongationChannelComboBox().setSelectedItem(elongationChannel);
         settingsWindow.getForceModeComboBox().setSelectedItem(forceMode);
         settingsWindow.getElongationModeComboBox().setSelectedItem(elongationMode);
+    }
+
+    /*
+     * Checks to make sure settings changes are appropriate
+     */
+    private void checkSettingsData(){
+        if(settingsWindow.getForceModeComboBox().getSelectedItem() == "Differential" && (int)settingsWindow.getForceChannelComboBox().getSelectedItem() > 4){
+            invalidSettingsMessage(1);
+        }
+        if(settingsWindow.getElongationModeComboBox().getSelectedItem() == "Differential" && (int) settingsWindow.getElongationChannelComboBox().getSelectedItem() > 4){
+            invalidSettingsMessage(1);
+        }
+        if(settingsWindow.getForceModeComboBox().getSelectedItem() == "Differential" && settingsWindow.getElongationModeComboBox().getSelectedItem() == "RSE" || settingsWindow.getForceModeComboBox().getSelectedItem() == "RSE" && settingsWindow.getElongationModeComboBox().getSelectedItem() == "Differential") {
+            if (settingsWindow.getElongationChannelComboBox().getSelectedItem() == settingsWindow.getForceChannelComboBox().getSelectedItem() || (int) settingsWindow.getElongationChannelComboBox().getSelectedItem() == ((int) settingsWindow.getForceChannelComboBox().getSelectedItem() * 2 + 1)) {
+                invalidSettingsMessage(2);
+            }
+        }
+        if(settingsWindow.getForceModeComboBox().getSelectedItem() == settingsWindow.getElongationModeComboBox().getSelectedItem() && settingsWindow.getElongationChannelComboBox().getSelectedItem() == settingsWindow.getForceChannelComboBox().getSelectedItem()){
+            invalidSettingsMessage(3);
+        }
+    }
+
+    /*
+     * Message that displays if any changes to the settings are incorrect
+     * Takes an int that determines which message to display
+     */
+    private void invalidSettingsMessage(int message){
+        if(message == 1){
+            JOptionPane.showMessageDialog(null, "In differential mode, channel number must be between 0 and 4", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }else if(message == 2){
+            JOptionPane.showMessageDialog(null, "Channel numbers are invalid for selected ranges", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Channel numbers cannot be the same if the force and elongation machines are in the same mode", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }
+
     }
 
     //getters
