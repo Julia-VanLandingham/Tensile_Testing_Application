@@ -165,6 +165,7 @@ public class MainController {
         mainWindow.getReset().setEnabled(false);
         mainWindow.getSettings().setEnabled(false);
         mainWindow.getInput().setEnabled(false);
+        mainWindow.getExport().setEnabled(false);
         updater.updateZeros();
         updater.collect();
         isStart = false;
@@ -181,6 +182,7 @@ public class MainController {
         //enable these once we stop pulling data
         mainWindow.getReset().setEnabled(true);
         mainWindow.getInput().setEnabled(true);
+        mainWindow.getExport().setEnabled(true);
         setInputFieldsEnabled(false);
         isStart = true;
         if(updater != null) {
