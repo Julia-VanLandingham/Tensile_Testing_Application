@@ -84,10 +84,8 @@ public class SettingsController {
                     revertSettings();//put all the settings back to as they were before the user changed them
                 }
             }
-            settingsWindow.setVisible(false);
         });
-
-
+        
         settingsWindow.getDefaultUnitSelectionBox().addActionListener(e -> onUnitSystemChanged());
         settingsWindow.getCloseButton().addActionListener(e -> {
             revertSettings();
