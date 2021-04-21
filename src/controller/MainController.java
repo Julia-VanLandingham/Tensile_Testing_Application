@@ -104,10 +104,6 @@ public class MainController {
                 }
             }else {
                 stopDataCollection();
-                int result = JOptionPane.showOptionDialog(null, "Data collection ended.\nDo you want to export data?\n", "Export Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Export", "Continue"}, JOptionPane.YES_OPTION);
-                if(result == JOptionPane.YES_OPTION){
-                    exportController.getExportWindow().setVisible(true);
-                }
             }
         });
 
