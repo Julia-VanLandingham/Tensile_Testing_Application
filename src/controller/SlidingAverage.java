@@ -1,7 +1,10 @@
 package controller;
 
+/**
+ * Computes the sliding average for data smoothing
+ */
 public class SlidingAverage {
-    private double [] queue;
+    private final double [] queue;
     private int index = 0;
     private double total = 0.0;
     private int count = 0;
@@ -10,6 +13,11 @@ public class SlidingAverage {
         queue = new double[size];
     }
 
+    /**
+     * Adds a data point to the sliding average
+     * @param newPoint the point to be added
+     * @return returns the average
+     */
     public double addData (double newPoint){
         total += newPoint;
         if(count >= queue.length){
@@ -17,6 +25,7 @@ public class SlidingAverage {
         }else{
             count ++;
         }
+
         queue[index] = newPoint;
         index = (index + 1) % queue.length;
         return total / count;

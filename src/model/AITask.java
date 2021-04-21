@@ -4,7 +4,6 @@ import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
-
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
@@ -28,7 +27,6 @@ public class AITask {
     private NiDaq daq ;
     private Pointer aiTask;
     private int[] read;
-    private double[] buffer;
     private double [][] data;
     private DoubleBuffer inputBuffer;
     private IntBuffer samplesPerChannelRead;
@@ -78,7 +76,7 @@ public class AITask {
         try {
             daq.cfgSampClkTiming(aiTask, "\0", SAMPLES_PER_SECOND, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, channels * INPUT_BUFFER_SIZE);
             read = new int[] {0};
-            buffer = new double[channels * INPUT_BUFFER_SIZE];
+            double[] buffer = new double[channels * INPUT_BUFFER_SIZE];
             inputBuffer = DoubleBuffer.wrap(buffer);
             samplesPerChannelRead = IntBuffer.wrap(read);
             data = new double[channels][INPUT_BUFFER_SIZE];
@@ -122,7 +120,6 @@ public class AITask {
             cleanedData += data[channelNumber][j];
         }
         cleanedData /= INPUT_BUFFER_SIZE;
-
 
         return cleanedData;
     }
