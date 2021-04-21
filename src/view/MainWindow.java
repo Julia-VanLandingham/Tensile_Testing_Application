@@ -66,7 +66,6 @@ public class MainWindow extends JFrame {
         graphPanel = new JPanel();
         graphPanel.setLayout(new BorderLayout());
         graphPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER), BorderFactory.createLineBorder(Color.BLACK, 1)));
-
         XYSeriesCollection dataset = new XYSeriesCollection(series);
         chart = ChartFactory.createXYLineChart(null,"Strain","Stress",dataset, PlotOrientation.VERTICAL,true,true,true);
 

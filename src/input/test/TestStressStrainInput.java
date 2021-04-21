@@ -85,64 +85,66 @@ public class TestStressStrainInput {
     }
 
     public static void main (String [] args) throws NiDaqException, InterruptedException {
-        String channel = "1";
-        double [] out = null;
-        System.out.println("Test Started...");
-        long startTime = System.currentTimeMillis();
-        while(out==null) {
-            out = analogInputTest(channel);
-            Thread.sleep(100);
-        }
-        long endTime = System.currentTimeMillis();
-        System.out.println("Test Finished.");
-        System.out.println("Time elapsed: " + ((endTime - startTime)/1000.0) + " seconds");
-        System.out.println("Output is not null.");
-        System.out.println("Printing the output:");
-        System.out.println("*******************************************");
-        double total = 0.0;
-        try {
-            PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile.txt"));
-            for(double num : out){
-                outputFile.println(num);
-                num += total;
+        if (args[0] == "-h" || args[0] == "--help" || args[0] == null) {
+            System.out.println("Run the program with arguments as follows\n[run command] [channel number] [mode]\nMODES:\n  DIFF = Differential \n  RSE = RSE mode\n  none = Default");
+        } else {
+            String channel = "1";
+            double[] out = null;
+            System.out.println("Test Started...");
+            long startTime = System.currentTimeMillis();
+            while (out == null) {
+                out = analogInputTest(channel);
+                Thread.sleep(100);
             }
-            outputFile.close();
-            System.out.println("File created successfully");
-        }
-        catch ( IOException e) {
-        }
-        System.out.println("Average of output is: " + (total / (double) out.length));
-        int averagingWindow = 10;
-        double [] cleanedData = new double[out.length / averagingWindow];
-        int cleanedDataIndex = 0;
-
-        double [] buffer = new double[averagingWindow];
-        total = 0.0;
-
-
-        for(int i = 0; i < out.length; ++i){
-            int indexBuffer = i % averagingWindow;
-            buffer[indexBuffer] = out[i];
-            if(indexBuffer == averagingWindow - 1){
-                for(double num : buffer){
-                    total += num;
+            long endTime = System.currentTimeMillis();
+            System.out.println("Test Finished.");
+            System.out.println("Time elapsed: " + ((endTime - startTime) / 1000.0) + " seconds");
+            System.out.println("Output is not null.");
+            System.out.println("Printing the output:");
+            System.out.println("*******************************************");
+            double total = 0.0;
+            try {
+                PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile.txt"));
+                for (double num : out) {
+                    outputFile.println(num);
+                    num += total;
                 }
-                cleanedData[cleanedDataIndex++] = total / averagingWindow;
-                total = 0.0;
+                outputFile.close();
+                System.out.println("File created successfully");
+            } catch (IOException e) {
             }
-        }
+            System.out.println("Average of output is: " + (total / (double) out.length));
+            int averagingWindow = 10;
+            double[] cleanedData = new double[out.length / averagingWindow];
+            int cleanedDataIndex = 0;
 
-        System.out.println("CLEANED DATA:\t" + cleanedData.length + " values");
-        System.out.println("Output to outfile_cleaned.txt");
-        try {
-            PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile_cleaned.txt"));
-            for(double num : cleanedData){
-                outputFile.println(num);
+            double[] buffer = new double[averagingWindow];
+            total = 0.0;
+
+
+            for (int i = 0; i < out.length; ++i) {
+                int indexBuffer = i % averagingWindow;
+                buffer[indexBuffer] = out[i];
+                if (indexBuffer == averagingWindow - 1) {
+                    for (double num : buffer) {
+                        total += num;
+                    }
+                    cleanedData[cleanedDataIndex++] = total / averagingWindow;
+                    total = 0.0;
+                }
             }
-            outputFile.close();
-            System.out.println("File created successfully");
-        }
-        catch ( IOException e) {
+
+            System.out.println("CLEANED DATA:\t" + cleanedData.length + " values");
+            System.out.println("Output to outfile_cleaned.txt");
+            try {
+                PrintWriter outputFile = new PrintWriter(new FileOutputStream("outfile_cleaned.txt"));
+                for (double num : cleanedData) {
+                    outputFile.println(num);
+                }
+                outputFile.close();
+                System.out.println("File created successfully");
+            } catch (IOException e) {
+            }
         }
     }
 
