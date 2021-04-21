@@ -38,6 +38,8 @@ public class MainWindow extends JFrame {
         int frameHeight = (int) (screenSize.getHeight() * .95);
         int frameWidth = (int) (screenSize.getWidth() * .95);
 
+        setIconImage(new ImageIcon(this.getClass().getResource("/tensile-icon.png")).getImage());
+
         setTitle("Tensile Testing");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setPreferredSize(new Dimension(frameWidth, frameHeight));

@@ -320,6 +320,10 @@ public class MainController {
     public GraphUpdater getUpdater() { return updater; }
 
     public static void main(String[] args){
+        try{
+            Thread.sleep(1000);
+        }
+        catch(InterruptedException e){ }
         new MainController();
     }
 }
