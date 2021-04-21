@@ -50,40 +50,43 @@ public class SettingsController {
 
         //stores settings in a file and updates the values in the input window
         settingsWindow.getSaveButton().addActionListener(e -> {
-            int option = JOptionPane.showOptionDialog(null, "\nYou are about to change settings that will persist " +
-                    "between instances of the program.\n" +
-                    "These changes will also affect all other users.\n" +
-                    "These values should not be changed unless you are sure what you are changing is correct.\n\n" +
-                    "Do you wish to continue?", "Confirm Settings Change", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[] {"Yes", "No"}, JOptionPane.NO_OPTION);
-            if(option == JOptionPane.YES_OPTION) {
-                try {
-                    double value = settingsWindow.getDefaultGaugeLength();
-                    double forceConstant = settingsWindow.getForceVoltage2UnitConstant();
-                    double elongationConstant = settingsWindow.getElongationVoltage2UnitConstant();
-                    updateUnitsSystem();
+            if(checkSettingsData()) {
+                int option = JOptionPane.showOptionDialog(null, "\nYou are about to change settings that will persist " +
+                        "between instances of the program.\n" +
+                        "These changes will also affect all other users.\n" +
+                        "These values should not be changed unless you are sure what you are changing is correct.\n\n" +
+                        "Do you wish to continue?", "Confirm Settings Change", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    try {
+                        double value = settingsWindow.getDefaultGaugeLength();
+                        double forceConstant = settingsWindow.getForceVoltage2UnitConstant();
+                        double elongationConstant = settingsWindow.getElongationVoltage2UnitConstant();
+                        updateUnitsSystem();
 
-                    PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
-                    out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
-                    out.println(value);
-                    out.println(settingsWindow.getForceChannelComboBox().getSelectedItem());
-                    out.println(settingsWindow.getForceModeComboBox().getSelectedItem());
-                    out.println(forceConstant);
-                    out.println(settingsWindow.getElongationChannelComboBox().getSelectedItem());
-                    out.println(settingsWindow.getElongationModeComboBox().getSelectedItem());
-                    out.println(elongationConstant);
+                        PrintWriter out = new PrintWriter(new FileOutputStream(CONFIG_FILE));
+                        out.println(settingsWindow.getDefaultUnitSelectionBox().getSelectedItem());
+                        out.println(value);
+                        out.println(settingsWindow.getForceChannelComboBox().getSelectedItem());
+                        out.println(settingsWindow.getForceModeComboBox().getSelectedItem());
+                        out.println(forceConstant);
+                        out.println(settingsWindow.getElongationChannelComboBox().getSelectedItem());
+                        out.println(settingsWindow.getElongationModeComboBox().getSelectedItem());
+                        out.println(elongationConstant);
 
-                    out.close();
-                    storeSettings();
-                } catch (FileNotFoundException exception) {
-                    //do nothing
-                } catch (NumberFormatException exception) {
-                    JOptionPane.showMessageDialog(settingsWindow, "Default Gauge Length is not a properly formatted number.", " Bad Gauge Length", JOptionPane.ERROR_MESSAGE);
+                        out.close();
+                        storeSettings();
+                    } catch (FileNotFoundException exception) {
+                        //do nothing
+                    } catch (NumberFormatException exception) {
+                        JOptionPane.showMessageDialog(settingsWindow, "Default Gauge Length is not a properly formatted number.", " Bad Gauge Length", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    revertSettings();//put all the settings back to as they were before the user changed them
                 }
-            }else{
-                revertSettings();//put all the settings back to as they were before the user changed them
+                settingsWindow.setVisible(false);
             }
-            settingsWindow.setVisible(false);
         });
+
 
         settingsWindow.getDefaultUnitSelectionBox().addActionListener(e -> onUnitSystemChanged());
         settingsWindow.getCloseButton().addActionListener(e -> {
@@ -207,6 +210,52 @@ public class SettingsController {
         settingsWindow.getElongationChannelComboBox().setSelectedItem(elongationChannel);
         settingsWindow.getForceModeComboBox().setSelectedItem(forceMode);
         settingsWindow.getElongationModeComboBox().setSelectedItem(elongationMode);
+    }
+
+    /*
+     * Checks to make sure settings changes are appropriate
+     */
+    private boolean checkSettingsData(){
+        if((settingsWindow.getForceModeComboBox().getSelectedItem() == "Differential") && ((int)settingsWindow.getForceChannelComboBox().getSelectedItem() > 3)){
+            invalidSettingsMessage(1);
+            return false;
+        }
+        if((settingsWindow.getElongationModeComboBox().getSelectedItem() == "Differential") && ((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() > 3)){
+            invalidSettingsMessage(1);
+            return false;
+        }
+        if(((settingsWindow.getForceModeComboBox().getSelectedItem() == "Differential") && (settingsWindow.getElongationModeComboBox().getSelectedItem() == "RSE"))){
+            if ((((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2) == (int) settingsWindow.getForceChannelComboBox().getSelectedItem()) || (((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2 + 1)== (int) settingsWindow.getForceChannelComboBox().getSelectedItem())) {
+                invalidSettingsMessage(2);
+                return false;
+            }
+        }
+        if(((settingsWindow.getForceModeComboBox().getSelectedItem() == "RSE") && (settingsWindow.getElongationModeComboBox().getSelectedItem() == "Differential"))){
+            if ((((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2) == (int) settingsWindow.getForceChannelComboBox().getSelectedItem()) || (((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2 + 1)== (int) settingsWindow.getForceChannelComboBox().getSelectedItem())) {
+                invalidSettingsMessage(2);
+                return false;
+            }
+        }
+        if((settingsWindow.getForceModeComboBox().getSelectedItem() == settingsWindow.getElongationModeComboBox().getSelectedItem()) && (settingsWindow.getElongationChannelComboBox().getSelectedItem() == settingsWindow.getForceChannelComboBox().getSelectedItem())){
+            invalidSettingsMessage(3);
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * Message that displays if any changes to the settings are incorrect
+     * Takes an int that determines which message to display
+     */
+    private void invalidSettingsMessage(int message){
+        if(message == 1){
+            JOptionPane.showMessageDialog(null, "In differential mode, channel number must be between 0 and 4", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }else if(message == 2){
+            JOptionPane.showMessageDialog(null, "Invalid channel and mode combinations", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Channel numbers cannot be the same if the force and elongation machines are in the same mode", "Invalid Settings Format", JOptionPane.WARNING_MESSAGE);
+        }
+
     }
 
     //getters
