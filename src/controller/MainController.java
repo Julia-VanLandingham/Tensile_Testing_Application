@@ -51,6 +51,8 @@ public class MainController {
         });
 
         mainWindow.getExport().addActionListener(e -> exportController.getExportWindow().setVisible(true));
+        mainWindow.getInputButton().addActionListener(e -> inputController.getInputWindow().setVisible(true));
+        mainWindow.getExportButton().addActionListener(e -> exportController.getExportWindow().setVisible(true));
 
         mainWindow.getExit().addActionListener(e -> {
             if(!isStart){
@@ -161,7 +163,6 @@ public class MainController {
         mainWindow.getReset().setEnabled(false);
         mainWindow.getSettings().setEnabled(false);
         mainWindow.getInput().setEnabled(false);
-        mainWindow.getExport().setEnabled(false);
         updater.updateZeros();
         updater.collect();
         isStart = false;
@@ -179,6 +180,8 @@ public class MainController {
         mainWindow.getReset().setEnabled(true);
         mainWindow.getInput().setEnabled(true);
         mainWindow.getExport().setEnabled(true);
+        mainWindow.getInputButton().setEnabled(true);
+        mainWindow.getExportButton().setEnabled(true);
         setInputFieldsEnabled(false);
         isStart = true;
         if(updater != null) {
@@ -193,6 +196,9 @@ public class MainController {
         mainWindow.getSeries().clear();
         mainWindow.getStartButton().setEnabled(true);
         mainWindow.getClearButton().setEnabled(false);
+        mainWindow.getInputButton().setEnabled(true);
+        mainWindow.getExportButton().setEnabled(false);
+        mainWindow.getExport().setEnabled(false);
         mainWindow.getSettings().setEnabled(true);
         setInputFieldsEnabled(true);
         exportController.isUnsaved = false;
