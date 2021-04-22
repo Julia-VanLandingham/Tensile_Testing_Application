@@ -144,7 +144,7 @@ public class UserInputWindow extends JFrame {
 
         gaugeLengthLabel = new JLabel("Gauge Length:");
         gaugeLengthInputField = new JTextField("", 10);
-        gaugeLengthInputField.setToolTipText("Actual gauge length used in calculations. Not saved upon close");
+        gaugeLengthInputField.setToolTipText("Actual gauge length used in calculations. It is unlikely that this needs to be changed");
 
         gaugeLengthInputPanel.add(gaugeLengthLabel);
         gaugeLengthInputPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));

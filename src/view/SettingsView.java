@@ -85,7 +85,7 @@ public class SettingsView extends JFrame{
 
                 double gaugeLength = input.nextDouble();
                 gaugeLengthField = new JTextField(String.valueOf(gaugeLength), 12);
-                gaugeLengthField.setToolTipText("Default value for gauge length, not used in calculations. Saved upon close");
+                gaugeLengthField.setToolTipText("Preferred default value. Saved upon close");
 
                 defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
                 defaultUnitSelectionBox.setToolTipText("Default unit system, not used in calculations. Saved upon close");
