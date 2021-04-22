@@ -85,6 +85,8 @@ public class GraphUpdater extends Thread{
      */
     public void pause(){
         run.set(false);
+        aiTask.pause();
+
     }
 
     /**

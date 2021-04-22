@@ -42,6 +42,16 @@ public class AITask {
         }
     }
 
+    public void pause(){
+        try {
+            daq.stopTask(aiTask);
+            //daq.clearTask(aiTask);
+            daq.resetDevice("Dev1\0");
+        } catch (NiDaqException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Creates an Analog Input Channel with the given mode, on the given port
      * @param channelNumber the port that the National Instruments Chip will read from
