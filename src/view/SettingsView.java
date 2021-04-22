@@ -113,6 +113,7 @@ public class SettingsView extends JFrame{
         }
 
         if(!readSucceeded){ //if no values input default values show
+            gaugeLengthLabel.setText("Gauge Length (in):");
             gaugeLengthField = new JTextField("0.5");
             defaultUnitSelectionBox = new JComboBox<>(MEASUREMENTS);
             currentUnitSystem = Units.ENGLISH;
