@@ -159,6 +159,7 @@ public class MainController {
     private void startDataCollection(){
         mainWindow.getStartButton().setText("Stop");
         mainWindow.getClearButton().setEnabled(false);
+        mainWindow.getInputButton().setEnabled(false);
         //do not allow any of these while data is being pulled
         mainWindow.getReset().setEnabled(false);
         mainWindow.getSettings().setEnabled(false);
