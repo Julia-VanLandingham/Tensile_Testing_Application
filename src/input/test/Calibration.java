@@ -148,8 +148,6 @@ public class Calibration {
                 "\tremove\t\t\t\t-> This removes the last reading if needed\n" +
                 "\tfinished\t\t\t-> This does the Linear Regression and outputs the voltage to units constant\n" +
                 "\t\t\t\t\t\t\t\tto the terminal\n" +
-                "\toutput [filename]\t-> Outputs the taken data points to a .csv file with 'filename.csv'\n" +
-                "\t\t\t\t\t\t\t\tas the name.\n" +
                 "\tquit\t\t\t\t-> Quits the program" +
                 "\tlist\t\t\t\t-> Lists all the current values stored";
 
@@ -196,35 +194,6 @@ public class Calibration {
                     for(int i = 0; i < calibration.index; i++){
                         System.out.println(calibration.voltageValues[i] + "\t" + calibration.actualValues[i]);
                     }
-                    break;
-                case "output":
-                    String filename = input.next();
-                    if(!hasFinished){
-                        System.out.println("You have not calculated the Linear Regression yet by entering 'finished'");
-                        System.out.print("Would you like to do that now? (y/n)");
-                        String confirmation = input.next();
-                        if(!(confirmation.equals("y") || confirmation.equals("Y") || confirmation.equals("yes") || confirmation.equals("Yes"))){
-                            break;
-                        }else{
-                            calibration.getVoltageToUnitsConstant();
-                        }
-                    }
-                    PrintWriter outputFile;
-                    try {
-                        if(!filename.contains(".csv")){
-                            filename += ".csv";
-                        }
-                        outputFile = new PrintWriter(new FileOutputStream(filename));
-                        outputFile.println("Voltage Values,Actual Values");
-                        for(int i = 0; i < calibration.actualValues.length; i++){
-                            outputFile.println(calibration.voltageValues[i] + "," + calibration.actualValues);
-                        }
-                        outputFile.println("\nVoltage To Units Constant\n" + calibration.voltageToUnitsConstant);
-
-                    } catch (FileNotFoundException e) {
-                        System.err.println("Could not write file!");
-                    }
-                    System.out.println("Output written");
                     break;
                 case "finished":
                     System.out.println("Getting Linear Regression of current dataset");
