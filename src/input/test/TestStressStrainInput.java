@@ -33,7 +33,6 @@ public class TestStressStrainInput {
     private static final double samplesPerSecond = 100.0;
     private static final int inputBufferSize = (int) Math.ceil(seconds * samplesPerSecond);
     private static final int samplesInChannel = inputBufferSize;
-    private static final int mode = Nicaiu.DAQmx_Val_Diff;
 
     /**
      * Tests the Analog inputs on the DAQ National Instruments 6009 Chip for the given channel pair
@@ -41,7 +40,7 @@ public class TestStressStrainInput {
      * @return Output in volts?
      * @throws NiDaqException
      */
-    private static double[] analogInputTest(String channel) throws NiDaqException, InterruptedException {
+    private static double[] analogInputTest(String channel, int mode) throws NiDaqException, InterruptedException {
         Pointer aiTask = null;
         try {
             String physicalChan = "Dev1/ai" + channel + "\0";
@@ -84,22 +83,28 @@ public class TestStressStrainInput {
         return output;
     }
 
+
     public static void main (String [] args) throws NiDaqException, InterruptedException {
         if (args[0] == "-h" || args[0] == "--help" || args[0] == null) {
-            System.out.println("Run the program with arguments as follows\n[run command] [channel number] [mode]\nMODES:\n  DIFF = Differential \n  RSE = RSE mode\n  none = Default");
+            System.out.println("Run the program with arguments as follows\n[run command] [channel number (int)] [mode]\nMODES:\n  DIFF = Differential \n  RSE = RSE mode\n  none = Default");
         } else {
-            String channel = "1";
+            String channel = args[0];
             double[] out = null;
             System.out.println("Test Started...");
-            long startTime = System.currentTimeMillis();
-            while (out == null) {
-                out = analogInputTest(channel);
-                Thread.sleep(100);
+            System.out.println("Channel Number: " + args[0]);
+            int mode = -1;
+            if(args[1] == "DIFF"){
+                mode = Nicaiu.DAQmx_Val_Diff;
+            }else if(args[1] == "RSE"){
+                mode = Nicaiu.DAQmx_Val_RSE;
+            }else{
+                System.err.println("Could not Need to specify DIFF or RSE mode.");
             }
+            long startTime = System.currentTimeMillis();
+            out = analogInputTest(channel, mode);
             long endTime = System.currentTimeMillis();
             System.out.println("Test Finished.");
             System.out.println("Time elapsed: " + ((endTime - startTime) / 1000.0) + " seconds");
-            System.out.println("Output is not null.");
             System.out.println("Printing the output:");
             System.out.println("*******************************************");
             double total = 0.0;
