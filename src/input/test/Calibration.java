@@ -5,9 +5,7 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.LinkedList;
@@ -33,6 +31,8 @@ public class Calibration {
     private double [] voltageValues;
     private double [] actualValues;
     private int index = 0;
+    private double voltageToUnitsConstant = 0.0;
+    private LinearRegression linearRegression;
 
     public Calibration (){
         voltageValues = new double[1024];
@@ -99,6 +99,17 @@ public class Calibration {
         return voltageValue;
     }
 
+    /**
+     * this method uses the Linear Regression class from Robert Sedgewick and Kevin Wayne's code
+     *
+     * @return the voltage to units constant (slope of the data)
+     */
+    public double getVoltageToUnitsConstant(){
+        linearRegression = new LinearRegression(voltageValues, actualValues);
+        voltageToUnitsConstant = linearRegression.slope();
+        return voltageToUnitsConstant;
+    }
+
     public void remove(){
         if(index > 0){
             voltageValues[index - 1] = 0.0;
@@ -115,7 +126,7 @@ public class Calibration {
         String header =
                 "-------------------------Tensile Testing Assistant: Calibration Tool-------------------------\n" +
                 "Developed by Computer Science Students from Otterbein University\n" +
-                "Connor May '21  & Julia VanLandingham '21 & Chris Geidans '22 & Katilin Dosche '22\n" +
+                "Connor May '21  & Julia VanLandingham '21 & Chris Geidans '22 & Kaitlin Dosch '22\n" +
                 "---------------------------------------------------------------------------------------------\n" +
                 "Description: This tool is made to aid users in finding a voltage to units constant to use in\n" +
                         "\tthe Tensile Testing Assistant software. First you will need to have a way to get a \n" +
@@ -139,7 +150,8 @@ public class Calibration {
                 "\t\t\t\t\t\t\t\tto the terminal\n" +
                 "\toutput [filename]\t-> Outputs the taken data points to a .csv file with 'filename.csv'\n" +
                 "\t\t\t\t\t\t\t\tas the name.\n" +
-                "\tquit\t\t\t\t-> Quits the program";
+                "\tquit\t\t\t\t-> Quits the program" +
+                "\tlist\t\t\t\t-> Lists all the current values stored";
 
         System.out.println(header + usageString);
         System.out.println("---------------------------------------------------------------------------------------------");
@@ -176,6 +188,48 @@ public class Calibration {
                     break;
                 case "remove":
                     calibration.remove();
+                    break;
+                case "list":
+                    System.out.println("Listing currently stored values:");
+                    for(int i = 0; i < calibration.actualValues.length; i++){
+                        if(calibration.voltageValues[i] != 0.0 && calibration.actualValues[i] != 0.0) {
+                            System.out.println(calibration.voltageValues[i] + ", " + calibration.actualValues[i]);
+                        }
+                    }
+                    break;
+                case "output":
+                    String filename = input.next();
+                    if(!hasFinished){
+                        System.out.println("You have not calculated the Linear Regression yet by entering 'finished'");
+                        System.out.print("Would you like to do that now? (y/n)");
+                        String confirmation = input.next();
+                        if(!(confirmation.equals("y") || confirmation.equals("Y") || confirmation.equals("yes") || confirmation.equals("Yes"))){
+                            break;
+                        }else{
+                            calibration.getVoltageToUnitsConstant();
+                        }
+                    }
+                    PrintWriter outputFile;
+                    try {
+                        if(!filename.contains(".csv")){
+                            filename += ".csv";
+                        }
+                        outputFile = new PrintWriter(new FileOutputStream(filename));
+                        outputFile.println("Voltage Values,Actual Values");
+                        for(int i = 0; i < calibration.actualValues.length; i++){
+                            outputFile.println(calibration.voltageValues[i] + "," + calibration.actualValues);
+                        }
+                        outputFile.println("\nVoltage To Units Constant\n" + calibration.voltageToUnitsConstant);
+
+                    } catch (FileNotFoundException e) {
+                        System.err.println("Could not write file!");
+                    }
+                    break;
+                case "finished":
+                    System.out.println("Getting Linear Regression of current dataset");
+                    double voltageToUnitsConstant = calibration.getVoltageToUnitsConstant();
+                    System.out.println("Voltage Constant of given data set is: " + voltageToUnitsConstant);
+                    hasFinished = true;
                     break;
                 case "quit":
                     if(hasFinished){
