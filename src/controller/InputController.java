@@ -33,6 +33,7 @@ public class InputController {
 
         inputWindow.getOkButton().addActionListener(e -> {
             inputWindow.setVisible(false);
+            mainController.getMainWindow().getStartButton().setEnabled(true);
             pullInputValues(); //actually store the inputs
         });
 

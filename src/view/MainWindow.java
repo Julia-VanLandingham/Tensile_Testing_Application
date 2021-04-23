@@ -21,6 +21,8 @@ public class MainWindow extends JFrame {
 
     private JButton startButton;
     private JButton graphReset;
+    private JButton inputButton;
+    private JButton exportButton;
     private JPanel optionsPanel;
     private JPanel graphPanel;
     private JMenuBar menuBar;
@@ -85,13 +87,25 @@ public class MainWindow extends JFrame {
 
         startButton = new JButton("Start");
         graphReset = new JButton("Clear");
+        inputButton = new JButton("Input");
+        exportButton = new JButton("Export");
+
         graphReset.setToolTipText("Click this to clear graph, but not inputs");
+        inputButton.setToolTipText("Click this to input measurements about the specimen");
+        exportButton.setToolTipText("Click this to export your data");
+
+        startButton.setEnabled(false);
         graphReset.setEnabled(false);
+        exportButton.setEnabled(false);
 
         optionsPanel.add(Box.createHorizontalGlue());
+        optionsPanel.add(inputButton);
+        optionsPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
         optionsPanel.add(startButton);
         optionsPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
         optionsPanel.add(graphReset);
+        optionsPanel.add(Box.createHorizontalStrut(HORIZONTAL_BUFFER));
+        optionsPanel.add(exportButton);
     }
 
     /*
@@ -104,6 +118,7 @@ public class MainWindow extends JFrame {
         settings = new JMenuItem("Settings");
         export = new JMenuItem("Export");
         exit = new JMenuItem("Exit");
+        export.setEnabled(false);
         file.add(export);
         file.add(settings);
         file.add(exit);
@@ -164,5 +179,13 @@ public class MainWindow extends JFrame {
 
     public XYSeries getSeries() {
         return series;
+    }
+
+    public JButton getInputButton(){
+        return inputButton;
+    }
+
+    public JButton getExportButton(){
+        return exportButton;
     }
 }

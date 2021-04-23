@@ -80,10 +80,8 @@ public class SettingsController {
                     } catch (NumberFormatException exception) {
                         JOptionPane.showMessageDialog(settingsWindow, "Default Gauge Length is not a properly formatted number.", " Bad Gauge Length", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    revertSettings();//put all the settings back to as they were before the user changed them
+                    settingsWindow.setVisible(false);
                 }
-                settingsWindow.setVisible(false);
             }
         });
 
@@ -225,7 +223,7 @@ public class SettingsController {
             return false;
         }
         if(((settingsWindow.getForceModeComboBox().getSelectedItem() == "Differential") && (settingsWindow.getElongationModeComboBox().getSelectedItem() == "RSE"))){
-            if ((((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2) == (int) settingsWindow.getForceChannelComboBox().getSelectedItem()) || (((int) settingsWindow.getElongationChannelComboBox().getSelectedItem() * 2 + 1)== (int) settingsWindow.getForceChannelComboBox().getSelectedItem())) {
+            if ((((int) settingsWindow.getForceChannelComboBox().getSelectedItem() * 2) == (int) settingsWindow.getElongationChannelComboBox().getSelectedItem()) || (((int) settingsWindow.getForceChannelComboBox().getSelectedItem() * 2 + 1)== (int) settingsWindow.getElongationChannelComboBox().getSelectedItem())) {
                 invalidSettingsMessage(2);
                 return false;
             }
