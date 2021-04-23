@@ -165,6 +165,7 @@ public class MainController {
         mainWindow.getSettings().setEnabled(false);
         mainWindow.getInput().setEnabled(false);
         updater.updateZeros();
+        updater.pause();
         updater.collect();
         isStart = false;
         exportController.isUnsaved = true;
