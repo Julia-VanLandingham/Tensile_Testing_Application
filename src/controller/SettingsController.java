@@ -55,6 +55,7 @@ public class SettingsController {
                         "between instances of the program.\n" +
                         "These changes will also affect all other users.\n" +
                         "These values should not be changed unless you are sure what you are changing is correct.\n\n" +
+                        "If you change channel and mode values, you MUST restart the program.\n\n" +
                         "Do you wish to continue?", "Confirm Settings Change", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     try {
