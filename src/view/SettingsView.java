@@ -119,10 +119,10 @@ public class SettingsView extends JFrame{
             currentUnitSystem = Units.ENGLISH;
             forceVoltage2UnitConstant.setText("1960.574197");
             elongationVoltage2UnitConstant.setText("0.041814743");
-            forceModeComboBox.setSelectedItem("RSE");
-            forceChannelComboBox.setSelectedItem(1);
-            elongationModeComboBox.setSelectedItem("Differential");
-            elongationChannelComboBox.setSelectedItem(3);
+            forceModeComboBox.setSelectedItem("Differential");
+            forceChannelComboBox.setSelectedItem(3);
+            elongationModeComboBox.setSelectedItem("RSE");
+            elongationChannelComboBox.setSelectedItem(1);
         }
 
         northPanel.add(unitsSelectionLabel);
@@ -197,7 +197,6 @@ public class SettingsView extends JFrame{
         elongationMachineSettings.add(voltageConstantLabel2);
         voltageConstantLabel2.setLabelFor(elongationVoltage2UnitConstant);
         elongationMachineSettings.add(elongationVoltage2UnitConstant);
-        //TODO: Fix ArrayOutOfBounds Exception thrown by the following code
         SpringUtilities.makeCompactGrid(elongationMachineSettings,3,2, HORIZONTAL_BUFFER, VERTICAL_BUFFER, HORIZONTAL_BUFFER, VERTICAL_BUFFER);
 
         forceMachineSettings.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Force Machine Settings"), BorderFactory.createEmptyBorder(VERTICAL_BUFFER,HORIZONTAL_BUFFER,VERTICAL_BUFFER,HORIZONTAL_BUFFER)));
