@@ -23,7 +23,7 @@ public class Calibration {
 
     // 5 min :      1500000
     // 2.5 min :     750000
-    private static final int seconds = 3;
+    private static final int seconds = 1;
 
     private static final double samplesPerSecond = 100.0;
     private static final int inputBufferSize = (int) Math.ceil(seconds * samplesPerSecond);
@@ -190,11 +190,11 @@ public class Calibration {
                     calibration.remove();
                     break;
                 case "list":
+                    System.out.println("This many values are stored currently: " + calibration.actualValues.length);
                     System.out.println("Listing currently stored values:");
-                    for(int i = 0; i < calibration.actualValues.length; i++){
-                        if(calibration.voltageValues[i] != 0.0 && calibration.actualValues[i] != 0.0) {
-                            System.out.println(calibration.voltageValues[i] + ", " + calibration.actualValues[i]);
-                        }
+                    System.out.println("Voltage Values\t\t\tActual Values");
+                    for(int i = 0; i < calibration.index; i++){
+                        System.out.println(calibration.voltageValues[i] + "\t" + calibration.actualValues[i]);
                     }
                     break;
                 case "output":
@@ -224,6 +224,7 @@ public class Calibration {
                     } catch (FileNotFoundException e) {
                         System.err.println("Could not write file!");
                     }
+                    System.out.println("Output written");
                     break;
                 case "finished":
                     System.out.println("Getting Linear Regression of current dataset");

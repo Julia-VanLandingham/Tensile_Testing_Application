@@ -23,8 +23,9 @@ public class GraphUpdater extends Thread{
 
     public GraphUpdater(XYSeries series, MainController mainController, SettingsController settingsController) throws NiDaqException {
         aiTask = new AITask();
-        aiTask.createAIChannel(settingsController.getSettingsWindow().getElongationChannel(), settingsController.getSettingsWindow().getElongationMode()); //Elongation
+        // DO NOT CHANGE THE ORDER OF THE NEXT 2 LINES
         aiTask.createAIChannel(settingsController.getSettingsWindow().getForceChannel(), settingsController.getSettingsWindow().getForceMode()); //Force
+        aiTask.createAIChannel(settingsController.getSettingsWindow().getElongationChannel(), settingsController.getSettingsWindow().getElongationMode()); //Elongation
         aiTask.readyToRun();
 
         LBS_PER_VOLT = settingsController.getSettingsWindow().getForceVoltage2UnitConstant();
