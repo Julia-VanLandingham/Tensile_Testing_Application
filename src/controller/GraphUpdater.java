@@ -139,4 +139,8 @@ public class GraphUpdater extends Thread{
             series.updateByIndex(i, yValue);
         }
     }
+
+    public XYSeries getSeries() {
+        return series;
+    }
 }
