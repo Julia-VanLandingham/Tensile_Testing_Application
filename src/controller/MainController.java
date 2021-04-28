@@ -219,6 +219,7 @@ public class MainController {
         //clear the inputs convert back to the default units from the settings and make text fields re-editable
         inputController.clear();
         setInputFieldsEnabled(true);
+        mainWindow.getStartButton().setEnabled(false);
         settingsController.updateUnitsSystem();
         inputController.onUnitSystemChange();
     }
